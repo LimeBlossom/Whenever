@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 
-namespace _Project.WheneverAbstractions
+namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {
     public interface IEffect
     {

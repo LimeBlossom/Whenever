@@ -1,62 +1,66 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 
-public enum CombatantType
+namespace WheneverAbstractions._Project.WheneverAbstractions
 {
-    Player,
-    Enemy
-}
-
-public interface ICombatantData
-{
-    public float GetCurrentHealth();
-    public Vector2 GetPosition();
-    public CombatantType GetCombatantType();
-}
-
-public class Combatant : ICombatantData
-{
-    public Health health;
-    public Damageable damageable;
-    public List<StatusEffect> statusEffects = new();
-    public CombatantType combatantType;
-    public Vector2 position;
-
-    public Combatant(int maxHealth, CombatantType type)
+    public enum CombatantType
     {
-        this.health = new Health(maxHealth);
-        this.damageable = new Damageable();
-        this.combatantType = type;
+        Player,
+        Enemy
+    }
+
+    public interface ICombatantData
+    {
+        public float CurrentHealth();
+        public Vector2 GetPosition();
+        public CombatantType GetCombatantType();
+    }
+
+    public class Combatant : ICombatantData
+    {
+        public Health health;
+        public Damageable damageable;
+        public List<StatusEffect> statusEffects = new();
+        public CombatantType combatantType;
+        public Vector2 position;
+
+        public Combatant(int maxHealth, CombatantType type)
+        {
+            this.health = new Health(maxHealth);
+            this.damageable = new Damageable();
+            this.combatantType = type;
         
-        this.position = new Vector2();
-    }
+            this.position = new Vector2();
+        }
     
-    public void StartTurn()
-    {
-        throw new NotImplementedException();
-        // foreach(StatusEffect statusEffect in statusEffects.ToArray())
-        // {
-        //     var statusEffectResult = statusEffect.ActivateOn(this);
-        //     if (statusEffectResult.completion == StatusEffectCompletion.Expired)
-        //     {
-        //         statusEffects.Remove(statusEffect);
-        //     }
-        // }
-    }
+        public void StartTurn()
+        {
+            throw new NotImplementedException();
+            // foreach(StatusEffect statusEffect in statusEffects.ToArray())
+            // {
+            //     var statusEffectResult = statusEffect.ActivateOn(this);
+            //     if (statusEffectResult.completion == StatusEffectCompletion.Expired)
+            //     {
+            //         statusEffects.Remove(statusEffect);
+            //     }
+            // }
+        }
 
-    public float GetCurrentHealth()
-    {
-        return health.GetCurrentHealth();
-    }
+        public float CurrentHealth()
+        {
+            return health.GetCurrentHealth();
+        }
 
-    public Vector2 GetPosition()
-    {
-        return position;
-    }
+        public Vector2 GetPosition()
+        {
+            return position;
+        }
 
-    public CombatantType GetCombatantType()
-    {
-        return combatantType;
+        public CombatantType GetCombatantType()
+        {
+            return combatantType;
+        }
     }
 }

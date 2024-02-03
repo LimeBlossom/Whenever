@@ -1,6 +1,8 @@
-﻿namespace _Project.WheneverAbstractions
+﻿using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
+
+namespace WheneverAbstractions._Project.WheneverAbstractions.Commands
 {
-    public static class CommandFactory
+    public static class CmdFactory
     {
         public static IWorldCommand Damage(DamageType type, int amount, CombatantId target)
         { 
@@ -11,14 +13,14 @@
             };
         }
         
-        public static IWorldCommand AddStatusEffect(CombatantId target, StatusEffect effect)
+        public static IWorldCommand Status(CombatantId target, StatusEffect effect)
         {
             return new AddStatusEffectCommand(target, effect);
         }
         
-        public static IWorldCommand AddWheneverEffect(CombatantId target, Whenever whenever)
+        public static IWorldCommand Whenever(Whenever whenever)
         {
-            return new AddWheneverCommand(target, whenever);
+            return new AddWheneverCommand(whenever);
         }
         
     }

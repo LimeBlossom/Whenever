@@ -1,18 +1,21 @@
-﻿public record CombatantId
+﻿namespace WheneverAbstractions._Project.WheneverAbstractions
 {
-    
-    private readonly int id;
-    
-    public static readonly CombatantId DEFAULT = new CombatantId(0);
-    
-    public static CombatantId Next(CombatantId id)
+    public record CombatantId
     {
-        return new CombatantId(id.id + 1);
-    }
+    
+        private readonly int id;
+    
+        public static readonly CombatantId DEFAULT = new CombatantId(0);
+    
+        public static CombatantId Next(CombatantId id)
+        {
+            return new CombatantId(id.id + 1);
+        }
     
     
-    private CombatantId(int id)
-    {
-        this.id = id;
+        private CombatantId(int id)
+        {
+            this.id = id;
+        }
     }
 }

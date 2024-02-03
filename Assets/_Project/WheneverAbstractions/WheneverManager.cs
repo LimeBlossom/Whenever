@@ -1,27 +1,30 @@
 using System.Collections.Generic;
 
-public class WheneverManager
+namespace WheneverAbstractions._Project.WheneverAbstractions
 {
-    private List<Whenever> whenevers = new();
+    public class WheneverManager
+    {
+        private List<Whenever> whenevers = new();
     
-    public void AddWhenever(Whenever whenever)
-    {
-        whenevers.Add(whenever);
-    }
-
-    public void CheckWhenevers(DamagePackage damagePackage, IEnumerable<Combatant> allCombatants)
-    {
-        foreach(Combatant combatant in allCombatants)
+        public void AddWhenever(Whenever whenever)
         {
-            foreach(Whenever whenever in whenevers)
+            whenevers.Add(whenever);
+        }
+
+        public void CheckWhenevers(DamagePackage damagePackage, IEnumerable<Combatant> allCombatants)
+        {
+            foreach(Combatant combatant in allCombatants)
             {
-                whenever.TryTrigger(damagePackage, combatant);
+                foreach(Whenever whenever in whenevers)
+                {
+                    whenever.TryTrigger(damagePackage, combatant);
+                }
             }
         }
-    }
 
-    public void Clear()
-    {
-        whenevers.Clear();
+        public void Clear()
+        {
+            whenevers.Clear();
+        }
     }
 }

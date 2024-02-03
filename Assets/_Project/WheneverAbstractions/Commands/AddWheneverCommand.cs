@@ -1,11 +1,12 @@
-﻿public record AddWheneverCommand : IWorldCommand
+﻿namespace WheneverAbstractions._Project.WheneverAbstractions.Commands
 {
-    public Whenever whenever;
-    public CombatantId Target { get; set; }
-    
-    public AddWheneverCommand(CombatantId target, Whenever whenever)
+    public record AddWheneverCommand : IWorldCommand
     {
-        Target = target;
-        this.whenever = whenever;
+        public Whenever whenever;
+    
+        public AddWheneverCommand(Whenever whenever)
+        {
+            this.whenever = whenever;
+        }
     }
 }

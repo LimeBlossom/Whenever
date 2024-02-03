@@ -1,11 +1,16 @@
-﻿public class AddStatusEffectCommand: IWorldCommand
+﻿using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
+
+namespace WheneverAbstractions._Project.WheneverAbstractions.Commands
 {
-    public CombatantId Target { get; }
-    public StatusEffect statusEffect;
-    
-    public AddStatusEffectCommand(CombatantId target, StatusEffect effect)
+    public class AddStatusEffectCommand: ITargetedWorldCommand
     {
-        Target = target;
-        statusEffect = effect;
+        public CombatantId Target { get; }
+        public StatusEffect statusEffect;
+    
+        public AddStatusEffectCommand(CombatantId target, StatusEffect effect)
+        {
+            Target = target;
+            statusEffect = effect;
+        }
     }
 }

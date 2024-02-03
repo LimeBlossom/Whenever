@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 
-namespace _Project.WheneverAbstractions
+namespace WheneverAbstractions._Project.WheneverAbstractions
 {
     public class GlobalCombatWorld
     {
@@ -31,7 +31,7 @@ namespace _Project.WheneverAbstractions
             throw new NotImplementedException();
         }
         
-        public ICombatantData GetCombatantData(CombatantId combatantId)
+        public ICombatantData CombatantData(CombatantId combatantId)
         {
             return allCombatants[combatantId];
         }
