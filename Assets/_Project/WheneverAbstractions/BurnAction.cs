@@ -1,30 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _Project.WheneverAbstractions;
 using UnityEngine;
 
 public class BurnAction: IEffect
 {
-    public void ApplyEffect(DamagePackage damagePackage, Combatant triggerTarget)
+    public IEnumerable<IWorldCommand> ApplyEffect(CombatantId triggerTarget)
     {
         // Apply burn status effect to target
         Burn burn = new();
         burn.damage = 1;
         burn.turnsLeft = 3;
-        triggerTarget.statusEffects.Add(burn);
+        yield return new AddStatusEffectCommand(triggerTarget, burn);
     }
 }
 
 public class Burn : StatusEffect
 {
-    public override StatusEffectResult ActivateOn(Combatant combatant)
+    public override StatusEffectResult ActivateOn(CombatantId target)
     {
         if (IsExpired())
         {
             return new StatusEffectResult
             {
                 completion = StatusEffectCompletion.Expired,
-                change = StatusEffectChange.NoChange
+                commands = Enumerable.Empty<IWorldCommand>()
             };
         }
         turnsLeft--;
@@ -32,15 +33,16 @@ public class Burn : StatusEffect
         DamagePackage damagePackage = new();
         damagePackage.damageAmount = damage;
         damagePackage.damageType = DamageType.BURN;
-        damagePackage.attacker = combatant;
-        damagePackage.target = combatant;
+        var damageCommand = new DamageCommand()
+        {
+            damagePackage = damagePackage,
+            Target = target
+        };
 
-        combatant.damageable.TakeDamage(ref damagePackage);
-
-        return new StatusEffectResult
+        return new StatusEffectResult()
         {
             completion = StatusEffectCompletion.Active,
-            change = StatusEffectChange.Changed
+            commands = new List<IWorldCommand> { damageCommand }
         };
     }
 }

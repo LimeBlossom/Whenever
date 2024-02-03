@@ -8,16 +8,10 @@ public enum StatusEffectCompletion
     Active
 }
 
-public enum StatusEffectChange
-{
-    NoChange,
-    Changed
-}
-
 public struct StatusEffectResult
 {
     public StatusEffectCompletion completion;
-    public StatusEffectChange change;
+    public IEnumerable<IWorldCommand> commands;
 }
 
 public abstract class StatusEffect
@@ -29,7 +23,7 @@ public abstract class StatusEffect
     /// returns true when 
     /// </summary>
     /// <returns></returns>
-    public abstract StatusEffectResult ActivateOn(Combatant combatant);
+    public abstract StatusEffectResult ActivateOn(CombatantId target);
     public virtual void SetDamage(float value)
     {
         damage = value;

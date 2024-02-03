@@ -14,16 +14,18 @@ public class UnitTestExample
         Assert.AreEqual("someThing", "someThing");
     }
 
-    private (Combatant player, Combatant enemy, GlobalTurnManager turnManager) GetEnemyAndPlayerTurnContext()
+    private (CombatantId player, CombatantId enemy, GlobalCombatWorld turnManager) GetEnemyAndPlayerTurnContext()
     {
         var player = new Combatant(10, CombatantType.Player);
         var enemy = new Combatant(10, CombatantType.Enemy);
-        var combatants = new Combatant[] {player, enemy};
-        var wheneverManager = new WheneverManager();
-        var turnManager = new GlobalTurnManager(wheneverManager, combatants.ToList());
+        var combatants = new[] {player, enemy};
+        var turnManager = new GlobalCombatWorld(combatants.ToList());
 
-        return (player, enemy, turnManager);
-    }ApplyEffect    
+        return (
+            turnManager.GetPlayers().Single(),
+            turnManager.GetEnemies().Single(), 
+            turnManager);
+    }    
 
 
     [Test]
@@ -32,59 +34,75 @@ public class UnitTestExample
         var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
         
         /* Code that would be applied by an attack action */
-        DamagePackage damagePackage = new();
-        damagePackage.damageType = DamageType.FIRE;
-        damagePackage.damageAmount = 1;
-        damagePackage.attacker = enemy;
-        damagePackage.target = player;
+        var damageCommand = new DamageCommand()
+        {
+            damagePackage = new(DamageType.FIRE, 1),
+            Target = player
+        };
+
+        var initiator = new CombatantCommandInitiator()
+        {
+            Initiator = enemy
+        };
         
 
         /* Code that would be called by a turn manager */
         turnManager.StartEnemyTurn();
-        turnManager.ApplyDamage(damagePackage);
+        turnManager.InitiateCommand(damageCommand,initiator);
         turnManager.StartPlayerTurn();
+
+
+        var playerData = turnManager.GetCombatantData(player);
+        var enemyData = turnManager.GetCombatantData(enemy);
         
-        Assert.AreEqual(9, player.health.GetCurrentHealth());
-        Assert.AreEqual(10, enemy.health.GetCurrentHealth());
+        Assert.AreEqual(9,playerData.GetCurrentHealth());
+        Assert.AreEqual(10, enemyData.GetCurrentHealth());
     }
 
     [Test]
     public void WhenPlayer_HasBurnOnBurnDamageHasBurnEffect__AppliesBurnDamage()
     {
         var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
-        
-        Whenever fireDamageAppliesBurn = new();
-        fireDamageAppliesBurn.SetTrigger(DamageType.FIRE);
-        fireDamageAppliesBurn.SetTarget(Target.Player);
-        BurnAction burnAction = new();
-        fireDamageAppliesBurn.effect += burnAction.Effect;
+
+        var wheneverFilter = new WheneverDamageFilter()
+        {
+            trigger = DamageType.FIRE,
+            targetType = Target.Player
+        };
+        Whenever fireDamageAppliesBurn = new(wheneverFilter, new BurnAction());
         turnManager.AddWhenever(fireDamageAppliesBurn);
 
         /* Code that would be applied by an attack action */
-        DamagePackage damagePackage = new();
-        damagePackage.damageType = DamageType.FIRE;
-        damagePackage.damageAmount = 1;
-        damagePackage.attacker = enemy;
-        damagePackage.target = player;
+        var damageCommand = CommandFactory.Damage(DamageType.FIRE, 1, player);
+        var initiator = CommandInitiatorFactory.From(enemy);
         
         turnManager.StartEnemyTurn();
-        turnManager.ApplyDamage(damagePackage);
-        Assert.AreEqual(9, player.health.GetCurrentHealth());
+        turnManager.InitiateCommand(damageCommand, initiator);
+        var playerData = turnManager.GetCombatantData(player);
+        Assert.AreEqual(9, playerData.GetCurrentHealth());
 
         /* Code that would be called by a turn manager */
         turnManager.StartPlayerTurn();
-        Assert.AreEqual(8, player.health.GetCurrentHealth());
+        Assert.AreEqual(8, playerData.GetCurrentHealth());
         turnManager.StartPlayerTurn();
-        Assert.AreEqual(7, player.health.GetCurrentHealth());
+        Assert.AreEqual(7, playerData.GetCurrentHealth());
         turnManager.StartPlayerTurn();
-        Assert.AreEqual(6, player.health.GetCurrentHealth());
+        Assert.AreEqual(6, playerData.GetCurrentHealth());
         turnManager.StartPlayerTurn();
         turnManager.StartPlayerTurn();
         turnManager.StartPlayerTurn();
         turnManager.StartPlayerTurn();
         turnManager.StartPlayerTurn();
         
-        Assert.AreEqual(6, player.health.GetCurrentHealth());
-        Assert.AreEqual(10, enemy.health.GetCurrentHealth());
+        var enemyData = turnManager.GetCombatantData(enemy);
+        Assert.AreEqual(6, playerData.GetCurrentHealth());
+        Assert.AreEqual(10, enemyData.GetCurrentHealth());
+    }
+
+    [Test]
+    public void When_PlayerDealsDamage__SpawnMeteorOnEnemy()
+    {
+        var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
+        
     }
 }

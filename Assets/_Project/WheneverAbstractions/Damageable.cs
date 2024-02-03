@@ -21,10 +21,31 @@ public struct DamageResistance
     public float resistance; // A number between 0 and 1
 }
 
+public interface IWorldCommand
+{
+    public CombatantId Target { get; }
+}
+
+public interface ICommandInitiator
+{
+    
+}
+
+public record CombatantCommandInitiator: ICommandInitiator
+{
+    public CombatantId Initiator { get; set; }
+}
+
 public struct DamagePackage
 {
     public DamageType damageType;
     public float damageAmount;
+    
+    public DamagePackage(DamageType damageType, float damageAmount)
+    {
+        this.damageType = damageType;
+        this.damageAmount = damageAmount;
+    }
 }
 
 public struct DamageContext

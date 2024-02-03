@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,14 +34,15 @@ public class Combatant : ICombatantData
     
     public void StartTurn()
     {
-        foreach(StatusEffect statusEffect in statusEffects.ToArray())
-        {
-            var statusEffectResult = statusEffect.ActivateOn(this);
-            if (statusEffectResult.completion == StatusEffectCompletion.Expired)
-            {
-                statusEffects.Remove(statusEffect);
-            }
-        }
+        throw new NotImplementedException();
+        // foreach(StatusEffect statusEffect in statusEffects.ToArray())
+        // {
+        //     var statusEffectResult = statusEffect.ActivateOn(this);
+        //     if (statusEffectResult.completion == StatusEffectCompletion.Expired)
+        //     {
+        //         statusEffects.Remove(statusEffect);
+        //     }
+        // }
     }
 
     public float GetCurrentHealth()

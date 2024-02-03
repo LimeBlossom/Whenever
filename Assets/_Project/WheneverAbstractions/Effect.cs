@@ -1,7 +1,9 @@
-﻿namespace _Project.WheneverAbstractions
+﻿using System.Collections.Generic;
+
+namespace _Project.WheneverAbstractions
 {
     public interface IEffect
     {
-        public void ApplyEffect(DamagePackage damagePackage, Combatant triggerTarget);
+        public IEnumerable<IWorldCommand> ApplyEffect(CombatantId triggerTarget);
     }
 }

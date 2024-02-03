@@ -1,4 +1,5 @@
 using System;
+using _Project.WheneverAbstractions;
 
 [Flags]
 public enum Target
@@ -10,42 +11,43 @@ public enum Target
 
 public class Whenever
 {
-    private WheneverFilter filter;
-    public delegate void Effect(DamagePackage damagePackage, Combatant triggerTarget);
-    public Effect effect;
+    private WheneverDamageFilter damageFilter;
+    private IEffect effect;
 
-    public void SetTrigger(DamageType trigger)
+    public Whenever(WheneverDamageFilter damageFilter, IEffect effect)
     {
-        this.filter.trigger = trigger;
-    }
-    
-    public void SetTarget(Target target)
-    {
-        this.filter.target = target;
+        this.damageFilter = damageFilter;
+        this.effect = effect;
     }
 
     public void TryTrigger(DamagePackage damagePackage, Combatant triggerTarget)
     {
-        if (triggerTarget != damagePackage.target) return;
-        
-        var targetEnumType = triggerTarget.combatantType switch
-        {
-            CombatantType.Player => Target.Player,
-            CombatantType.Enemy => Target.Enemy,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-        if((target & targetEnumType) == 0) return;
-        if (damagePackage.damageType != trigger) return;
-        
-            /*newDamagePackage =*/ effect?.Invoke(damagePackage, triggerTarget);
+        throw new NotImplementedException();
+        // if (triggerTarget != damagePackage.target) return;
+        //
+        // var targetEnumType = triggerTarget.combatantType switch
+        // {
+        //     CombatantType.Player => Target.Player,
+        //     CombatantType.Enemy => Target.Enemy,
+        //     _ => throw new ArgumentOutOfRangeException()
+        // };
+        // if((target & targetEnumType) == 0) return;
+        // if (damagePackage.damageType != trigger) return;
+        //
+        //     /*newDamagePackage =*/ effect?.Invoke(damagePackage, triggerTarget);
         // if success then WheneverManager.CheckWhenevers
     }
 }
 
-public class WheneverFilter
+public interface IWheneverFilter
+{
+    public bool TriggersOn(IWorldCommand command, ICommandInitiator initiator, GlobalCombatWorld world);
+}
+
+public class WheneverDamageFilter : IWheneverFilter
 {
     public DamageType trigger;
-    public Target target;
+    public Target targetType;
 
     public bool CanTrigger(DamagePackage damagePackage, DamageContext context, Combatant triggerTarget)
     {
@@ -57,8 +59,21 @@ public class WheneverFilter
             CombatantType.Enemy => Target.Enemy,
             _ => throw new ArgumentOutOfRangeException()
         };
-        if((target & targetEnumType) == 0) return false;
+        if((targetType & targetEnumType) == 0) return false;
         if (damagePackage.damageType != trigger) return false;
         return true;
+    }
+
+    public bool TriggersOn(IWorldCommand command, ICommandInitiator initiator, GlobalCombatWorld world)
+    {
+        if(command is DamageCommand damageCommand)
+        {
+            if(initiator is CombatantCommandInitiator combatantCommandInitiator)
+            {
+                var combatantData = world.GetCombatantData(damageCommand.Target);
+                return CanTrigger(damageCommand.damagePackage, combatantData., combatantCommandInitiator.Initiator);
+            }
+        }
+        throw new NotImplementedException();
     }
 }
