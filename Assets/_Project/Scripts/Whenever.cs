@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum Target
@@ -30,6 +28,5 @@ public class Whenever
     {
         if(damagePackage.damageType == trigger)
             /*newDamagePackage =*/ effect?.Invoke(damagePackage, owner);
-        // if success then WheneverManager.CheckWhenevers
     }
 }
