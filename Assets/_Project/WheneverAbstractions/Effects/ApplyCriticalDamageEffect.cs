@@ -5,7 +5,7 @@ using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {
-    public class ApplyCriticalDamageEffect: IEffect
+    public record ApplyCriticalDamageEffect: IEffect
     {
         public float critDamageMultiplier;
         public IEnumerable<IWorldCommand> ApplyEffect(InitiatedCommand command, IInspectableWorld world)

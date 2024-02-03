@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using WheneverAbstractions._Project.WheneverAbstractions.Commands;
+using Random = System.Random;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions
 {
@@ -52,11 +54,13 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
         /// </summary>
         public void StartPlayerTurn()
         {
+            Debug.Log("Starting player turn");
             GenerateAndApplyStatusEffectsFor(CombatantType.Player);
         }
 
         public void StartEnemyTurn()
         {
+            Debug.Log("Starting enemy turn");
             GenerateAndApplyStatusEffectsFor(CombatantType.Enemy);
         }
         
@@ -97,6 +101,7 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
                     }
                 }
                 
+                Debug.Log("Applying command: " + commandToExecute);
                 commandToExecute.command.ApplyCommand(commandableWorld);
             }
         }

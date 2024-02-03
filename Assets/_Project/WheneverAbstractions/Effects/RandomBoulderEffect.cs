@@ -6,7 +6,7 @@ using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {
-    public class RandomBoulderEffect: IEffect
+    public record RandomBoulderEffect: IEffect
     {
         private float meteorDamage;
 

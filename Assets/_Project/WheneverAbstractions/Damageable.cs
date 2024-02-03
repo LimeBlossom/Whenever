@@ -31,6 +31,11 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
             this.damageType = damageType;
             this.damageAmount = damageAmount;
         }
+
+        public override string ToString()
+        {
+            return $"Damage {damageAmount:F1} {damageType}";
+        }
     }
 
     public struct DamageContext

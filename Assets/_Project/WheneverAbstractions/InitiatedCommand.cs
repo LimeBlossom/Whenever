@@ -12,5 +12,10 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
             this.command = command;
             this.initiator = initiator;
         }
+        
+        public override string ToString()
+        {
+            return $"[{initiator}] -> [{command}]";
+        }
     }
 }

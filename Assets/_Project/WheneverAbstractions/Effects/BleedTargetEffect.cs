@@ -7,7 +7,7 @@ using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {
-    public class BleedTargetEffect: IEffect
+    public record BleedTargetEffect: IEffect
     {
         public float bleedDamage;
         public int turns;
@@ -20,7 +20,7 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
             }
 
             // Apply burn status effect to target
-            var bleedStatus = new BleedStatus(turns)
+            var bleedStatus = new BleedStatus(turns, command.initiator)
             {
                 damage = bleedDamage
             };

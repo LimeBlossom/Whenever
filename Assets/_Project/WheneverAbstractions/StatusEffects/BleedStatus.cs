@@ -4,10 +4,10 @@ using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.StatusEffects
 {
-    public class BleedStatus : StatusEffect
+    public record BleedStatus : StatusEffect
     {
         public float damage;
-        public BleedStatus(int turnsLeft) : base(turnsLeft)
+        public BleedStatus(int turnsLeft, ICommandInitiator initiator) : base(turnsLeft, initiator)
         {
         }
         public override StatusEffectResult ActivateOn(CombatantId target)

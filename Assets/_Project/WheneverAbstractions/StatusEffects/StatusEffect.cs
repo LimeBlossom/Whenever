@@ -15,13 +15,20 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.StatusEffects
         public IEnumerable<IWorldCommand> commands;
     }
 
-    public abstract class StatusEffect
+    public abstract record StatusEffect
     {
         private int turnsLeft;
+        private readonly ICommandInitiator initiator;
 
-        protected StatusEffect(int turnsLeft)
+        protected StatusEffect(int turnsLeft, ICommandInitiator initiator)
         {
             this.turnsLeft = turnsLeft;
+            this.initiator = initiator;
+        }
+        
+        public ICommandInitiator GetInitiator()
+        {
+            return initiator;
         }
 
         /// <summary>

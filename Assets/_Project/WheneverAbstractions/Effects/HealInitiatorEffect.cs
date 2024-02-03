@@ -6,7 +6,7 @@ using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {
-    public class HealInitiatorEffect: IEffect
+    public record HealInitiatorEffect: IEffect
     {
         private float healAmount;
 
@@ -17,9 +17,9 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 
         public IEnumerable<IWorldCommand> ApplyEffect(InitiatedCommand command, IInspectableWorld world)
         {
-            if (command.initiator is not CombatantCommandInitiator combatantCommandInitiator)
+            if (!command.initiator.TryAsOrRecursedFrom<CombatantCommandInitiator>(out var initiator))
             {
-                Debug.LogWarning("Heal effect can only be applied to combatants");
+                Debug.LogWarning("Heal effect can only be applied to initiators which came from combatants");
                 yield break;
             }
             var damagePackage = new DamagePackage
@@ -27,7 +27,7 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
                 damageAmount = -healAmount,
                 damageType = DamageType.HEAL
             };
-            yield return new DamageCommand(combatantCommandInitiator.Initiator, damagePackage);
+            yield return new DamageCommand(initiator.Initiator, damagePackage);
         }
     }
 }

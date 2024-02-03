@@ -8,10 +8,10 @@ using WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions
 {
-    public class Whenever
+    public record Whenever
     {
-        private IWheneverFilter filter;
-        private IEffect effect;
+        public IWheneverFilter filter;
+        public IEffect effect;
 
         public Whenever(IWheneverFilter filter, IEffect effect)
         {

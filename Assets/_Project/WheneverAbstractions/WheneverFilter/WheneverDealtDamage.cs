@@ -5,7 +5,7 @@ using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
 {
-    public class WheneverDealtDamage : IWheneverFilter
+    public record WheneverDealtDamage : IWheneverFilter
     {
         public DamageType validDamageType;
         public WheneverCombatantTypeFilter wheneverCombatantTypeFilterType;

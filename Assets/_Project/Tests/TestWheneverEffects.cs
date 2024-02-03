@@ -188,7 +188,7 @@ public class UnitTestExample
         var appliesCriticalDamage = new Whenever(wheneverPhysicalDamageTakenByEnemy, EffectFactory.CriticalDamage());
         turnManager.InitiateCommand(CmdFactory.Whenever(appliesCriticalDamage), InitiatorFactory.FromNone());
         
-        var wheneverCriticalDamageTakenByEnemy = WheneverFilterFactory.CreateDealsDamageFilter(
+        var wheneverCriticalDamageTakenByEnemy = WheneverFilterFactory.CreateDealtDamageFilter(
             DamageType.CRITICAL,
             WheneverCombatantTypeFilter.Enemy);
         var appliesBleedStatus = new Whenever(wheneverCriticalDamageTakenByEnemy, EffectFactory.BleedTarget(1, 3));

@@ -3,7 +3,7 @@ using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.Commands
 {
-    public class AddStatusEffectCommand: ITargetedWorldCommand
+    public record AddStatusEffectCommand: ITargetedWorldCommand
     {
         public CombatantId Target { get; }
         
