@@ -4,7 +4,6 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
 {
     public interface IWheneverFilter
     {
-        
-        public bool TriggersOn(IWorldCommand command, ICommandInitiator initiator, GlobalCombatWorld world);
+        public bool TriggersOn(InitiatedCommand initiatedCommand, IInspectableWorld world);
     }
 }

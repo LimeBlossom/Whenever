@@ -5,6 +5,6 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {
     public interface IEffect
     {
-        public IEnumerable<IWorldCommand> ApplyEffect(CombatantId triggerTarget);
+        public IEnumerable<IWorldCommand> ApplyEffect(InitiatedCommand command, IInspectableWorld world);
     }
 }

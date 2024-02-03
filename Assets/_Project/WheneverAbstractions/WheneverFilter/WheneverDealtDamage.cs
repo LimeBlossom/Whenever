@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
 using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 
@@ -9,10 +10,9 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
         public DamageType validDamageType;
         public WheneverCombatantTypeFilter wheneverCombatantTypeFilterType;
 
-        private bool CanTrigger(DamageCommand damageCommand, ICombatantData triggerTarget, CombatantId triggerTargetId)
+        private bool CanTrigger(DamagePackage damagePackage, ICombatantData triggerTarget)
         {
-            if(damageCommand.Target != triggerTargetId) return false;
-            if(damageCommand.damagePackage.damageType != validDamageType) return false;
+            if(damagePackage.damageType != validDamageType) return false;
         
             var targetEnumType = triggerTarget.GetCombatantType() switch
             {
@@ -24,17 +24,15 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
             return true;
         }
 
-        public bool TriggersOn(IWorldCommand command, ICommandInitiator initiator, GlobalCombatWorld world)
+        public bool TriggersOn(InitiatedCommand initiatedCommand, IInspectableWorld world)
         {
-            if(command is DamageCommand damageCommand)
+            if(initiatedCommand.command is DamageCommand damageCommand)
             {
-                if(initiator is CombatantCommandInitiator combatantCommandInitiator)
-                {
-                    var combatantData = world.CombatantData(combatantCommandInitiator.Initiator);
-                    return CanTrigger(damageCommand, combatantData, damageCommand.Target);
-                }
+                var targetData = world.CombatantData(damageCommand.Target);
+                return CanTrigger(damageCommand.damagePackage, targetData);
             }
-            throw new NotImplementedException();
+
+            return false;
         }
     }
 }

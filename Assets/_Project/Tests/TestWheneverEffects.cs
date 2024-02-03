@@ -23,7 +23,7 @@ public class UnitTestExample
         var player = new Combatant(10, CombatantType.Player);
         var enemy = new Combatant(10, CombatantType.Enemy);
         var combatants = new[] {player, enemy};
-        var turnManager = new GlobalCombatWorld(combatants.ToList());
+        var turnManager = new GlobalCombatWorld(combatants.ToList(), 197271);
 
         return (
             turnManager.GetOfType(CombatantType.Player).Single(),
@@ -61,7 +61,7 @@ public class UnitTestExample
         var wheneverFilter = WheneverFilterFactory.CreateDealtDamageFilter(
                 DamageType.FIRE,
                 WheneverCombatantTypeFilter.Player);
-        Whenever fireDamageAppliesBurn = new(wheneverFilter, EffectFactory.Burn());
+        Whenever fireDamageAppliesBurn = new(wheneverFilter, EffectFactory.BurnTarget());
         turnManager.InitiateCommand(
             CmdFactory.Whenever(fireDamageAppliesBurn),
             InitiatorFactory.FromNone());
@@ -103,7 +103,7 @@ public class UnitTestExample
         var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
             DamageType.PHYSICAL,
             WheneverCombatantTypeFilter.Player);
-        var healPlayer = new Whenever(wheneverPlayerDealsPhysical, EffectFactory.Heal(3));
+        var healPlayer = new Whenever(wheneverPlayerDealsPhysical, EffectFactory.HealInitiator(3));
         turnManager.InitiateCommand(CmdFactory.Whenever(healPlayer), InitiatorFactory.FromNone());
         
         // player takes damage
@@ -122,6 +122,28 @@ public class UnitTestExample
             InitiatorFactory.From(player));
         
         Assert.AreEqual(10, turnManager.CombatantData(player).CurrentHealth());
+        Assert.AreEqual(9, turnManager.CombatantData(enemy).CurrentHealth());
+    }
+    
+    [Test]
+    public void When_FireDamageTaken_RandomBoulderThrown()
+    {
+        var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
+        
+        // whenever anyone takes fire damage, throw a random boulder
+        var wheneverFireDamageTaken = WheneverFilterFactory.CreateDealtDamageFilter(
+            DamageType.FIRE,
+            WheneverCombatantTypeFilter.Any);
+        var randomMeteor = new Whenever(wheneverFireDamageTaken, EffectFactory.RandomBoulder(2));
+        turnManager.InitiateCommand(CmdFactory.Whenever(randomMeteor), InitiatorFactory.FromNone());
+        
+        // player deals fire damage, triggering a random meteor
+        turnManager.StartPlayerTurn();
+        turnManager.InitiateCommand(
+            CmdFactory.Damage(DamageType.FIRE, 1, enemy),
+            InitiatorFactory.From(player));
+        
+        Assert.AreEqual(8, turnManager.CombatantData(player).CurrentHealth());
         Assert.AreEqual(9, turnManager.CombatantData(enemy).CurrentHealth());
     }
 }

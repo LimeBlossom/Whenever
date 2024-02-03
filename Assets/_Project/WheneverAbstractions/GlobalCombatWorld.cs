@@ -5,13 +5,17 @@ using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions
 {
-    public class GlobalCombatWorld
+    public class GlobalCombatWorld : IInspectableWorld
     {
         private List<Whenever> whenevers = new();
         private Dictionary<CombatantId, Combatant> allCombatants;
+        private Random rng;
+        public Random GetRng() => rng;
         
-        public GlobalCombatWorld(List<Combatant> allCombatants)
+        public GlobalCombatWorld(List<Combatant> allCombatants, uint? seed = null)
         {
+            seed ??= (uint) DateTime.Now.Ticks;
+            rng = new Random((int) seed);
             this.allCombatants = new();
             var id = CombatantId.DEFAULT;
             foreach (var combatant in allCombatants)
@@ -27,6 +31,11 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
             return allCombatants
                 .Where(x => x.Value.combatantType == type)
                 .Select(x => x.Key);
+        }
+        
+        public IEnumerable<CombatantId> AllIds()
+        {
+            return allCombatants.Keys;
         }
 
         public ICombatantData CombatantData(CombatantId combatantId)
@@ -72,9 +81,24 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
         }
         public void InitiateCommand(InitiatedCommand command)
         {
-            //TODO: filter this through the whenever stack?
             var commandableWorld = new CommandableWorld(this);
-            command.command.ApplyCommand(commandableWorld);
+            
+            var initiatedCommandQueue = new Queue<InitiatedCommand>();
+            initiatedCommandQueue.Enqueue(command);
+            
+            while (initiatedCommandQueue.Count > 0)
+            {
+                var commandToExecute = initiatedCommandQueue.Dequeue();
+                foreach (var whenever in whenevers)
+                {
+                    foreach (var toQueue in whenever.GetTriggeredCommands(commandToExecute, this))
+                    {
+                        initiatedCommandQueue.Enqueue(toQueue);
+                    }
+                }
+                
+                commandToExecute.command.ApplyCommand(commandableWorld);
+            }
         }
 
         private class CommandableWorld : ICommandableWorld
@@ -102,5 +126,12 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
     {
         Combatant GetCombatantRaw(CombatantId combatantId);
         void AddWhenever(Whenever whenever);
-    } 
+    }
+
+    public interface IInspectableWorld
+    {
+        public ICombatantData CombatantData(CombatantId combatantId);
+        public IEnumerable<CombatantId> AllIds();
+        public Random GetRng();
+    }
 }

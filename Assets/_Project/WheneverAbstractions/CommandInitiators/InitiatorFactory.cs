@@ -16,6 +16,22 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators
         {
             return new StatusEffectCommandInitiator();
         }
+
+        public static ICommandInitiator FromEffectOf(ICommandInitiator previousInitiator)
+        {
+            if (previousInitiator is RecursiveEffectCommandInitiator recursiveInitiator)
+            {
+                return new RecursiveEffectCommandInitiator
+                {
+                    EffectDepth = recursiveInitiator.EffectDepth + 1
+                };
+            }
+
+            return new RecursiveEffectCommandInitiator
+            {
+                EffectDepth = 1
+            };
+        }
         
         public static ICommandInitiator FromNone(string description = "None")
         {

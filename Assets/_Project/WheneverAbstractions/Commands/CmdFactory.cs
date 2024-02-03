@@ -6,11 +6,7 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Commands
     {
         public static IWorldCommand Damage(DamageType type, int amount, CombatantId target)
         { 
-            return new DamageCommand()
-            {
-                damagePackage = new(type, amount),
-                Target = target
-            };
+            return new DamageCommand(target, new DamagePackage(type, amount));
         }
         
         public static IWorldCommand Status(CombatantId target, StatusEffect effect)

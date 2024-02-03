@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
+using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 using WheneverAbstractions._Project.WheneverAbstractions.Effects;
 using WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter;
 
@@ -15,22 +19,13 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
             this.effect = effect;
         }
 
-        public void TryTrigger(DamagePackage damagePackage, Combatant triggerTarget)
+        public IEnumerable<InitiatedCommand> GetTriggeredCommands(InitiatedCommand command, IInspectableWorld world)
         {
-            throw new NotImplementedException();
-            // if (triggerTarget != damagePackage.target) return;
-            //
-            // var targetEnumType = triggerTarget.combatantType switch
-            // {
-            //     CombatantType.Player => Target.Player,
-            //     CombatantType.Enemy => Target.Enemy,
-            //     _ => throw new ArgumentOutOfRangeException()
-            // };
-            // if((target & targetEnumType) == 0) return;
-            // if (damagePackage.damageType != trigger) return;
-            //
-            //     /*newDamagePackage =*/ effect?.Invoke(damagePackage, triggerTarget);
-            // if success then WheneverManager.CheckWhenevers
+            if (!filter.TriggersOn(command, world)) return Enumerable.Empty<InitiatedCommand>();
+
+            var nextInitiator = InitiatorFactory.FromEffectOf(command.initiator);
+            
+            return effect.ApplyEffect(command, world).Select(x => new InitiatedCommand(x, nextInitiator));
         }
     }
 }

@@ -21,11 +21,7 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.StatusEffects
             DamagePackage damagePackage = new();
             damagePackage.damageAmount = damage;
             damagePackage.damageType = DamageType.BURN;
-            var damageCommand = new DamageCommand()
-            {
-                damagePackage = damagePackage,
-                Target = target
-            };
+            var damageCommand = new DamageCommand(target, damagePackage);
 
             return new StatusEffectResult()
             {
