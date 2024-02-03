@@ -21,11 +21,6 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
         public float resistance; // A number between 0 and 1
     }
 
-    public interface ICommandInitiator
-    {
-    
-    }
-
     public struct DamagePackage
     {
         public DamageType damageType;

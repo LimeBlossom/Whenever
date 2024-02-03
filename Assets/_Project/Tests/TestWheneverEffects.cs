@@ -109,10 +109,10 @@ public class UnitTestExample
         // player takes damage
         turnManager.StartEnemyTurn();
         turnManager.InitiateCommand(
-            CmdFactory.Damage(DamageType.PHYSICAL, 1, player),
+            CmdFactory.Damage(DamageType.PHYSICAL, 4, player),
             InitiatorFactory.From(enemy));
         
-        Assert.AreEqual(9, turnManager.CombatantData(player).CurrentHealth());
+        Assert.AreEqual(6, turnManager.CombatantData(player).CurrentHealth());
         Assert.AreEqual(10, turnManager.CombatantData(enemy).CurrentHealth());
         
         // player deals damage
@@ -121,7 +121,7 @@ public class UnitTestExample
             CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
             InitiatorFactory.From(player));
         
-        Assert.AreEqual(10, turnManager.CombatantData(player).CurrentHealth());
+        Assert.AreEqual(9, turnManager.CombatantData(player).CurrentHealth());
         Assert.AreEqual(9, turnManager.CombatantData(enemy).CurrentHealth());
     }
     

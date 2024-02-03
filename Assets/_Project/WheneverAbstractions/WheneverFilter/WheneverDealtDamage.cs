@@ -10,11 +10,11 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
         public DamageType validDamageType;
         public WheneverCombatantTypeFilter wheneverCombatantTypeFilterType;
 
-        private bool CanTrigger(DamagePackage damagePackage, ICombatantData triggerTarget)
+        private bool CanTrigger(DamagePackage damagePackage, CombatantType combatantType)
         {
             if(damagePackage.damageType != validDamageType) return false;
         
-            var targetEnumType = triggerTarget.GetCombatantType() switch
+            var targetEnumType = combatantType switch
             {
                 CombatantType.Player => WheneverCombatantTypeFilter.Player,
                 CombatantType.Enemy => WheneverCombatantTypeFilter.Enemy,
@@ -28,7 +28,7 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
         {
             if(initiatedCommand.command is DamageCommand damageCommand)
             {
-                var targetData = world.CombatantData(damageCommand.Target);
+                var targetData = world.CombatantData(damageCommand.Target).GetCombatantType();
                 return CanTrigger(damageCommand.damagePackage, targetData);
             }
 
