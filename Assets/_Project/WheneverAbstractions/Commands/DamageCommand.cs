@@ -17,7 +17,7 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Commands
         {
             var target = world.GetCombatantRaw(Target);
             var withResistance = target.damageable.ApplyResistances(damagePackage);
-            target.health.Reduce(withResistance.damageAmount);
+            target.health.Change(withResistance.damageAmount);
         }
     }
 }

@@ -10,7 +10,18 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
             this.maxHealth = maxHealth;
             this.curHealth = maxHealth;
         }
-    
+
+        public void Change(float delta)
+        {
+            if (delta < 0)
+            {
+                Increase(-delta);
+            }
+            else
+            {
+                Reduce(delta);
+            }
+        }
         public void Reduce(float value)
         {
             curHealth -= value;

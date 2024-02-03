@@ -124,6 +124,36 @@ public class UnitTestExample
         Assert.AreEqual(9, turnManager.CombatantData(player).CurrentHealth());
         Assert.AreEqual(9, turnManager.CombatantData(enemy).CurrentHealth());
     }
+    [Test]
+    public void WhenPlayer_DealsDamage_HealsSelf_ToMaxHealth()
+    {
+        var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
+        
+        // whenever the player deals damage, heal the player
+        var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
+            DamageType.PHYSICAL,
+            WheneverCombatantTypeFilter.Player);
+        var healPlayer = new Whenever(wheneverPlayerDealsPhysical, EffectFactory.HealInitiator(3));
+        turnManager.InitiateCommand(CmdFactory.Whenever(healPlayer), InitiatorFactory.FromNone());
+        
+        // player takes damage
+        turnManager.StartEnemyTurn();
+        turnManager.InitiateCommand(
+            CmdFactory.Damage(DamageType.PHYSICAL, 1, player),
+            InitiatorFactory.From(enemy));
+        
+        Assert.AreEqual(9, turnManager.CombatantData(player).CurrentHealth());
+        Assert.AreEqual(10, turnManager.CombatantData(enemy).CurrentHealth());
+        
+        // player deals damage
+        turnManager.StartPlayerTurn();
+        turnManager.InitiateCommand(
+            CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
+            InitiatorFactory.From(player));
+        
+        Assert.AreEqual(10, turnManager.CombatantData(player).CurrentHealth());
+        Assert.AreEqual(9, turnManager.CombatantData(enemy).CurrentHealth());
+    }
     
     [Test]
     public void When_FireDamageTaken_RandomBoulderThrown()
