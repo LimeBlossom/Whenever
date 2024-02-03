@@ -4,10 +4,10 @@ using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.StatusEffects
 {
-    public class BurnStatus : StatusEffect
+    public class BleedStatus : StatusEffect
     {
         public float damage;
-        public BurnStatus(int turnsLeft) : base(turnsLeft)
+        public BleedStatus(int turnsLeft) : base(turnsLeft)
         {
         }
         public override StatusEffectResult ActivateOn(CombatantId target)
@@ -21,11 +21,9 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.StatusEffects
                 };
             }
 
-            DamagePackage damagePackage = new()
-            {
-                damageAmount = damage,
-                damageType = DamageType.BURN
-            };
+            DamagePackage damagePackage = new();
+            damagePackage.damageAmount = damage;
+            damagePackage.damageType = DamageType.BLEED;
             var damageCommand = new DamageCommand(target, damagePackage);
 
             return new StatusEffectResult()

@@ -17,30 +17,27 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.StatusEffects
 
     public abstract class StatusEffect
     {
-        public int turnsLeft;
-        public float damage;
+        private int turnsLeft;
+
+        protected StatusEffect(int turnsLeft)
+        {
+            this.turnsLeft = turnsLeft;
+        }
 
         /// <summary>
         /// returns true when 
         /// </summary>
         /// <returns></returns>
         public abstract StatusEffectResult ActivateOn(CombatantId target);
-        public virtual void SetDamage(float value)
-        {
-            damage = value;
-        }
 
-        public virtual void SetTurnsLeft(int value)
+        protected bool NextTurnIsExpired()
         {
-            turnsLeft = value;
-        }
-
-        public virtual bool IsExpired()
-        {
-            if(turnsLeft <= 0)
+            if (turnsLeft <= 0)
             {
                 return true;
             }
+
+            turnsLeft--;
             return false;
         }
     }
