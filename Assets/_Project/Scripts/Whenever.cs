@@ -5,20 +5,19 @@ using UnityEngine;
 
 public enum Target
 {
-    EVOKER,
-    TARGET,
-    ALL
+    ATTACKER,
+    TARGET
 }
 
 [Serializable]
 public class Whenever
 {
     [SerializeField] private DamageType trigger;
-    [SerializeField] private bool onEnemy;
+    public string effectName;
     [SerializeField] private Target target;
     [SerializeField] private int maxDistance;
 
-    public delegate void Effect(DamagePackage damagePackage, Combatant owner);
+    public delegate void Effect(DamagePackage damagePackage, Combatant owner, Target target);
     public Effect effect;
 
     public void SetTrigger(DamageType trigger)
@@ -26,10 +25,15 @@ public class Whenever
         this.trigger = trigger;
     }
 
+    public void SetTarget(Target target)
+    {
+        this.target = target;
+    }
+
     public void TryTrigger(DamagePackage damagePackage, Combatant owner)
     {
         if(damagePackage.damageType == trigger)
-            /*newDamagePackage =*/ effect?.Invoke(damagePackage, owner);
-        // if success then WheneverManager.CheckWhenevers
+          effect?.Invoke(damagePackage, owner, target);
+        // if success then WheneverManager.CheckWhenevers?
     }
 }

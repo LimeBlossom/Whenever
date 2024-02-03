@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,9 +8,10 @@ public abstract class StatusEffect
     public int turnsLeft;
     public float damage;
     // DamageType?
-    public Combatant combatant;
+    public Combatant self;
+    public Combatant originator;
 
-    public abstract bool Activate();
+    public abstract void Activate();
     public virtual void SetDamage(float value)
     {
         damage = value;

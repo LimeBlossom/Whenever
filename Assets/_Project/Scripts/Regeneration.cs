@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Regeneration : StatusEffect
 {
-    public override bool Activate()
+    public override void Activate()
     {
         if (turnsLeft > 0)
         {
@@ -13,13 +13,10 @@ public class Regeneration : StatusEffect
             DamagePackage damagePackage = new();
             damagePackage.damageAmount = -damage;
             damagePackage.damageType = DamageType.HEAL;
-            damagePackage.attacker = combatant;
-            damagePackage.target = combatant;
+            damagePackage.attacker = originator;
+            damagePackage.target = self;
 
-            combatant.damageable.TakeDamage(ref damagePackage);
-            combatant.wheneverManager.CheckWhenevers(damagePackage, combatant);
+            self.damageable.TakeDamage(ref damagePackage);
         }
-
-        return IsExpired();
     }
 }

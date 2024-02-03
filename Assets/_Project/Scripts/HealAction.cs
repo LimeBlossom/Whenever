@@ -6,14 +6,23 @@ public class HealAction
 {
     public int healAmount;
 
-    public void Effect(DamagePackage damagePackage, Combatant owner)
+    public void Effect(DamagePackage damagePackage, Combatant owner, Target target)
     {
         DamagePackage damagePack = new();
         damagePack.damageType = DamageType.HEAL;
         damagePack.damageAmount = -healAmount;
-        damagePack.attacker = owner;
-        damagePack.target = owner;
 
-        owner.damageable.TakeDamage(ref damagePack);
+        if (target == Target.ATTACKER)
+        {
+            damagePack.attacker = damagePackage.attacker;
+            damagePack.target = damagePackage.attacker;
+            damagePack.attacker.damageable.TakeDamage(ref damagePack);
+        }
+        if (target == Target.TARGET)
+        {
+            damagePack.attacker = damagePackage.target;
+            damagePack.target = damagePackage.target;
+            damagePack.attacker.damageable.TakeDamage(ref damagePack);
+        }
     }
 }

@@ -39,10 +39,20 @@ public class Damageable : MonoBehaviour, IDamageable
 
     public void TakeDamage(ref DamagePackage damagePackage)
     {
+        print($"{gameObject.name} took {damagePackage.damageAmount} {damagePackage.damageType} damage");
         float damageResistance = FindResistanceOfType(damagePackage.damageType).resistance;
 
         float damage = damagePackage.damageAmount * (1 - damageResistance);
-        damagePackage.target.health.Reduce(damage);
+        if(damage > 0)
+        {
+            damagePackage.target.health.Reduce(damage);
+        }
+        else if(damage < 0)
+        {
+            damagePackage.target.health.Increase(-damage);
+        }
+        damagePackage.attacker.wheneverManager.CheckWhenevers(damagePackage, damagePackage.attacker);
+        damagePackage.target.wheneverManager.CheckWhenevers(damagePackage, damagePackage.target);
     }
 
     private DamageResistance FindResistanceOfType(DamageType damageType)

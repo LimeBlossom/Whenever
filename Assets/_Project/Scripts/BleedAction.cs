@@ -2,29 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BurnAction
+public class BleedAction
 {
     public void Effect(DamagePackage damagePackage, Combatant owner, Target target)
     {
-        // Apply burn status effect to target
-        Burn burn = new();
+        // Apply bleed status effect to target
+        Bleed bleed = new();
         if (target == Target.TARGET)
         {
-            burn.self = damagePackage.target;
-            burn.originator = damagePackage.attacker;
+            bleed.self = damagePackage.target;
+            bleed.originator = damagePackage.attacker;
         }
-        if(target == Target.ATTACKER)
+        if (target == Target.ATTACKER)
         {
-            burn.self = damagePackage.attacker;
-            burn.originator = damagePackage.attacker;
+            bleed.self = damagePackage.attacker;
+            bleed.originator = damagePackage.attacker;
         }
-        burn.damage = 1;
-        burn.turnsLeft = 3;
-        damagePackage.target.statusEffects.Add(burn);
+        bleed.damage = 1;
+        bleed.turnsLeft = 3;
+        damagePackage.target.statusEffects.Add(bleed);
     }
 }
 
-public class Burn : StatusEffect
+public class Bleed : StatusEffect
 {
     public override void Activate()
     {
@@ -34,7 +34,7 @@ public class Burn : StatusEffect
 
             DamagePackage damagePackage = new();
             damagePackage.damageAmount = damage;
-            damagePackage.damageType = DamageType.BURN;
+            damagePackage.damageType = DamageType.BLEED;
             damagePackage.attacker = originator;
             damagePackage.target = self;
 
