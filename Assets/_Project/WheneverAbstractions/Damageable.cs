@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,18 +25,40 @@ public struct DamagePackage
 {
     public DamageType damageType;
     public float damageAmount;
-    public Combatant attacker;
-    public Combatant target;
 }
 
 public struct DamageContext
 {
+    public DamageSource attacker;
+    public ICombatantData target;
+}
+
+public enum DamageSourceType
+{
+    Combatant,
+    Effect
+}
+public struct DamageSource
+{
+    public DamageSourceType sourceType;
+    private ICombatantData attacker;
+    private int effectRecursionDepth;
     
+    public ICombatantData GetAttacker()
+    {
+        if (sourceType != DamageSourceType.Combatant) throw new InvalidOperationException();
+        return attacker;
+    }
+    public int GetEffectData()
+    {
+        if (sourceType != DamageSourceType.Effect) throw new InvalidOperationException();
+        return effectRecursionDepth;
+    }
 }
 
 public interface IDamageable
 {
-    public void TakeDamage(ref DamagePackage damagePackage);
+    public DamagePackage ApplyResistances(DamagePackage damagePackage);
 }
 
 public class Damageable : IDamageable
@@ -47,12 +70,14 @@ public class Damageable : IDamageable
         damageResistances = new List<DamageResistance>();
     }
     
-    public void TakeDamage(ref DamagePackage damagePackage)
+    public DamagePackage ApplyResistances(DamagePackage damagePackage)
     {
         float damageResistance = FindResistanceOfType(damagePackage.damageType).resistance;
 
         float damage = damagePackage.damageAmount * (1 - damageResistance);
-        damagePackage.target.health.Reduce(damage);
+        
+        damagePackage.damageAmount = damage;
+        return damagePackage;
     }
 
     private DamageResistance FindResistanceOfType(DamageType damageType)

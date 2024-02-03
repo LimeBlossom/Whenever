@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using _Project.WheneverAbstractions;
 using UnityEngine;
 
-public class BurnAction
+public class BurnAction: IEffect
 {
-    public void Effect(DamagePackage damagePackage, Combatant triggerTarget)
+    public void ApplyEffect(DamagePackage damagePackage, Combatant triggerTarget)
     {
         // Apply burn status effect to target
         Burn burn = new();
