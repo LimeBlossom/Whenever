@@ -1,4 +1,6 @@
-﻿namespace WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators
+﻿using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
+
+namespace WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators
 {
     public static class InitiatorFactory
     {
@@ -8,6 +10,11 @@
             {
                 Initiator = combatantId,
             };
+        }
+
+        public static ICommandInitiator From(StatusEffect statusEffect)
+        {
+            return new StatusEffectCommandInitiator();
         }
         
         public static ICommandInitiator FromNone(string description = "None")

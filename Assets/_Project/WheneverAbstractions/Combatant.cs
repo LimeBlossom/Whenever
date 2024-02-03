@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
+using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions
@@ -17,7 +19,7 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
         public Vector2 GetPosition();
         public CombatantType GetCombatantType();
     }
-
+    
     public class Combatant : ICombatantData
     {
         public Health health;
@@ -35,17 +37,20 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
             this.position = new Vector2();
         }
     
-        public void StartTurn()
+        public IEnumerable<InitiatedCommand> ApplyStatusEffects(CombatantId myId)
         {
-            throw new NotImplementedException();
-            // foreach(StatusEffect statusEffect in statusEffects.ToArray())
-            // {
-            //     var statusEffectResult = statusEffect.ActivateOn(this);
-            //     if (statusEffectResult.completion == StatusEffectCompletion.Expired)
-            //     {
-            //         statusEffects.Remove(statusEffect);
-            //     }
-            // }
+            foreach(StatusEffect statusEffect in statusEffects.ToArray())
+            {
+                var statusEffectResult = statusEffect.ActivateOn(myId);
+                if (statusEffectResult.completion == StatusEffectCompletion.Expired)
+                {
+                    statusEffects.Remove(statusEffect);
+                }
+                foreach (var command in statusEffectResult.commands)
+                {
+                    yield return new InitiatedCommand(command, InitiatorFactory.From(statusEffect));
+                }
+            }
         }
 
         public float CurrentHealth()

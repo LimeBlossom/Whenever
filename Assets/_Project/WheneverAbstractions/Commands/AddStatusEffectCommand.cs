@@ -12,5 +12,11 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Commands
             Target = target;
             statusEffect = effect;
         }
+
+        public void ApplyCommand(ICommandableWorld world)
+        {
+            var target = world.GetCombatantRaw(Target);
+            target.statusEffects.Add(statusEffect);
+        }
     }
 }

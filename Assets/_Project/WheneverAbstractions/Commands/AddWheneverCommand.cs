@@ -8,5 +8,10 @@
         {
             this.whenever = whenever;
         }
+
+        public void ApplyCommand(ICommandableWorld world)
+        {
+            world.AddWhenever(whenever);
+        }
     }
 }

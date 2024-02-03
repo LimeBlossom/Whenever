@@ -26,10 +26,10 @@ public class UnitTestExample
         var turnManager = new GlobalCombatWorld(combatants.ToList());
 
         return (
-            turnManager.GetPlayers().Single(),
-            turnManager.GetEnemies().Single(), 
+            turnManager.GetOfType(CombatantType.Player).Single(),
+            turnManager.GetOfType(CombatantType.Enemy).Single(), 
             turnManager);
-    }    
+    }
 
 
     [Test]
@@ -37,22 +37,12 @@ public class UnitTestExample
     {
         var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
         
-        /* Code that would be applied by an attack action */
-        var damageCommand = new DamageCommand()
-        {
-            damagePackage = new(DamageType.FIRE, 1),
-            Target = player
-        };
-
-        var initiator = new CombatantCommandInitiator()
-        {
-            Initiator = enemy
-        };
-        
-
         /* Code that would be called by a turn manager */
         turnManager.StartEnemyTurn();
-        turnManager.InitiateCommand(damageCommand,initiator);
+        
+        turnManager.InitiateCommand(
+            CmdFactory.Damage(DamageType.FIRE, 1, player),
+            InitiatorFactory.From(enemy));
         turnManager.StartPlayerTurn();
 
 
@@ -72,15 +62,17 @@ public class UnitTestExample
                 DamageType.FIRE,
                 WheneverCombatantTypeFilter.Player);
         Whenever fireDamageAppliesBurn = new(wheneverFilter, EffectFactory.Burn());
-        var addWheneverCommand = CmdFactory.Whenever(fireDamageAppliesBurn);
-        turnManager.InitiateCommand(addWheneverCommand, InitiatorFactory.FromNone());
+        turnManager.InitiateCommand(
+            CmdFactory.Whenever(fireDamageAppliesBurn),
+            InitiatorFactory.FromNone());
 
         /* Code that would be applied by an attack action */
-        var damageCommand = CmdFactory.Damage(DamageType.FIRE, 1, player);
-        var initiator = InitiatorFactory.From(enemy);
         
         turnManager.StartEnemyTurn();
-        turnManager.InitiateCommand(damageCommand, initiator);
+        
+        turnManager.InitiateCommand(
+            CmdFactory.Damage(DamageType.FIRE, 1, player),
+            InitiatorFactory.From(enemy));
         var playerData = turnManager.CombatantData(player);
         Assert.AreEqual(9, playerData.CurrentHealth());
 
