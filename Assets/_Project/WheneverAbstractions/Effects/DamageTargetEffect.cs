@@ -4,19 +4,13 @@ using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {
-    public record DamageTargetEffect: IEffect
+    public record DamageTargetEffect: EffectTargetEffect
     {
         public DamagePackage damagePackage;
-        public IEnumerable<IWorldCommand> ApplyEffect(InitiatedCommand command, IInspectableWorld world)
+
+        protected override IEnumerable<IWorldCommand> ApplyEffectToTarget(CombatantId target, IInspectableWorld world)
         {
-            if (command.command is not ITargetedWorldCommand targetedCommand)
-            {
-                Debug.LogWarning("Damage target effect can only apply on commands that target at least one combatant");
-                yield break;
-            }
-            
-            // Apply damage to target
-            yield return new DamageCommand(targetedCommand.Target, damagePackage);
+            yield return new DamageCommand(target, damagePackage);
         }
     }
 }

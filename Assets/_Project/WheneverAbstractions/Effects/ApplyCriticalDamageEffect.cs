@@ -7,6 +7,7 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
     public record ApplyCriticalDamageEffect: IEffect
     {
         public float critDamageMultiplier;
+
         public IEnumerable<IWorldCommand> ApplyEffect(InitiatedCommand command, IInspectableWorld world)
         {
             if (command.command is not DamageCommand targetedCommand)
