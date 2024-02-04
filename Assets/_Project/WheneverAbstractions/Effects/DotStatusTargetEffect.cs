@@ -5,8 +5,10 @@ using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {
-    public record BurnTargetEffect: IEffect
+    public record DotStatusTargetEffect: IEffect
     {
+        public DamagePackage damagePackage;
+        public int turns;
         public IEnumerable<IWorldCommand> ApplyEffect(InitiatedCommand command, IInspectableWorld world)
         {
             if (command.command is not ITargetedWorldCommand targetedCommand)
@@ -15,10 +17,9 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
                 yield break;
             }
 
-            // Apply burn status effect to target
-            var status = new DotStatus(3, command.initiator)
+            var status = new DotStatus(turns, command.initiator)
             {
-                damagePackage = new (DamageType.BURN, 1)
+                damagePackage = damagePackage
             };
             yield return new AddStatusEffectCommand(targetedCommand.Target, status);
         }

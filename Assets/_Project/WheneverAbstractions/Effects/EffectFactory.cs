@@ -5,15 +5,19 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {
     public static class EffectFactory
     {
-        public static IEffect BurnTarget()
+        public static IEffect BurnTarget(float damage = 1, int turns = 3)
         {
-            return new BurnTargetEffect();
+            return new DotStatusTargetEffect
+            {
+                damagePackage = new (DamageType.BURN,  damage),
+                turns = turns
+            };
         }
         public static IEffect BleedTarget(float bleedDamage, int turns)
         {
-            return new BleedTargetEffect
+            return new DotStatusTargetEffect
             {
-                bleedDamage = bleedDamage,
+                damagePackage = new (DamageType.BLEED, bleedDamage),
                 turns = turns
             };
         }
