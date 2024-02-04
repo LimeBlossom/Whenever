@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
 using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 using Random = System.Random;
 
@@ -90,12 +91,22 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
             var initiatedCommandQueue = new Queue<InitiatedCommand>();
             initiatedCommandQueue.Enqueue(command);
             
+            var wheneversRemaining = whenevers.ToList();
             while (initiatedCommandQueue.Count > 0)
             {
                 var commandToExecute = initiatedCommandQueue.Dequeue();
-                foreach (var whenever in whenevers)
+                if (commandToExecute.initiator is RecursiveEffectCommandInitiator { EffectDepth: > 1000 })
                 {
-                    foreach (var toQueue in whenever.GetTriggeredCommands(commandToExecute, this))
+                    throw new Exception("Recursion depth exceeded 1000, likely infinite loop in effect. Aborting.");
+                }
+                foreach (var whenever in wheneversRemaining.ToList())
+                {
+                    var triggers = whenever.GetTriggeredCommands(commandToExecute, this).ToList();
+                    if (triggers.Any())
+                    {
+                        wheneversRemaining.Remove(whenever);
+                    }
+                    foreach (var toQueue in triggers)
                     {
                         initiatedCommandQueue.Enqueue(toQueue);
                     }

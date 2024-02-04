@@ -5,6 +5,7 @@ using WheneverAbstractions._Project.WheneverAbstractions;
 using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
 using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 using WheneverAbstractions._Project.WheneverAbstractions.Effects;
+using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 using WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter;
 
 public class UnitTestExample
@@ -238,4 +239,81 @@ public class UnitTestExample
         Assert.AreEqual(8, playerData.CurrentHealth());
         Assert.AreEqual(5, enemyData.CurrentHealth());
     }
+
+    [Test]
+    public void When_PlayerAppliesBleedToEnemy_TakesPhysicalDamage()
+    {
+        var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
+        
+        var wheneverPhysicalDamageTakenByEnemy = WheneverFilterFactory.CreateDealtDamageFilter(
+            DamageType.PHYSICAL,
+            WheneverCombatantTypeFilter.Enemy);
+        var appliesBleedStatus = new Whenever(wheneverPhysicalDamageTakenByEnemy, EffectFactory.BleedTarget(1, 3));
+        turnManager.InitiateCommand(CmdFactory.Whenever(appliesBleedStatus), InitiatorFactory.FromNone());
+        
+        var wheneverBleedInflictedOnEnemy = WheneverFilterFactory.CreateStatusEffectInflictedFilter(
+            typeof(BleedStatus),
+            WheneverCombatantTypeFilter.Enemy);
+        var appliesPhysicalDamageToInitiator = new Whenever(wheneverBleedInflictedOnEnemy, EffectFactory.DamageInitiator(DamageType.PHYSICAL, 1));
+        turnManager.InitiateCommand(CmdFactory.Whenever(appliesPhysicalDamageToInitiator), InitiatorFactory.FromNone());
+        
+        var playerData = turnManager.CombatantData(player);
+        var enemyData = turnManager.CombatantData(enemy);
+        
+        turnManager.StartPlayerTurn();
+        turnManager.InitiateCommand(
+            CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
+            InitiatorFactory.From(player));
+        Assert.AreEqual(9, playerData.CurrentHealth());
+        Assert.AreEqual(9, enemyData.CurrentHealth());
+        
+        turnManager.StartEnemyTurn();
+        turnManager.StartPlayerTurn();
+        Assert.AreEqual(9, playerData.CurrentHealth());
+        Assert.AreEqual(8, enemyData.CurrentHealth());
+        
+        turnManager.StartEnemyTurn();
+        turnManager.StartPlayerTurn();
+        Assert.AreEqual(9, playerData.CurrentHealth());
+        Assert.AreEqual(7, enemyData.CurrentHealth());
+        
+        turnManager.StartEnemyTurn();
+        turnManager.StartPlayerTurn();
+        Assert.AreEqual(9, playerData.CurrentHealth());
+        Assert.AreEqual(6, enemyData.CurrentHealth());
+        
+        turnManager.StartEnemyTurn();
+        turnManager.StartPlayerTurn();
+        Assert.AreEqual(9, playerData.CurrentHealth());
+        Assert.AreEqual(6, enemyData.CurrentHealth());
+    }
+    [Test]
+    public void When_PhysicalDamageOnEnemy_TriggerPhysicalDamageOnEnemy_OnlyAppliesOnce()
+    {
+        var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
+        
+        var wheneverPhysicalDamageTakenByEnemy = WheneverFilterFactory.CreateDealtDamageFilter(
+            DamageType.PHYSICAL,
+            WheneverCombatantTypeFilter.Enemy);
+        var appliesPhysicalDamage = new Whenever(wheneverPhysicalDamageTakenByEnemy, EffectFactory.DamageTarget(DamageType.PHYSICAL, 1));
+        turnManager.InitiateCommand(CmdFactory.Whenever(appliesPhysicalDamage), InitiatorFactory.FromNone());
+        
+        var playerData = turnManager.CombatantData(player);
+        var enemyData = turnManager.CombatantData(enemy);
+        
+        turnManager.StartPlayerTurn();
+        turnManager.InitiateCommand(
+            CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
+            InitiatorFactory.From(player));
+        
+        Assert.AreEqual(10, playerData.CurrentHealth());
+        Assert.AreEqual(8, enemyData.CurrentHealth());
+        
+        turnManager.StartEnemyTurn();
+        turnManager.StartPlayerTurn();
+        Assert.AreEqual(10, playerData.CurrentHealth());
+        Assert.AreEqual(8, enemyData.CurrentHealth());
+
+    }
+
 }

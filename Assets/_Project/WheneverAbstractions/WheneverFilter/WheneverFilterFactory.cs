@@ -1,4 +1,6 @@
-﻿namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
+﻿using System;
+
+namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
 {
     public static class WheneverFilterFactory
     {
@@ -21,6 +23,17 @@
             return new WheneverDealsDamage
             {
                 validDamageType = validDamageType,
+                wheneverCombatantTypeFilterType = wheneverCombatantTypeFilterType
+            };
+        }
+        
+        public static IWheneverFilter CreateStatusEffectInflictedFilter(
+            Type statusEffectType,
+            WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
+        {
+            return new WheneverStatusInflicted()
+            {
+                statusEffectType = statusEffectType,
                 wheneverCombatantTypeFilterType = wheneverCombatantTypeFilterType
             };
         }

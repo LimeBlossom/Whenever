@@ -35,5 +35,20 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
             };
         }
         
+        public static IEffect DamageTarget(DamageType damageType, float damageAmount)
+        {
+            return new DamageTargetEffect
+            {
+                damagePackage = new(damageType, damageAmount)
+            };
+        }
+        public static IEffect DamageInitiator(DamageType damageType, float damageAmount)
+        {
+            return new DamageInitiatorEffect
+            {
+                damagePackage = new(damageType, damageAmount)
+            };
+        }
+        
     }
 }
