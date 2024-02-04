@@ -28,13 +28,13 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
         public CombatantType combatantType;
         public Vector2 position;
 
-        public Combatant(int maxHealth, CombatantType type)
+        public Combatant(int maxHealth, CombatantType type, Vector2 position = default)
         {
             this.health = new Health(maxHealth);
             this.damageable = new Damageable();
             this.combatantType = type;
         
-            this.position = new Vector2();
+            this.position = position;
         }
     
         public IEnumerable<InitiatedCommand> ApplyStatusEffects(CombatantId myId)

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using WheneverAbstractions._Project.WheneverAbstractions;
 using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
 using WheneverAbstractions._Project.WheneverAbstractions.Commands;
+using WheneverAbstractions._Project.WheneverAbstractions.PrimitiveUtilities;
 using Random = System.Random;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions
@@ -14,7 +16,14 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
         private Dictionary<CombatantId, Combatant> allCombatants;
         private Random rng;
         public Random GetRng() => rng;
-        
+        public CombatantId GetAtLocation(Vector2 location)
+        {
+            return allCombatants
+                .Where(x => x.Value.position == location)
+                .Select(x => x.Key)
+                .SingleOrDefault();
+        }
+
         public GlobalCombatWorld(List<Combatant> allCombatants, uint? seed = null)
         {
             seed ??= (uint) DateTime.Now.Ticks;
@@ -149,5 +158,20 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
         public ICombatantData CombatantData(CombatantId combatantId);
         public IEnumerable<CombatantId> AllIds();
         public Random GetRng();
+        
+        public CombatantId GetAtLocation(Vector2 location);
+        
+    }
+}
+
+public static class InspectableWorldExtensions{
+
+    public static IEnumerable<CombatantId> GetAdjacentCombatants(this IInspectableWorld world, CombatantId combatantId)
+    {
+        var combatantData = world.CombatantData(combatantId);
+        var adjacentTiles = VectorExtensions.GetAdjacentTiles(combatantData.GetPosition());
+        return adjacentTiles
+            .Select(world.GetAtLocation)
+            .Where(x => x != CombatantId.INVALID);
     }
 }

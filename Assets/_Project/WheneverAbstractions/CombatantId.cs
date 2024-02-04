@@ -5,7 +5,8 @@
     
         private readonly int id;
     
-        public static readonly CombatantId DEFAULT = new CombatantId(0);
+        public static readonly CombatantId DEFAULT = new CombatantId(1);
+        public static readonly CombatantId INVALID = default;
     
         public static CombatantId Next(CombatantId id)
         {

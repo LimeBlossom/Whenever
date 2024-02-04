@@ -287,6 +287,7 @@ public class UnitTestExample
         Assert.AreEqual(9, playerData.CurrentHealth());
         Assert.AreEqual(6, enemyData.CurrentHealth());
     }
+    
     [Test]
     public void When_PhysicalDamageOnEnemy_TriggerPhysicalDamageOnEnemy_OnlyAppliesOnce()
     {
@@ -313,7 +314,54 @@ public class UnitTestExample
         turnManager.StartPlayerTurn();
         Assert.AreEqual(10, playerData.CurrentHealth());
         Assert.AreEqual(8, enemyData.CurrentHealth());
+    }
+    
+    [Test]
+    public void When_PlayerDealsPhysicalDamage_AdjacentEnemiesTakePhysicalDamage(){
+        GlobalCombatWorld GenerateWorld()
+        {
+            var playerData = new Combatant(10, CombatantType.Player, new (0, 0));
+            var enemies = new Vector2[]
+            {
+                new(3, 3),
+                new(3, 4),
+                new(4, 3),
+                new(2, 3),
 
+                new(1, 1),
+                new(2, 2),
+                new(4, 2),
+            }.Select(x => new Combatant(10, CombatantType.Enemy, x)).ToArray();
+        
+            return new GlobalCombatWorld(new[] {playerData}.Concat(enemies).ToList(), 197271);   
+        }
+        var turnManager = GenerateWorld();
+        float GetHealthOf(float x, float y) => turnManager.CombatantData(turnManager.GetAtLocation(new (x, y))).CurrentHealth();
+        
+        var playerId = turnManager.GetAtLocation(new(0, 0));
+        
+        var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
+            DamageType.PHYSICAL,
+            WheneverCombatantTypeFilter.Player);
+        var appliesPhysicalDamage = new Whenever(wheneverPlayerDealsPhysical, EffectFactory.DamageAdjacentTargets(DamageType.PHYSICAL, 1));
+        turnManager.InitiateCommand(CmdFactory.Whenever(appliesPhysicalDamage), InitiatorFactory.FromNone());
+        
+        turnManager.StartPlayerTurn();
+        turnManager.InitiateCommand(
+            CmdFactory.Damage(DamageType.PHYSICAL, 1, turnManager.GetAtLocation(new (3, 3))),
+            InitiatorFactory.From(playerId));
+        
+        Assert.AreEqual(9, GetHealthOf(3, 3));
+        Assert.AreEqual(9, GetHealthOf(3, 4));
+        Assert.AreEqual(9, GetHealthOf(4, 3));
+        Assert.AreEqual(9, GetHealthOf(2, 3));
+        
+        Assert.AreEqual(10, GetHealthOf(1, 1));
+        Assert.AreEqual(10, GetHealthOf(2, 2));
+        Assert.AreEqual(10, GetHealthOf(4, 2));
+        
+        Assert.AreEqual(10, GetHealthOf(0, 0));
+        
     }
 
 }

@@ -49,6 +49,14 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
                 damagePackage = new(damageType, damageAmount)
             };
         }
-        
+
+        public static IEffect DamageAdjacentTargets(DamageType type, float damageAmount)
+        {
+            return new DamageAdjacentToTargetEffect
+            {
+                damageAmount = damageAmount,
+                damageType = type
+            };
+        }
     }
 }
