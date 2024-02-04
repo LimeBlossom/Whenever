@@ -7,33 +7,30 @@
             DamageType validDamageType,
             WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
-            return new WheneverDealtDamage
-            {
-                validDamageType = validDamageType,
-                wheneverCombatantTypeFilterType = wheneverCombatantTypeFilterType
-            };
+            return new CompositeWheneverFilter(
+                new DamageIsOfType(validDamageType),
+                new TargetIsOfType(wheneverCombatantTypeFilterType)
+            );
         }
         
         public static IWheneverFilter CreateDealsDamageFilter(
             DamageType validDamageType,
             WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
-            return new WheneverDealsDamage
-            {
-                validDamageType = validDamageType,
-                wheneverCombatantTypeFilterType = wheneverCombatantTypeFilterType
-            };
+            return new CompositeWheneverFilter(
+                new DamageIsOfType(validDamageType),
+                new InitiatorIsOfType(wheneverCombatantTypeFilterType)
+            );
         }
         
         public static IWheneverFilter CreateDotStatusEffectInflictedFilter(
             DamageType dotDamageType,
             WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
-            return new WheneverStatusInflicted()
-            {
-                dotDamageType = dotDamageType,
-                wheneverCombatantTypeFilterType = wheneverCombatantTypeFilterType
-            };
+            return new CompositeWheneverFilter(
+                new DotStatusIsOfType(dotDamageType),
+                new TargetIsOfType(wheneverCombatantTypeFilterType)
+            );
         }
         
     }
