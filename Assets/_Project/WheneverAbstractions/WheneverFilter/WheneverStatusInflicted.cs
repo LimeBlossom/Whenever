@@ -8,12 +8,13 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
 {
     public record WheneverStatusInflicted : IWheneverFilter
     {
-        public Type statusEffectType;
+        public DamageType dotDamageType;
         public WheneverCombatantTypeFilter wheneverCombatantTypeFilterType;
 
         private bool CanTrigger(StatusEffect statusEffect, CombatantType combatantType)
         {
-            if (!statusEffectType.IsInstanceOfType(statusEffect)) return false;
+            if (statusEffect is not DotStatus dotStatus) return false;
+            if (dotStatus.damagePackage.damageType != dotDamageType) return false;
         
             var targetEnumType = combatantType switch
             {

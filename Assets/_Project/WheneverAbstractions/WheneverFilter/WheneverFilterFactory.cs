@@ -27,13 +27,13 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
             };
         }
         
-        public static IWheneverFilter CreateStatusEffectInflictedFilter(
-            Type statusEffectType,
+        public static IWheneverFilter CreateDotStatusEffectInflictedFilter(
+            DamageType dotDamageType,
             WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
             return new WheneverStatusInflicted()
             {
-                statusEffectType = statusEffectType,
+                dotDamageType = dotDamageType,
                 wheneverCombatantTypeFilterType = wheneverCombatantTypeFilterType
             };
         }

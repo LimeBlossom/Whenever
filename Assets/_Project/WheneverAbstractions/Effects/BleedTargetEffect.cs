@@ -19,12 +19,11 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
                 yield break;
             }
 
-            // Apply burn status effect to target
-            var bleedStatus = new BleedStatus(turns, command.initiator)
+            var status = new DotStatus(turns, command.initiator)
             {
-                damage = bleedDamage
+                damagePackage = new (DamageType.BLEED, bleedDamage)
             };
-            yield return new AddStatusEffectCommand(targetedCommand.Target, bleedStatus);
+            yield return new AddStatusEffectCommand(targetedCommand.Target, status);
         }
     }
 }

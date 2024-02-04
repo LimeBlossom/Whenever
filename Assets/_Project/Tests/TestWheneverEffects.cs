@@ -251,8 +251,8 @@ public class UnitTestExample
         var appliesBleedStatus = new Whenever(wheneverPhysicalDamageTakenByEnemy, EffectFactory.BleedTarget(1, 3));
         turnManager.InitiateCommand(CmdFactory.Whenever(appliesBleedStatus), InitiatorFactory.FromNone());
         
-        var wheneverBleedInflictedOnEnemy = WheneverFilterFactory.CreateStatusEffectInflictedFilter(
-            typeof(BleedStatus),
+        var wheneverBleedInflictedOnEnemy = WheneverFilterFactory.CreateDotStatusEffectInflictedFilter(
+            DamageType.BLEED,
             WheneverCombatantTypeFilter.Enemy);
         var appliesPhysicalDamageToInitiator = new Whenever(wheneverBleedInflictedOnEnemy, EffectFactory.DamageInitiator(DamageType.PHYSICAL, 1));
         turnManager.InitiateCommand(CmdFactory.Whenever(appliesPhysicalDamageToInitiator), InitiatorFactory.FromNone());

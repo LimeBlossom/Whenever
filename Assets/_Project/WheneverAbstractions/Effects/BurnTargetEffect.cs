@@ -16,9 +16,11 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
             }
 
             // Apply burn status effect to target
-            var burnStatus = new BurnStatus(3, command.initiator);
-            burnStatus.damage = 1;
-            yield return new AddStatusEffectCommand(targetedCommand.Target, burnStatus);
+            var status = new DotStatus(3, command.initiator)
+            {
+                damagePackage = new (DamageType.BURN, 1)
+            };
+            yield return new AddStatusEffectCommand(targetedCommand.Target, status);
         }
     }
 }
