@@ -364,4 +364,120 @@ public class UnitTestExample
         
     }
 
+    [Test]
+    public void When_PlayerDealsPhysicalDamage_AdjacentEnemiesTakePhysicalDamage_AndTriggersHealPlayer(){
+        GlobalCombatWorld GenerateWorld()
+        {
+            var playerData = new Combatant(10, CombatantType.Player, new (0, 0));
+            var enemies = new Vector2[]
+            {
+                new(3, 3),
+                new(3, 4),
+                new(4, 3),
+                new(2, 3),
+
+                new(1, 1),
+                new(2, 2),
+                new(4, 2),
+            }.Select(x => new Combatant(10, CombatantType.Enemy, x)).ToArray();
+        
+            return new GlobalCombatWorld(new[] {playerData}.Concat(enemies).ToList(), 197271);   
+        }
+        var turnManager = GenerateWorld();
+        float GetHealthOf(float x, float y) => turnManager.CombatantData(turnManager.GetAtLocation(new (x, y))).CurrentHealth();
+        float GetHealthOfId(CombatantId id) => turnManager.CombatantData(id).CurrentHealth();
+        
+        var playerId = turnManager.GetAtLocation(new(0, 0));
+        
+        var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
+            DamageType.PHYSICAL,
+            WheneverCombatantTypeFilter.Player);
+        var appliesDamageToAdjacents = EffectFactory.DamageAdjacentTargets(DamageType.PHYSICAL, 1);
+        turnManager.InitiateCommand(CmdFactory.Whenever(new Whenever(wheneverPlayerDealsPhysical, appliesDamageToAdjacents)), InitiatorFactory.FromNone());
+        
+        var healsInitiator = EffectFactory.HealInitiator(1);
+        turnManager.InitiateCommand(CmdFactory.Whenever(new Whenever(wheneverPlayerDealsPhysical, healsInitiator)), InitiatorFactory.FromNone());
+        
+        turnManager.StartEnemyTurn();
+        turnManager.InitiateCommand(
+            CmdFactory.Damage(DamageType.PHYSICAL, 8, playerId),
+            InitiatorFactory.From(turnManager.GetAtLocation(new (3, 3))));
+        Assert.AreEqual(2, GetHealthOfId(playerId));
+        
+        turnManager.StartPlayerTurn();
+        turnManager.InitiateCommand(
+            CmdFactory.Damage(DamageType.PHYSICAL, 1, turnManager.GetAtLocation(new (3, 3))),
+            InitiatorFactory.From(playerId));
+        
+        // the healing whenever trigger occurs after the damage adjacents, so the player deals damage to 4 total:
+        // the original enemy, and the enemies hit by the adjacent factor. healing them for (3 adjacent + 1 direct) = 4
+        Assert.AreEqual(6, GetHealthOfId(playerId));
+        
+        Assert.AreEqual(9, GetHealthOf(3, 3));
+        Assert.AreEqual(9, GetHealthOf(3, 4));
+        Assert.AreEqual(9, GetHealthOf(4, 3));
+        Assert.AreEqual(9, GetHealthOf(2, 3));
+        
+        Assert.AreEqual(10, GetHealthOf(1, 1));
+        Assert.AreEqual(10, GetHealthOf(2, 2));
+        Assert.AreEqual(10, GetHealthOf(4, 2));
+    }
+    [Test]
+    public void When_PlayerDealsPhysicalDamage_AdjacentEnemiesTakePhysicalDamage_AndTriggersHealPlayer__Inverted_Is_Worse(){
+        GlobalCombatWorld GenerateWorld()
+        {
+            var playerData = new Combatant(10, CombatantType.Player, new (0, 0));
+            var enemies = new Vector2[]
+            {
+                new(3, 3),
+                new(3, 4),
+                new(4, 3),
+                new(2, 3),
+
+                new(1, 1),
+                new(2, 2),
+                new(4, 2),
+            }.Select(x => new Combatant(10, CombatantType.Enemy, x)).ToArray();
+        
+            return new GlobalCombatWorld(new[] {playerData}.Concat(enemies).ToList(), 197271);   
+        }
+        var turnManager = GenerateWorld();
+        float GetHealthOf(float x, float y) => turnManager.CombatantData(turnManager.GetAtLocation(new (x, y))).CurrentHealth();
+        float GetHealthOfId(CombatantId id) => turnManager.CombatantData(id).CurrentHealth();
+        
+        var playerId = turnManager.GetAtLocation(new(0, 0));
+        
+        var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
+            DamageType.PHYSICAL,
+            WheneverCombatantTypeFilter.Player);
+        var healsInitiator = EffectFactory.HealInitiator(1);
+        turnManager.InitiateCommand(CmdFactory.Whenever(new Whenever(wheneverPlayerDealsPhysical, healsInitiator)), InitiatorFactory.FromNone());
+        
+        var appliesDamageToAdjacents = EffectFactory.DamageAdjacentTargets(DamageType.PHYSICAL, 1);
+        turnManager.InitiateCommand(CmdFactory.Whenever(new Whenever(wheneverPlayerDealsPhysical, appliesDamageToAdjacents)), InitiatorFactory.FromNone());
+        
+        turnManager.StartEnemyTurn();
+        turnManager.InitiateCommand(
+            CmdFactory.Damage(DamageType.PHYSICAL, 8, playerId),
+            InitiatorFactory.From(turnManager.GetAtLocation(new (3, 3))));
+        Assert.AreEqual(2, GetHealthOfId(playerId));
+        
+        turnManager.StartPlayerTurn();
+        turnManager.InitiateCommand(
+            CmdFactory.Damage(DamageType.PHYSICAL, 1, turnManager.GetAtLocation(new (3, 3))),
+            InitiatorFactory.From(playerId));
+        
+        // the healing whenever trigger occurs before the damage adjacents, so the player deals damage to 1 total at this point:
+        // the original enemy alone
+        Assert.AreEqual(3, GetHealthOfId(playerId));
+        
+        Assert.AreEqual(9, GetHealthOf(3, 3));
+        Assert.AreEqual(9, GetHealthOf(3, 4));
+        Assert.AreEqual(9, GetHealthOf(4, 3));
+        Assert.AreEqual(9, GetHealthOf(2, 3));
+        
+        Assert.AreEqual(10, GetHealthOf(1, 1));
+        Assert.AreEqual(10, GetHealthOf(2, 2));
+        Assert.AreEqual(10, GetHealthOf(4, 2));
+    }
 }

@@ -93,36 +93,29 @@ namespace WheneverAbstractions._Project.WheneverAbstractions
         {
             this.InitiateCommand(new InitiatedCommand(command, initiator));
         }
+
         public void InitiateCommand(InitiatedCommand command)
         {
             var commandableWorld = new CommandableWorld(this);
-            
-            var initiatedCommandQueue = new Queue<InitiatedCommand>();
-            initiatedCommandQueue.Enqueue(command);
-            
-            var wheneversRemaining = whenevers.ToList();
-            while (initiatedCommandQueue.Count > 0)
+
+            var currentCommandBatch = new List<InitiatedCommand>(){command};
+
+            foreach (var whenever in whenevers)
             {
-                var commandToExecute = initiatedCommandQueue.Dequeue();
-                if (commandToExecute.initiator is RecursiveEffectCommandInitiator { EffectDepth: > 1000 })
+                var newCommands = new List<InitiatedCommand>();
+                foreach (var initiatedCommand in currentCommandBatch)
                 {
-                    throw new Exception("Recursion depth exceeded 1000, likely infinite loop in effect. Aborting.");
+                    var triggered = whenever.GetTriggeredCommands(initiatedCommand, this).ToList();
+                    if (!triggered.Any()) continue;
+                    newCommands.AddRange(triggered);
                 }
-                foreach (var whenever in wheneversRemaining.ToList())
-                {
-                    var triggers = whenever.GetTriggeredCommands(commandToExecute, this).ToList();
-                    if (triggers.Any())
-                    {
-                        wheneversRemaining.Remove(whenever);
-                    }
-                    foreach (var toQueue in triggers)
-                    {
-                        initiatedCommandQueue.Enqueue(toQueue);
-                    }
-                }
+                currentCommandBatch.AddRange(newCommands);
+            }
                 
-                Debug.Log("Applying command: " + commandToExecute);
-                commandToExecute.command.ApplyCommand(commandableWorld);
+            foreach (var currentCommand in currentCommandBatch)
+            {
+                Debug.Log("Applying command: " + currentCommand);
+                currentCommand.command.ApplyCommand(commandableWorld);
             }
         }
 
