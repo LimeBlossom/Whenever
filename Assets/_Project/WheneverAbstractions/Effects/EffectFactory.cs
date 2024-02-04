@@ -1,7 +1,4 @@
-﻿using System;
-using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
-
-namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
+﻿namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {
     public static class EffectFactory
     {

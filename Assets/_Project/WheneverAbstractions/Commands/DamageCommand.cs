@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace WheneverAbstractions._Project.WheneverAbstractions.Commands
+﻿namespace WheneverAbstractions._Project.WheneverAbstractions.Commands
 {
     public record DamageCommand : ITargetedWorldCommand
     {

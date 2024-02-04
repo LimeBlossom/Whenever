@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
 using WheneverAbstractions._Project.WheneverAbstractions.Commands;
-using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {

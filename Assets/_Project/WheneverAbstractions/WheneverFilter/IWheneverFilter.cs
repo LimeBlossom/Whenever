@@ -1,6 +1,4 @@
-﻿using WheneverAbstractions._Project.WheneverAbstractions.Commands;
-
-namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
+﻿namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
 {
     public interface IWheneverFilter
     {

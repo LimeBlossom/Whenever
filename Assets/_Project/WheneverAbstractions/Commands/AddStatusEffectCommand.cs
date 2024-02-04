@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
+﻿using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.Commands
 {

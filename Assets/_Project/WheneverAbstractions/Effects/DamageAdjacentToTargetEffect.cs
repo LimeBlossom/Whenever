@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using WheneverAbstractions._Project.WheneverAbstractions.Commands;
-using WheneverAbstractions._Project.WheneverAbstractions.PrimitiveUtilities;
-using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {

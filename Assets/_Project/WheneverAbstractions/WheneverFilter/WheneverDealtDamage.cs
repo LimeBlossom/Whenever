@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
 using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter

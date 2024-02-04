@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using WheneverAbstractions._Project.WheneverAbstractions.Commands;
-using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
+﻿namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
 {
     public static class WheneverFilterFactory
     {
