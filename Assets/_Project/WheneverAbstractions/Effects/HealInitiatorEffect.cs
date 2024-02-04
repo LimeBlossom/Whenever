@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using UnityEngine;
-using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
 using WheneverAbstractions._Project.WheneverAbstractions.Commands;
 
 namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
 {
-    public record HealInitiatorEffect: IEffect
+    public record HealInitiatorEffect: EffectInitiatorEffect
     {
         private float healAmount;
 
@@ -14,19 +12,14 @@ namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
             this.healAmount = healAmount;
         }
 
-        public IEnumerable<IWorldCommand> ApplyEffect(InitiatedCommand command, IInspectableWorld world)
+        protected override IEnumerable<IWorldCommand> ApplyEffectToInitiator(CombatantId initiator, IInspectableWorld world)
         {
-            if (!command.initiator.TryAsOrRecursedFrom<CombatantCommandInitiator>(out var initiator))
-            {
-                Debug.LogWarning("Heal effect can only be applied to initiators which came from combatants");
-                yield break;
-            }
             var damagePackage = new DamagePackage
             {
                 damageAmount = -healAmount,
                 damageType = DamageType.HEAL
             };
-            yield return new DamageCommand(initiator.Initiator, damagePackage);
+            yield return new DamageCommand(initiator, damagePackage);
         }
     }
 }
