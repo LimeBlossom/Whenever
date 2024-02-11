@@ -1,9 +1,12 @@
-﻿namespace Whenever.Core.WheneverFilter
+﻿using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
+
+namespace Whenever.Core.WheneverFilter
 {
     public static class WheneverFilterFactory
     {
         
-        public static IWheneverFilter CreateDealtDamageFilter(
+        public static IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo> CreateDealtDamageFilter(
             DamageType validDamageType,
             WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
@@ -13,7 +16,7 @@
             );
         }
         
-        public static IWheneverFilter CreateDealsDamageFilter(
+        public static IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo> CreateDealsDamageFilter(
             DamageType validDamageType,
             WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
@@ -23,7 +26,7 @@
             );
         }
         
-        public static IWheneverFilter CreateDotStatusEffectInflictedFilter(
+        public static IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo> CreateDotStatusEffectInflictedFilter(
             DamageType dotDamageType,
             WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {

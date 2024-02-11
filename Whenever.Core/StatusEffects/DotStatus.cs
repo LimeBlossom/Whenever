@@ -2,6 +2,8 @@
 using System.Linq;
 using Whenever.Core.CommandInitiators;
 using Whenever.Core.Commands;
+using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
 
 namespace Whenever.Core.StatusEffects
 {
@@ -18,7 +20,7 @@ namespace Whenever.Core.StatusEffects
                 return new StatusEffectResult
                 {
                     completion = StatusEffectCompletion.Expired,
-                    commands = Enumerable.Empty<IWorldCommand>()
+                    commands = Enumerable.Empty<IWorldCommand<ICommandableWorldDemo>>()
                 };
             }
 
@@ -27,7 +29,7 @@ namespace Whenever.Core.StatusEffects
             return new StatusEffectResult()
             {
                 completion = StatusEffectCompletion.Active,
-                commands = new List<IWorldCommand> { damageCommand }
+                commands = new List<IWorldCommand<ICommandableWorldDemo>> { damageCommand }
             };
         }
 

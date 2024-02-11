@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Whenever.Core.Commands;
+using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
 
 namespace Whenever.Core.Effects
 {
@@ -7,7 +9,7 @@ namespace Whenever.Core.Effects
     {
         public float damageAmount;
         public DamageType damageType;
-        protected override IEnumerable<IWorldCommand> ApplyEffectToTarget(CombatantId target, IInspectableWorld world)
+        protected override IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffectToTarget(CombatantId target, IInspectableWorldDemo world)
         {
             var newTargets = world.GetAdjacentCombatants(target);
             

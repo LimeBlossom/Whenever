@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Whenever.Core.CommandInitiators;
 using Whenever.Core.StatusEffects;
+using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
 
 namespace Whenever.Core
 {
@@ -35,7 +37,7 @@ namespace Whenever.Core
             this.position = position;
         }
     
-        public IEnumerable<InitiatedCommand> ApplyStatusEffects(CombatantId myId)
+        public IEnumerable<InitiatedCommand<ICommandableWorldDemo>> ApplyStatusEffects(CombatantId myId)
         {
             foreach(StatusEffect statusEffect in statusEffects.ToArray())
             {
@@ -46,7 +48,7 @@ namespace Whenever.Core
                 }
                 foreach (var command in statusEffectResult.commands)
                 {
-                    yield return new InitiatedCommand(command, InitiatorFactory.From(statusEffect));
+                    yield return new InitiatedCommand<ICommandableWorldDemo>(command, InitiatorFactory.From(statusEffect));
                 }
             }
         }

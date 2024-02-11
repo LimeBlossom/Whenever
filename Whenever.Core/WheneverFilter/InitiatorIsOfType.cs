@@ -1,8 +1,10 @@
 ﻿using Whenever.Core.CommandInitiators;
+using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
 
 namespace Whenever.Core.WheneverFilter
 {
-    public record InitiatorIsOfType : IWheneverFilter
+    public record InitiatorIsOfType : IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>
     {
         private readonly WheneverCombatantTypeFilter combatTypeFilter;
 
@@ -11,7 +13,7 @@ namespace Whenever.Core.WheneverFilter
             this.combatTypeFilter = combatTypeFilter;
         }
 
-        public bool TriggersOn(InitiatedCommand initiatedCommand, IInspectableWorld world)
+        public bool TriggersOn(InitiatedCommand<ICommandableWorldDemo> initiatedCommand, IInspectableWorldDemo world)
         {
             if (!initiatedCommand.initiator.TryAsOrRecursedFrom<CombatantCommandInitiator>(out var initiator))
             {

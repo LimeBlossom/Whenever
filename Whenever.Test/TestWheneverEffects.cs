@@ -6,9 +6,13 @@ using Whenever.Core.CommandInitiators;
 using Whenever.Core.Commands;
 using Whenever.Core.Effects;
 using Whenever.Core.WheneverFilter;
+using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
 
 namespace Whenever.Test
 {
+    using WheneverType = Whenever.Core.Whenever<IInspectableWorldDemo, ICommandableWorldDemo>;
+    
     public class UnitTestExample
     {
         [Test]
@@ -20,12 +24,12 @@ namespace Whenever.Test
             Assert.AreEqual("someThing", "someThing");
         }
 
-        private (CombatantId player, CombatantId enemy, GlobalCombatWorld turnManager) GetEnemyAndPlayerTurnContext()
+        private (CombatantId player, CombatantId enemy, GlobalCombatWorldDemo turnManager) GetEnemyAndPlayerTurnContext()
         {
             var player = new Combatant(10, CombatantType.Player);
             var enemy = new Combatant(10, CombatantType.Enemy);
             var combatants = new[] {player, enemy};
-            var turnManager = new GlobalCombatWorld(combatants.ToList(), 197271);
+            var turnManager = new GlobalCombatWorldDemo(combatants.ToList(), 197271);
 
             return (
                 turnManager.GetOfType(CombatantType.Player).Single(),
@@ -63,10 +67,8 @@ namespace Whenever.Test
             var wheneverFilter = WheneverFilterFactory.CreateDealtDamageFilter(
                 DamageType.FIRE,
                 WheneverCombatantTypeFilter.Player);
-            Core.Whenever fireDamageAppliesBurn = new(wheneverFilter, EffectFactory.BurnTarget());
-            turnManager.InitiateCommand(
-                CmdFactory.Whenever(fireDamageAppliesBurn),
-                InitiatorFactory.FromNone());
+            WheneverType fireDamageAppliesBurn = new(wheneverFilter, EffectFactory.BurnTarget());
+            turnManager.AddWhenever(fireDamageAppliesBurn);
 
             /* Code that would be applied by an attack action */
         
@@ -105,8 +107,8 @@ namespace Whenever.Test
             var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
                 DamageType.PHYSICAL,
                 WheneverCombatantTypeFilter.Player);
-            var healPlayer = new Core.Whenever(wheneverPlayerDealsPhysical, EffectFactory.HealInitiator(3));
-            turnManager.InitiateCommand(CmdFactory.Whenever(healPlayer), InitiatorFactory.FromNone());
+            var healPlayer = new WheneverType(wheneverPlayerDealsPhysical, EffectFactory.HealInitiator(3));
+            turnManager.AddWhenever(healPlayer);
         
             // player takes damage
             turnManager.StartEnemyTurn();
@@ -135,8 +137,8 @@ namespace Whenever.Test
             var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
                 DamageType.PHYSICAL,
                 WheneverCombatantTypeFilter.Player);
-            var healPlayer = new Core.Whenever(wheneverPlayerDealsPhysical, EffectFactory.HealInitiator(3));
-            turnManager.InitiateCommand(CmdFactory.Whenever(healPlayer), InitiatorFactory.FromNone());
+            var healPlayer = new WheneverType(wheneverPlayerDealsPhysical, EffectFactory.HealInitiator(3));
+            turnManager.AddWhenever(healPlayer);
         
             // player takes damage
             turnManager.StartEnemyTurn();
@@ -166,8 +168,8 @@ namespace Whenever.Test
             var wheneverFireDamageTaken = WheneverFilterFactory.CreateDealtDamageFilter(
                 DamageType.FIRE,
                 WheneverCombatantTypeFilter.Any);
-            var randomMeteor = new Core.Whenever(wheneverFireDamageTaken, EffectFactory.RandomBoulder(2));
-            turnManager.InitiateCommand(CmdFactory.Whenever(randomMeteor), InitiatorFactory.FromNone());
+            var randomMeteor = new WheneverType(wheneverFireDamageTaken, EffectFactory.RandomBoulder(2));
+            turnManager.AddWhenever(randomMeteor);
         
             // player deals fire damage, triggering a random meteor
             turnManager.StartPlayerTurn();
@@ -187,20 +189,20 @@ namespace Whenever.Test
             var wheneverPhysicalDamageTakenByEnemy = WheneverFilterFactory.CreateDealtDamageFilter(
                 DamageType.PHYSICAL,
                 WheneverCombatantTypeFilter.Enemy);
-            var appliesCriticalDamage = new Core.Whenever(wheneverPhysicalDamageTakenByEnemy, EffectFactory.CriticalDamage());
-            turnManager.InitiateCommand(CmdFactory.Whenever(appliesCriticalDamage), InitiatorFactory.FromNone());
+            var appliesCriticalDamage = new WheneverType(wheneverPhysicalDamageTakenByEnemy, EffectFactory.CriticalDamage());
+            turnManager.AddWhenever(appliesCriticalDamage);
         
             var wheneverCriticalDamageTakenByEnemy = WheneverFilterFactory.CreateDealtDamageFilter(
                 DamageType.CRITICAL,
                 WheneverCombatantTypeFilter.Enemy);
-            var appliesBleedStatus = new Core.Whenever(wheneverCriticalDamageTakenByEnemy, EffectFactory.BleedTarget(1, 3));
-            turnManager.InitiateCommand(CmdFactory.Whenever(appliesBleedStatus), InitiatorFactory.FromNone());
+            var appliesBleedStatus = new WheneverType(wheneverCriticalDamageTakenByEnemy, EffectFactory.BleedTarget(1, 3));
+            turnManager.AddWhenever(appliesBleedStatus);
         
             var wheneverPlayerDealsBleed = WheneverFilterFactory.CreateDealsDamageFilter(
                 DamageType.BLEED,
                 WheneverCombatantTypeFilter.Player);
-            var appliesHeal = new Core.Whenever(wheneverPlayerDealsBleed, EffectFactory.HealInitiator(1));
-            turnManager.InitiateCommand(CmdFactory.Whenever(appliesHeal), InitiatorFactory.FromNone());
+            var appliesHeal = new WheneverType(wheneverPlayerDealsBleed, EffectFactory.HealInitiator(1));
+            turnManager.AddWhenever(appliesHeal);
         
             var playerData = turnManager.CombatantData(player);
             var enemyData = turnManager.CombatantData(enemy);
@@ -249,14 +251,14 @@ namespace Whenever.Test
             var wheneverPhysicalDamageTakenByEnemy = WheneverFilterFactory.CreateDealtDamageFilter(
                 DamageType.PHYSICAL,
                 WheneverCombatantTypeFilter.Enemy);
-            var appliesBleedStatus = new Core.Whenever(wheneverPhysicalDamageTakenByEnemy, EffectFactory.BleedTarget(1, 3));
-            turnManager.InitiateCommand(CmdFactory.Whenever(appliesBleedStatus), InitiatorFactory.FromNone());
+            var appliesBleedStatus = new WheneverType(wheneverPhysicalDamageTakenByEnemy, EffectFactory.BleedTarget(1, 3));
+            turnManager.AddWhenever(appliesBleedStatus);
         
             var wheneverBleedInflictedOnEnemy = WheneverFilterFactory.CreateDotStatusEffectInflictedFilter(
                 DamageType.BLEED,
                 WheneverCombatantTypeFilter.Enemy);
-            var appliesPhysicalDamageToInitiator = new Core.Whenever(wheneverBleedInflictedOnEnemy, EffectFactory.DamageInitiator(DamageType.PHYSICAL, 1));
-            turnManager.InitiateCommand(CmdFactory.Whenever(appliesPhysicalDamageToInitiator), InitiatorFactory.FromNone());
+            var appliesPhysicalDamageToInitiator = new WheneverType(wheneverBleedInflictedOnEnemy, EffectFactory.DamageInitiator(DamageType.PHYSICAL, 1));
+            turnManager.AddWhenever(appliesPhysicalDamageToInitiator);
         
             var playerData = turnManager.CombatantData(player);
             var enemyData = turnManager.CombatantData(enemy);
@@ -297,8 +299,8 @@ namespace Whenever.Test
             var wheneverPhysicalDamageTakenByEnemy = WheneverFilterFactory.CreateDealtDamageFilter(
                 DamageType.PHYSICAL,
                 WheneverCombatantTypeFilter.Enemy);
-            var appliesPhysicalDamage = new Core.Whenever(wheneverPhysicalDamageTakenByEnemy, EffectFactory.DamageTarget(DamageType.PHYSICAL, 1));
-            turnManager.InitiateCommand(CmdFactory.Whenever(appliesPhysicalDamage), InitiatorFactory.FromNone());
+            var appliesPhysicalDamage = new WheneverType(wheneverPhysicalDamageTakenByEnemy, EffectFactory.DamageTarget(DamageType.PHYSICAL, 1));
+            turnManager.AddWhenever(appliesPhysicalDamage);
         
             var playerData = turnManager.CombatantData(player);
             var enemyData = turnManager.CombatantData(enemy);
@@ -319,7 +321,7 @@ namespace Whenever.Test
     
         [Test]
         public void When_PlayerDealsPhysicalDamage_AdjacentEnemiesTakePhysicalDamage(){
-            GlobalCombatWorld GenerateWorld()
+            GlobalCombatWorldDemo GenerateWorld()
             {
                 var playerData = new Combatant(10, CombatantType.Player, new (0, 0));
                 var enemies = new Vector2[]
@@ -334,7 +336,7 @@ namespace Whenever.Test
                     new(4, 2),
                 }.Select(x => new Combatant(10, CombatantType.Enemy, x)).ToArray();
         
-                return new GlobalCombatWorld(new[] {playerData}.Concat(enemies).ToList(), 197271);   
+                return new GlobalCombatWorldDemo(new[] {playerData}.Concat(enemies).ToList(), 197271);   
             }
             var turnManager = GenerateWorld();
             float GetHealthOf(float x, float y) => turnManager.CombatantData(turnManager.GetAtLocation(new (x, y))).CurrentHealth();
@@ -344,8 +346,8 @@ namespace Whenever.Test
             var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
                 DamageType.PHYSICAL,
                 WheneverCombatantTypeFilter.Player);
-            var appliesPhysicalDamage = new Core.Whenever(wheneverPlayerDealsPhysical, EffectFactory.DamageAdjacentTargets(DamageType.PHYSICAL, 1));
-            turnManager.InitiateCommand(CmdFactory.Whenever(appliesPhysicalDamage), InitiatorFactory.FromNone());
+            var appliesPhysicalDamage = new WheneverType(wheneverPlayerDealsPhysical, EffectFactory.DamageAdjacentTargets(DamageType.PHYSICAL, 1));
+            turnManager.AddWhenever(appliesPhysicalDamage);
         
             turnManager.StartPlayerTurn();
             turnManager.InitiateCommand(
@@ -367,7 +369,7 @@ namespace Whenever.Test
 
         [Test]
         public void When_PlayerDealsPhysicalDamage_AdjacentEnemiesTakePhysicalDamage_AndTriggersHealPlayer(){
-            GlobalCombatWorld GenerateWorld()
+            GlobalCombatWorldDemo GenerateWorld()
             {
                 var playerData = new Combatant(10, CombatantType.Player, new (0, 0));
                 var enemies = new Vector2[]
@@ -382,7 +384,7 @@ namespace Whenever.Test
                     new(4, 2),
                 }.Select(x => new Combatant(10, CombatantType.Enemy, x)).ToArray();
         
-                return new GlobalCombatWorld(new[] {playerData}.Concat(enemies).ToList(), 197271);   
+                return new GlobalCombatWorldDemo(new[] {playerData}.Concat(enemies).ToList(), 197271);   
             }
             var turnManager = GenerateWorld();
             float GetHealthOf(float x, float y) => turnManager.CombatantData(turnManager.GetAtLocation(new (x, y))).CurrentHealth();
@@ -394,10 +396,10 @@ namespace Whenever.Test
                 DamageType.PHYSICAL,
                 WheneverCombatantTypeFilter.Player);
             var appliesDamageToAdjacents = EffectFactory.DamageAdjacentTargets(DamageType.PHYSICAL, 1);
-            turnManager.InitiateCommand(CmdFactory.Whenever(new Core.Whenever(wheneverPlayerDealsPhysical, appliesDamageToAdjacents)), InitiatorFactory.FromNone());
+            turnManager.AddWhenever(new WheneverType(wheneverPlayerDealsPhysical, appliesDamageToAdjacents));
         
             var healsInitiator = EffectFactory.HealInitiator(1);
-            turnManager.InitiateCommand(CmdFactory.Whenever(new Core.Whenever(wheneverPlayerDealsPhysical, healsInitiator)), InitiatorFactory.FromNone());
+            turnManager.AddWhenever(new WheneverType(wheneverPlayerDealsPhysical, healsInitiator));
         
             turnManager.StartEnemyTurn();
             turnManager.InitiateCommand(
@@ -425,7 +427,7 @@ namespace Whenever.Test
         }
         [Test]
         public void When_PlayerDealsPhysicalDamage_AdjacentEnemiesTakePhysicalDamage_AndTriggersHealPlayer__Inverted_Is_Worse(){
-            GlobalCombatWorld GenerateWorld()
+            GlobalCombatWorldDemo GenerateWorld()
             {
                 var playerData = new Combatant(10, CombatantType.Player, new (0, 0));
                 var enemies = new Vector2[]
@@ -440,7 +442,7 @@ namespace Whenever.Test
                     new(4, 2),
                 }.Select(x => new Combatant(10, CombatantType.Enemy, x)).ToArray();
         
-                return new GlobalCombatWorld(new[] {playerData}.Concat(enemies).ToList(), 197271);   
+                return new GlobalCombatWorldDemo(new[] {playerData}.Concat(enemies).ToList(), 197271);   
             }
             var turnManager = GenerateWorld();
             float GetHealthOf(float x, float y) => turnManager.CombatantData(turnManager.GetAtLocation(new (x, y))).CurrentHealth();
@@ -452,10 +454,10 @@ namespace Whenever.Test
                 DamageType.PHYSICAL,
                 WheneverCombatantTypeFilter.Player);
             var healsInitiator = EffectFactory.HealInitiator(1);
-            turnManager.InitiateCommand(CmdFactory.Whenever(new Core.Whenever(wheneverPlayerDealsPhysical, healsInitiator)), InitiatorFactory.FromNone());
+            turnManager.AddWhenever(new WheneverType(wheneverPlayerDealsPhysical, healsInitiator));
         
             var appliesDamageToAdjacents = EffectFactory.DamageAdjacentTargets(DamageType.PHYSICAL, 1);
-            turnManager.InitiateCommand(CmdFactory.Whenever(new Core.Whenever(wheneverPlayerDealsPhysical, appliesDamageToAdjacents)), InitiatorFactory.FromNone());
+            turnManager.AddWhenever(new WheneverType(wheneverPlayerDealsPhysical, appliesDamageToAdjacents));
         
             turnManager.StartEnemyTurn();
             turnManager.InitiateCommand(

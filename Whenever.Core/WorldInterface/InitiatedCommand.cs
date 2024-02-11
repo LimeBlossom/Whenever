@@ -1,14 +1,14 @@
 ﻿using Whenever.Core.CommandInitiators;
 using Whenever.Core.Commands;
 
-namespace Whenever.Core
+namespace Whenever.Core.WorldInterface
 {
-    public record InitiatedCommand
+    public record InitiatedCommand<TCommand> where TCommand: ICommandWorld
     {
-        public IWorldCommand command;
+        public IWorldCommand<TCommand> command;
         public ICommandInitiator initiator;
 
-        public InitiatedCommand(IWorldCommand command, ICommandInitiator initiator)
+        public InitiatedCommand(IWorldCommand<TCommand> command, ICommandInitiator initiator)
         {
             this.command = command;
             this.initiator = initiator;

@@ -1,4 +1,6 @@
-﻿namespace Whenever.Core.CommandInitiators
+﻿using Whenever.Core.WorldInterface;
+
+namespace Whenever.Core.CommandInitiators
 {
     public record CombatantCommandInitiator: ICommandInitiator
     {

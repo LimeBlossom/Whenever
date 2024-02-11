@@ -2,14 +2,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Whenever.Core.Commands;
 using Whenever.Core.StatusEffects;
+using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
 
 namespace Whenever.Core.Effects
 {
-    public record DotStatusTargetEffect: IEffect
+    public record DotStatusTargetEffect: IEffect<IInspectableWorldDemo, ICommandableWorldDemo>
     {
         public DamagePackage damagePackage;
         public int turns;
-        public IEnumerable<IWorldCommand> ApplyEffect(InitiatedCommand command, IInspectableWorld world)
+        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffect(InitiatedCommand<ICommandableWorldDemo> command, IInspectableWorldDemo world)
         {
             if (command.command is not ITargetedWorldCommand targetedCommand)
             {

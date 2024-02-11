@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Whenever.Core.Commands;
+using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
 
 namespace Whenever.Core.Effects
 {
@@ -12,7 +14,7 @@ namespace Whenever.Core.Effects
             this.healAmount = healAmount;
         }
 
-        protected override IEnumerable<IWorldCommand> ApplyEffectToInitiator(CombatantId initiator, IInspectableWorld world)
+        protected override IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffectToInitiator(CombatantId initiator, IInspectableWorldDemo world)
         {
             var damagePackage = new DamagePackage
             {

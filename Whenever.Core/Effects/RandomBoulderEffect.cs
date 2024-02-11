@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Whenever.Core.Commands;
+using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
 
 namespace Whenever.Core.Effects
 {
-    public record RandomBoulderEffect: IEffect
+    public record RandomBoulderEffect: IEffect<IInspectableWorldDemo, ICommandableWorldDemo>
     {
         private float meteorDamage;
 
@@ -13,7 +15,7 @@ namespace Whenever.Core.Effects
             this.meteorDamage = meteorDamage;
         }
 
-        public IEnumerable<IWorldCommand> ApplyEffect(InitiatedCommand command, IInspectableWorld world)
+        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffect(InitiatedCommand<ICommandableWorldDemo> command, IInspectableWorldDemo world)
         {
             var allCombatants = world.AllIds().ToArray();
             var randomSelection = world.GetRng().Next(0, allCombatants.Length);

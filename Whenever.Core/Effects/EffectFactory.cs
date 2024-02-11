@@ -1,8 +1,11 @@
-﻿namespace Whenever.Core.Effects
+﻿using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
+
+namespace Whenever.Core.Effects
 {
     public static class EffectFactory
     {
-        public static IEffect BurnTarget(float damage = 1, int turns = 3)
+        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> BurnTarget(float damage = 1, int turns = 3)
         {
             return new DotStatusTargetEffect
             {
@@ -10,7 +13,7 @@
                 turns = turns
             };
         }
-        public static IEffect BleedTarget(float bleedDamage, int turns)
+        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> BleedTarget(float bleedDamage, int turns)
         {
             return new DotStatusTargetEffect
             {
@@ -19,16 +22,16 @@
             };
         }
 
-        public static IEffect HealInitiator(float healAmount)
+        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> HealInitiator(float healAmount)
         {
             return new HealInitiatorEffect(healAmount);
         }
-        public static IEffect RandomBoulder(float meteorDamage)
+        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> RandomBoulder(float meteorDamage)
         {
             return new RandomBoulderEffect(meteorDamage);
         }
         
-        public static IEffect CriticalDamage(float critDamageMultiplier = 1)
+        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> CriticalDamage(float critDamageMultiplier = 1)
         {
             return new ApplyCriticalDamageEffect
             {
@@ -36,14 +39,14 @@
             };
         }
         
-        public static IEffect DamageTarget(DamageType damageType, float damageAmount)
+        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> DamageTarget(DamageType damageType, float damageAmount)
         {
             return new DamageTargetEffect
             {
                 damagePackage = new(damageType, damageAmount)
             };
         }
-        public static IEffect DamageInitiator(DamageType damageType, float damageAmount)
+        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> DamageInitiator(DamageType damageType, float damageAmount)
         {
             return new DamageInitiatorEffect
             {
@@ -51,7 +54,7 @@
             };
         }
 
-        public static IEffect DamageAdjacentTargets(DamageType type, float damageAmount)
+        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> DamageAdjacentTargets(DamageType type, float damageAmount)
         {
             return new DamageAdjacentToTargetEffect
             {

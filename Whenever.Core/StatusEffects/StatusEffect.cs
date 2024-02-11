@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Whenever.Core.CommandInitiators;
 using Whenever.Core.Commands;
+using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
 
 namespace Whenever.Core.StatusEffects
 {
@@ -13,7 +15,7 @@ namespace Whenever.Core.StatusEffects
     public struct StatusEffectResult
     {
         public StatusEffectCompletion completion;
-        public IEnumerable<IWorldCommand> commands;
+        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> commands;
     }
 
     public abstract record StatusEffect

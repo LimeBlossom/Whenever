@@ -1,4 +1,6 @@
 ﻿using Whenever.Core.StatusEffects;
+using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
 
 namespace Whenever.Core.Commands
 {
@@ -14,7 +16,7 @@ namespace Whenever.Core.Commands
             statusEffect = effect;
         }
 
-        public void ApplyCommand(ICommandableWorld world)
+        public void ApplyCommand(ICommandableWorldDemo world)
         {
             var target = world.GetCombatantRaw(Target);
             target.statusEffects.Add(statusEffect);

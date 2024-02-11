@@ -1,4 +1,7 @@
-﻿namespace Whenever.Core.Commands
+﻿using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.WorldInterface;
+
+namespace Whenever.Core.Commands
 {
     public record DamageCommand : ITargetedWorldCommand
     {
@@ -11,7 +14,7 @@
             Target = target;
         }
         
-        public void ApplyCommand(ICommandableWorld world)
+        public void ApplyCommand(ICommandableWorldDemo world)
         {
             var target = world.GetCombatantRaw(Target);
             var withResistance = target.damageable.ApplyResistances(damagePackage);

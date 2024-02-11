@@ -1,4 +1,4 @@
-﻿namespace Whenever.Core
+﻿namespace Whenever.Core.WorldInterface
 {
     public record CombatantId
     {
