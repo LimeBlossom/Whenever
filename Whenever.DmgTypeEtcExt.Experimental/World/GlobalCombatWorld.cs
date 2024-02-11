@@ -9,7 +9,7 @@ using Random = System.Random;
 
 namespace Whenever.DmgTypeEtcExt.Experimental.World
 {
-    public class GlobalCombatWorldDemo : IInspectableWorldDemo, ICommandableWorldDemo, IManageWorld<IInspectableWorldDemo, ICommandableWorldDemo>
+    public class GlobalCombatWorldDemo : IInspectableWorldDemo, ICommandableWorldDemo
     {
         private List<Whenever<IInspectableWorldDemo, ICommandableWorldDemo>> whenevers = new();
         private Dictionary<CombatantId, Combatant> allCombatants;
@@ -58,19 +58,6 @@ namespace Whenever.DmgTypeEtcExt.Experimental.World
         {
             return allCombatants[combatantId];
         }
-        /// <summary>
-        /// applies all status effects currently on the player(s)
-        /// </summary>
-        public void StartPlayerTurn()
-        {
-            Debug.Log("Starting player turn");
-        }
-
-        public void StartEnemyTurn()
-        {
-            Debug.Log("Starting enemy turn");
-        }
-
         public void InitiateCommand(IWorldCommand<ICommandableWorldDemo> commandOld, ICommandInitiator initiator)
         {
             this.InitiateCommand(new InitiatedCommand<ICommandableWorldDemo>(commandOld, initiator));

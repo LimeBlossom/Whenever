@@ -48,12 +48,10 @@ namespace Whenever.Test
             var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
         
             /* Code that would be called by a turn manager */
-            turnManager.StartEnemyTurn();
         
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.FIRE, 1, player),
                 InitiatorFactory.From(enemy));
-            turnManager.StartPlayerTurn();
 
 
             var playerData = turnManager.CombatantData(player);
@@ -76,7 +74,6 @@ namespace Whenever.Test
             turnManager.AddWhenever(healPlayer);
         
             // player takes damage
-            turnManager.StartEnemyTurn();
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 4, player),
                 InitiatorFactory.From(enemy));
@@ -85,7 +82,6 @@ namespace Whenever.Test
             Assert.AreEqual(10, turnManager.CombatantData(enemy).CurrentHealth());
         
             // player deals damage
-            turnManager.StartPlayerTurn();
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
                 InitiatorFactory.From(player));
@@ -106,7 +102,6 @@ namespace Whenever.Test
             turnManager.AddWhenever(healPlayer);
         
             // player takes damage
-            turnManager.StartEnemyTurn();
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, player),
                 InitiatorFactory.From(enemy));
@@ -115,7 +110,6 @@ namespace Whenever.Test
             Assert.AreEqual(10, turnManager.CombatantData(enemy).CurrentHealth());
         
             // player deals damage
-            turnManager.StartPlayerTurn();
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
                 InitiatorFactory.From(player));
@@ -137,7 +131,6 @@ namespace Whenever.Test
             turnManager.AddWhenever(randomMeteor);
         
             // player deals fire damage, triggering a random meteor
-            turnManager.StartPlayerTurn();
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.FIRE, 1, enemy),
                 InitiatorFactory.From(player));
@@ -160,7 +153,6 @@ namespace Whenever.Test
             var playerData = turnManager.CombatantData(player);
             var enemyData = turnManager.CombatantData(enemy);
         
-            turnManager.StartPlayerTurn();
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
                 InitiatorFactory.From(player));
@@ -168,8 +160,6 @@ namespace Whenever.Test
             Assert.AreEqual(10, playerData.CurrentHealth());
             Assert.AreEqual(8, enemyData.CurrentHealth());
         
-            turnManager.StartEnemyTurn();
-            turnManager.StartPlayerTurn();
             Assert.AreEqual(10, playerData.CurrentHealth());
             Assert.AreEqual(8, enemyData.CurrentHealth());
         }
@@ -204,7 +194,6 @@ namespace Whenever.Test
             var appliesPhysicalDamage = new WheneverType(wheneverPlayerDealsPhysical, EffectFactory.DamageAdjacentTargets(DamageType.PHYSICAL, 1));
             turnManager.AddWhenever(appliesPhysicalDamage);
         
-            turnManager.StartPlayerTurn();
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, turnManager.GetAtLocation(new (3, 3))),
                 InitiatorFactory.From(playerId));
@@ -256,13 +245,11 @@ namespace Whenever.Test
             var healsInitiator = EffectFactory.HealInitiator(1);
             turnManager.AddWhenever(new WheneverType(wheneverPlayerDealsPhysical, healsInitiator));
         
-            turnManager.StartEnemyTurn();
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 8, playerId),
                 InitiatorFactory.From(turnManager.GetAtLocation(new (3, 3))));
             Assert.AreEqual(2, GetHealthOfId(playerId));
         
-            turnManager.StartPlayerTurn();
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, turnManager.GetAtLocation(new (3, 3))),
                 InitiatorFactory.From(playerId));
@@ -314,13 +301,11 @@ namespace Whenever.Test
             var appliesDamageToAdjacents = EffectFactory.DamageAdjacentTargets(DamageType.PHYSICAL, 1);
             turnManager.AddWhenever(new WheneverType(wheneverPlayerDealsPhysical, appliesDamageToAdjacents));
         
-            turnManager.StartEnemyTurn();
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 8, playerId),
                 InitiatorFactory.From(turnManager.GetAtLocation(new (3, 3))));
             Assert.AreEqual(2, GetHealthOfId(playerId));
         
-            turnManager.StartPlayerTurn();
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, turnManager.GetAtLocation(new (3, 3))),
                 InitiatorFactory.From(playerId));
