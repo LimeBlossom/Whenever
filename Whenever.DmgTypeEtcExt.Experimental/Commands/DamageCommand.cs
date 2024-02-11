@@ -1,9 +1,10 @@
-﻿using Whenever.Core.WheneverTestDemo;
+﻿using Whenever.Core.Commands;
 using Whenever.Core.WorldInterface;
+using Whenever.DmgTypeEtcExt.Experimental.World;
 
-namespace Whenever.Core.Commands
+namespace Whenever.DmgTypeEtcExt.Experimental.Commands
 {
-    public record DamageCommand : ITargetedWorldCommand
+    public record DamageCommand : IGenericTargetedWorldCommand<ICommandableWorldDemo>
     {
         public DamagePackage damagePackage;
         public CombatantId Target { get; }

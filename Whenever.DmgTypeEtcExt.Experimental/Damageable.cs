@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Whenever.Core
+namespace Whenever.DmgTypeEtcExt.Experimental
 {
     public enum DamageType
     {

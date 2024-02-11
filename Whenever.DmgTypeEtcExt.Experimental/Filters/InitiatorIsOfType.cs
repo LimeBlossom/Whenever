@@ -1,8 +1,8 @@
 ﻿using Whenever.Core.CommandInitiators;
-using Whenever.Core.WheneverTestDemo;
 using Whenever.Core.WorldInterface;
+using Whenever.DmgTypeEtcExt.Experimental.World;
 
-namespace Whenever.Core.WheneverFilter
+namespace Whenever.DmgTypeEtcExt.Experimental.Filters
 {
     public record InitiatorIsOfType : IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>
     {

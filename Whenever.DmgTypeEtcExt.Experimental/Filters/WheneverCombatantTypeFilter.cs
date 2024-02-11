@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Whenever.Core.WheneverFilter
+namespace Whenever.DmgTypeEtcExt.Experimental.Filters
 {
     [Flags]
     public enum WheneverCombatantTypeFilter

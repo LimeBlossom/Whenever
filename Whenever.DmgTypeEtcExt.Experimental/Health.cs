@@ -1,4 +1,4 @@
-namespace Whenever.Core
+namespace Whenever.DmgTypeEtcExt.Experimental
 {
     public class Health
     {

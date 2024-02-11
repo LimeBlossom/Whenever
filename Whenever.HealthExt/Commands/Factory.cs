@@ -1,6 +1,7 @@
 ﻿using Whenever.Core.Commands;
-using Whenever.Core.StatusEffects;
 using Whenever.Core.WorldInterface;
+using Whenever.HealthExt.StatusEffects;
+using Whenever.HealthExt.World;
 
 namespace Whenever.HealthExt.Commands
 {

@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using Whenever.Core;
 using Whenever.Core.CommandInitiators;
 using Whenever.Core.WorldInterface;
 using Whenever.HealthExt;
+using Whenever.HealthExt.World;
 
 namespace Whenever.Test
 {
@@ -11,19 +13,18 @@ namespace Whenever.Test
     
     public class TestBasicHealthWorldWhenevers
     {
-        
-
         private (CombatantId player, CombatantId enemy, IManageWorld<IInspectWorldHealth, ICommandWorldHealth> manager, IInspectWorldHealth inspector, HealthWorld world) GetEnemyAndPlayerTurnContext()
         {
             var player = new HealthCombatant(10);
             var enemy = new HealthCombatant(10);
             var combatants = new[] {player, enemy};
             var turnManager = new HealthWorld(combatants.ToList());
-
+            var wheneverManager =
+                new WheneverManager<IInspectWorldHealth, ICommandWorldHealth>(turnManager, turnManager);
             return (
                 player.id,
                 enemy.id,
-                turnManager,
+                wheneverManager,
                 turnManager,
                 turnManager);
         }
@@ -54,17 +55,17 @@ namespace Whenever.Test
             turnManager.InitiateCommandBatch(new[] { initiated });
             
             Assert.AreEqual(8, inspector.GetHealth(enemy));
-            
-            world.ApplyAllStatusEffects();
+
+            turnManager.InitiateCommandBatch(world.ApplyAllStatusEffects());
             Assert.AreEqual(7, inspector.GetHealth(enemy));
             
-            world.ApplyAllStatusEffects();
+            turnManager.InitiateCommandBatch(world.ApplyAllStatusEffects());
             Assert.AreEqual(6, inspector.GetHealth(enemy));
             
-            world.ApplyAllStatusEffects();
+            turnManager.InitiateCommandBatch(world.ApplyAllStatusEffects());
             Assert.AreEqual(5, inspector.GetHealth(enemy));
             
-            world.ApplyAllStatusEffects();
+            turnManager.InitiateCommandBatch(world.ApplyAllStatusEffects());
             Assert.AreEqual(5, inspector.GetHealth(enemy));
         }
     }

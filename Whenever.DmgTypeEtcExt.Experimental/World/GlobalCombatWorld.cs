@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Whenever.Core;
 using Whenever.Core.CommandInitiators;
 using Whenever.Core.WorldInterface;
 using Random = System.Random;
 
-namespace Whenever.Core.WheneverTestDemo
+namespace Whenever.DmgTypeEtcExt.Experimental.World
 {
     public class GlobalCombatWorldDemo : IInspectableWorldDemo, ICommandableWorldDemo, IManageWorld<IInspectableWorldDemo, ICommandableWorldDemo>
     {
@@ -63,18 +64,11 @@ namespace Whenever.Core.WheneverTestDemo
         public void StartPlayerTurn()
         {
             Debug.Log("Starting player turn");
-            GenerateAndApplyStatusEffectsFor(CombatantType.Player);
         }
 
         public void StartEnemyTurn()
         {
             Debug.Log("Starting enemy turn");
-            GenerateAndApplyStatusEffectsFor(CombatantType.Enemy);
-        }
-        
-        private void GenerateAndApplyStatusEffectsFor(CombatantType type)
-        {
-            throw new NotImplementedException();
         }
 
         public void InitiateCommand(IWorldCommand<ICommandableWorldDemo> commandOld, ICommandInitiator initiator)

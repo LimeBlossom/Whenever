@@ -1,4 +1,6 @@
 ﻿using Whenever.Core.WorldInterface;
+using Whenever.HealthExt.Commands;
+using Whenever.HealthExt.World;
 
 namespace Whenever.HealthExt.Filters
 {
@@ -13,7 +15,7 @@ namespace Whenever.HealthExt.Filters
 
         public bool TriggersOn(InitiatedCommand<ICommandWorldHealth> initiatedCommand, IInspectWorldHealth world)
         {
-            if (initiatedCommand.command is Core.Commands.Damage damageCommand)
+            if (initiatedCommand.command is Damage damageCommand)
             {
                 return damageCommand.damage >= atLeast;
             }

@@ -1,10 +1,6 @@
-using System.Collections.Generic;
 using UnityEngine;
-using Whenever.Core.CommandInitiators;
-using Whenever.Core.WheneverTestDemo;
-using Whenever.Core.WorldInterface;
 
-namespace Whenever.Core
+namespace Whenever.DmgTypeEtcExt.Experimental
 {
     public enum CombatantType
     {

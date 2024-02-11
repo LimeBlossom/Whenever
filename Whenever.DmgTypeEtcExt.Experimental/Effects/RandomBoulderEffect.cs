@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using Whenever.Core.Commands;
-using Whenever.Core.WheneverTestDemo;
 using Whenever.Core.WorldInterface;
+using Whenever.DmgTypeEtcExt.Experimental.Commands;
+using Whenever.DmgTypeEtcExt.Experimental.World;
 
-namespace Whenever.Core.Effects
+namespace Whenever.DmgTypeEtcExt.Experimental.Effects
 {
     public record RandomBoulderEffect: IEffect<IInspectableWorldDemo, ICommandableWorldDemo>
     {

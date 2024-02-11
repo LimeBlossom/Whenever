@@ -1,8 +1,8 @@
 ﻿using Whenever.Core.Commands;
-using Whenever.Core.WheneverTestDemo;
 using Whenever.Core.WorldInterface;
+using Whenever.DmgTypeEtcExt.Experimental.World;
 
-namespace Whenever.Core.WheneverFilter
+namespace Whenever.DmgTypeEtcExt.Experimental.Filters
 {
     public record TargetIsOfType : IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>
     {
@@ -15,7 +15,7 @@ namespace Whenever.Core.WheneverFilter
 
         public bool TriggersOn(InitiatedCommand<ICommandableWorldDemo> initiatedCommand, IInspectableWorldDemo world)
         {
-            if (initiatedCommand.command is not ITargetedWorldCommand targetedCommand) return false;
+            if (initiatedCommand.command is not IGenericTargetedWorldCommand<ICommandableWorldDemo> targetedCommand) return false;
             
             var combatantType = world.CombatantData(targetedCommand.Target).GetCombatantType();
                 

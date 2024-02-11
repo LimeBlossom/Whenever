@@ -1,7 +1,7 @@
-﻿using Whenever.Core.StatusEffects;
-using Whenever.Core.WorldInterface;
+﻿using Whenever.Core.WorldInterface;
+using Whenever.HealthExt.StatusEffects;
 
-namespace Whenever.HealthExt
+namespace Whenever.HealthExt.World
 {
     public interface ICommandWorldHealth : ICommandWorld
     {

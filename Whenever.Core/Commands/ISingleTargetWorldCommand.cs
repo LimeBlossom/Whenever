@@ -1,5 +1,4 @@
-﻿using Whenever.Core.WheneverTestDemo;
-using Whenever.Core.WorldInterface;
+﻿using Whenever.Core.WorldInterface;
 
 namespace Whenever.Core.Commands
 {
@@ -8,9 +7,5 @@ namespace Whenever.Core.Commands
         where TCommand: ICommandWorld
     {
         public CombatantId Target { get; }
-    }
-
-    public interface ITargetedWorldCommand : IGenericTargetedWorldCommand<ICommandableWorldDemo>
-    {
     }
 }

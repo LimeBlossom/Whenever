@@ -1,7 +1,7 @@
-﻿using Whenever.Core.WheneverTestDemo;
-using Whenever.Core.WorldInterface;
+﻿using Whenever.Core.WorldInterface;
+using Whenever.DmgTypeEtcExt.Experimental.World;
 
-namespace Whenever.Core.Effects
+namespace Whenever.DmgTypeEtcExt.Experimental.Effects
 {
     public static class EffectFactory
     {
@@ -45,16 +45,6 @@ namespace Whenever.Core.Effects
                 damageAmount = damageAmount,
                 damageType = type
             };
-        }
-
-        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> BurnTarget()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> BleedTarget(int i, int i1)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

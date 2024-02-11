@@ -2,16 +2,14 @@
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
-using Whenever.Core.CommandInitiators;
-using Whenever.Core.StatusEffects;
 using Whenever.Core.WorldInterface;
+using Whenever.HealthExt.StatusEffects;
+using Whenever.HealthExt.World;
 
 namespace Whenever.HealthExt
 {
-    public class HealthWorld : IInspectWorldHealth, ICommandWorldHealth, IManageWorld<IInspectWorldHealth, ICommandWorldHealth>
+    public class HealthWorld : IInspectWorldHealth, ICommandWorldHealth
     {
-
-        private List<Whenever.Core.Whenever<IInspectWorldHealth, ICommandWorldHealth>> whenevers = new();
         protected Dictionary<CombatantId, HealthCombatant> allCombatants;
 
         public HealthWorld(List<HealthCombatant> allCombatants)
@@ -52,53 +50,15 @@ namespace Whenever.HealthExt
             return allCombatants[combatantId];
         }
 
-        public void ApplyAllStatusEffects()
+        public List<InitiatedCommand<ICommandWorldHealth>> ApplyAllStatusEffects()
         {
             var resultantCommands = new List<InitiatedCommand<ICommandWorldHealth>>();
             foreach (var combatant in allCombatants)
             {
                 resultantCommands.AddRange(combatant.Value.ApplyStatusEffects(combatant.Key));
             }
-        
-            foreach (var command in resultantCommands)
-            {
-                InitiateCommandBatch(new List<InitiatedCommand<ICommandWorldHealth>>{command});
-            }
-        }
 
-        public HealthCombatant CommandCombatant(CombatantId combatantId)
-        {
-            return allCombatants[combatantId];
-        }
-        
-        public void AddWhenever(Whenever.Core.Whenever<IInspectWorldHealth, ICommandWorldHealth> whenever)
-        {
-            whenevers.Add(whenever);
-        }
-
-        public void InitiateCommandBatch(IEnumerable<InitiatedCommand<ICommandWorldHealth>> initiatedCommands)
-        {
-            var commandableWorld = this;
-
-            var currentCommandBatch = new List<InitiatedCommand<ICommandWorldHealth>>(initiatedCommands);
-
-            foreach (var whenever in whenevers)
-            {
-                var newCommands = new List<InitiatedCommand<ICommandWorldHealth>>();
-                foreach (var initiatedCommand in currentCommandBatch)
-                {
-                    var triggered = whenever.GetTriggeredCommands(initiatedCommand, this).ToList();
-                    if (!triggered.Any()) continue;
-                    newCommands.AddRange(triggered);
-                }
-                currentCommandBatch.AddRange(newCommands);
-            }
-                
-            foreach (var currentCommand in currentCommandBatch)
-            {
-                Debug.Log("Applying command: " + currentCommand);
-                currentCommand.command.ApplyCommand(commandableWorld);
-            }
+            return resultantCommands;
         }
         
         public void SaySomething(CombatantId id, string message)

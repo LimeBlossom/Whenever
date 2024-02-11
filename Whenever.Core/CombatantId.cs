@@ -2,7 +2,6 @@
 {
     public record CombatantId
     {
-    
         private readonly int id;
     
         public static readonly CombatantId DEFAULT = new CombatantId(1);
@@ -12,7 +11,6 @@
         {
             return new CombatantId(id.id + 1);
         }
-    
     
         private CombatantId(int id)
         {

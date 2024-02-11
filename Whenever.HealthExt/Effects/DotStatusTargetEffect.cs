@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Whenever.Core.Commands;
-using Whenever.Core.StatusEffects;
 using Whenever.Core.WorldInterface;
+using Whenever.HealthExt.Commands;
+using Whenever.HealthExt.StatusEffects;
+using Whenever.HealthExt.World;
 
 namespace Whenever.HealthExt.Effects
 {

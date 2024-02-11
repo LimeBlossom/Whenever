@@ -1,6 +1,6 @@
 ﻿using Whenever.Core.WorldInterface;
 
-namespace Whenever.HealthExt
+namespace Whenever.HealthExt.World
 {
     public interface IInspectWorldHealth: IInspectWorld
     {

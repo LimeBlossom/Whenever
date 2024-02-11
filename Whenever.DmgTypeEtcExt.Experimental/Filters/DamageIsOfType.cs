@@ -1,8 +1,8 @@
-﻿using Whenever.Core.Commands;
-using Whenever.Core.WheneverTestDemo;
-using Whenever.Core.WorldInterface;
+﻿using Whenever.Core.WorldInterface;
+using Whenever.DmgTypeEtcExt.Experimental.Commands;
+using Whenever.DmgTypeEtcExt.Experimental.World;
 
-namespace Whenever.Core.WheneverFilter
+namespace Whenever.DmgTypeEtcExt.Experimental.Filters
 {
     public record DamageIsOfType : IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>
     {

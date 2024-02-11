@@ -1,7 +1,8 @@
-﻿using Whenever.Core.WorldInterface;
-using Whenever.HealthExt;
+﻿using Whenever.Core.Commands;
+using Whenever.Core.WorldInterface;
+using Whenever.HealthExt.World;
 
-namespace Whenever.Core.Commands
+namespace Whenever.HealthExt.Commands
 {
     public record Damage : IGenericTargetedWorldCommand<ICommandWorldHealth>
     {

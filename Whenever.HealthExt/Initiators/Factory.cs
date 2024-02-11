@@ -1,6 +1,5 @@
 ﻿using Whenever.Core.CommandInitiators;
-using Whenever.Core.StatusEffects;
-using Whenever.Core.WorldInterface;
+using Whenever.HealthExt.StatusEffects;
 
 namespace Whenever.HealthExt.Initiators
 {

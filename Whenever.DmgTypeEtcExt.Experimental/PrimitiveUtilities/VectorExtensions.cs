@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Whenever.Core.PrimitiveUtilities
+namespace Whenever.DmgTypeEtcExt.Experimental.PrimitiveUtilities
 {
     public class VectorExtensions
     {

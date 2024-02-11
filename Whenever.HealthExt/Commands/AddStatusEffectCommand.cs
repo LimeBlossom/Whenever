@@ -1,9 +1,9 @@
-﻿using Whenever.Core.StatusEffects;
-using Whenever.Core.WheneverTestDemo;
+﻿using Whenever.Core.Commands;
 using Whenever.Core.WorldInterface;
-using Whenever.HealthExt;
+using Whenever.HealthExt.StatusEffects;
+using Whenever.HealthExt.World;
 
-namespace Whenever.Core.Commands
+namespace Whenever.HealthExt.Commands
 {
     public record AddStatusEffectCommand: IGenericTargetedWorldCommand<ICommandWorldHealth>
     {

@@ -1,11 +1,12 @@
 using System.Collections.Generic;
-using Whenever.Core.Commands;
-using Whenever.Core.WheneverTestDemo;
+using Whenever.Core.Effects;
 using Whenever.Core.WorldInterface;
+using Whenever.DmgTypeEtcExt.Experimental.Commands;
+using Whenever.DmgTypeEtcExt.Experimental.World;
 
-namespace Whenever.Core.Effects
+namespace Whenever.DmgTypeEtcExt.Experimental.Effects
 {
-    public record HealInitiatorEffect: EffectInitiatorEffect
+    public record HealInitiatorEffect: EffectInitiatorEffect<IInspectableWorldDemo, ICommandableWorldDemo>
     {
         private float healAmount;
 

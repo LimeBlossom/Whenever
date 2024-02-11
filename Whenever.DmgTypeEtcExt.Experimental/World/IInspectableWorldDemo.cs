@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Whenever.Core.PrimitiveUtilities;
 using Whenever.Core.WorldInterface;
+using Whenever.DmgTypeEtcExt.Experimental.PrimitiveUtilities;
 using Random = System.Random;
 
-namespace Whenever.Core.WheneverTestDemo
+namespace Whenever.DmgTypeEtcExt.Experimental.World
 {
     public interface IInspectableWorldDemo: IInspectWorld
     {

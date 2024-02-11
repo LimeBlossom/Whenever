@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Whenever.Core.CommandInitiators;
-using Whenever.Core.Commands;
-using Whenever.Core.WheneverTestDemo;
 using Whenever.Core.WorldInterface;
-using Whenever.HealthExt;
+using Whenever.HealthExt.Commands;
+using Whenever.HealthExt.World;
 
-namespace Whenever.Core.StatusEffects
+namespace Whenever.HealthExt.StatusEffects
 {
     public record DotStatus : StatusEffect
     {
@@ -25,7 +24,7 @@ namespace Whenever.Core.StatusEffects
                 };
             }
 
-            var damageCommand = new Commands.Damage(target, damage);
+            var damageCommand = new Damage(target, damage);
 
             return new StatusEffectResult()
             {

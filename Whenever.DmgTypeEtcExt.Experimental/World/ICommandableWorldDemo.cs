@@ -1,6 +1,7 @@
-﻿using Whenever.Core.WorldInterface;
+﻿using Whenever.Core;
+using Whenever.Core.WorldInterface;
 
-namespace Whenever.Core.WheneverTestDemo
+namespace Whenever.DmgTypeEtcExt.Experimental.World
 {
     public interface ICommandableWorldDemo : ICommandWorld
     {

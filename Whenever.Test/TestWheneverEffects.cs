@@ -6,8 +6,12 @@ using Whenever.Core.CommandInitiators;
 using Whenever.Core.Commands;
 using Whenever.Core.Effects;
 using Whenever.Core.WheneverFilter;
-using Whenever.Core.WheneverTestDemo;
 using Whenever.Core.WorldInterface;
+using Whenever.DmgTypeEtcExt.Experimental;
+using Whenever.DmgTypeEtcExt.Experimental.Commands;
+using Whenever.DmgTypeEtcExt.Experimental.Effects;
+using Whenever.DmgTypeEtcExt.Experimental.Filters;
+using Whenever.DmgTypeEtcExt.Experimental.World;
 
 namespace Whenever.Test
 {
@@ -56,45 +60,6 @@ namespace Whenever.Test
             var enemyData = turnManager.CombatantData(enemy);
         
             Assert.AreEqual(9,playerData.CurrentHealth());
-            Assert.AreEqual(10, enemyData.CurrentHealth());
-        }
-
-        [Test]
-        public void WhenPlayer_HasBurnOnBurnDamageHasBurnEffect__AppliesBurnDamage()
-        {
-            var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
-
-            var wheneverFilter = WheneverFilterFactory.CreateDealtDamageFilter(
-                DamageType.FIRE,
-                WheneverCombatantTypeFilter.Player);
-            WheneverType fireDamageAppliesBurn = new(wheneverFilter, EffectFactory.BurnTarget());
-            turnManager.AddWhenever(fireDamageAppliesBurn);
-
-            /* Code that would be applied by an attack action */
-        
-            turnManager.StartEnemyTurn();
-        
-            turnManager.InitiateCommand(
-                CmdFactory.Damage(DamageType.FIRE, 1, player),
-                InitiatorFactory.From(enemy));
-            var playerData = turnManager.CombatantData(player);
-            Assert.AreEqual(9, playerData.CurrentHealth());
-
-            /* Code that would be called by a turn manager */
-            turnManager.StartPlayerTurn();
-            Assert.AreEqual(8, playerData.CurrentHealth());
-            turnManager.StartPlayerTurn();
-            Assert.AreEqual(7, playerData.CurrentHealth());
-            turnManager.StartPlayerTurn();
-            Assert.AreEqual(6, playerData.CurrentHealth());
-            turnManager.StartPlayerTurn();
-            turnManager.StartPlayerTurn();
-            turnManager.StartPlayerTurn();
-            turnManager.StartPlayerTurn();
-            turnManager.StartPlayerTurn();
-        
-            var enemyData = turnManager.CombatantData(enemy);
-            Assert.AreEqual(6, playerData.CurrentHealth());
             Assert.AreEqual(10, enemyData.CurrentHealth());
         }
 
@@ -181,116 +146,6 @@ namespace Whenever.Test
             Assert.AreEqual(9, turnManager.CombatantData(enemy).CurrentHealth());
         }
 
-        [Test]
-        public void When_PlayerDealsPhysicalCritAndBleed_ThenHealsFromBleed__HealsProperly()
-        {
-            var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
-        
-            var wheneverPhysicalDamageTakenByEnemy = WheneverFilterFactory.CreateDealtDamageFilter(
-                DamageType.PHYSICAL,
-                WheneverCombatantTypeFilter.Enemy);
-            var appliesCriticalDamage = new WheneverType(wheneverPhysicalDamageTakenByEnemy, EffectFactory.CriticalDamage());
-            turnManager.AddWhenever(appliesCriticalDamage);
-        
-            var wheneverCriticalDamageTakenByEnemy = WheneverFilterFactory.CreateDealtDamageFilter(
-                DamageType.CRITICAL,
-                WheneverCombatantTypeFilter.Enemy);
-            var appliesBleedStatus = new WheneverType(wheneverCriticalDamageTakenByEnemy, EffectFactory.BleedTarget(1, 3));
-            turnManager.AddWhenever(appliesBleedStatus);
-        
-            var wheneverPlayerDealsBleed = WheneverFilterFactory.CreateDealsDamageFilter(
-                DamageType.BLEED,
-                WheneverCombatantTypeFilter.Player);
-            var appliesHeal = new WheneverType(wheneverPlayerDealsBleed, EffectFactory.HealInitiator(1));
-            turnManager.AddWhenever(appliesHeal);
-        
-            var playerData = turnManager.CombatantData(player);
-            var enemyData = turnManager.CombatantData(enemy);
-            turnManager.StartEnemyTurn();
-            turnManager.InitiateCommand(
-                CmdFactory.Damage(DamageType.PHYSICAL, 5, player),
-                InitiatorFactory.From(enemy));
-        
-            Assert.AreEqual(5, playerData.CurrentHealth());
-            Assert.AreEqual(10, enemyData.CurrentHealth());
-        
-            turnManager.StartPlayerTurn();
-            turnManager.InitiateCommand(
-                CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
-                InitiatorFactory.From(player));
-        
-            Assert.AreEqual(5, playerData.CurrentHealth());
-            Assert.AreEqual(8, enemyData.CurrentHealth());
-        
-            turnManager.StartEnemyTurn();
-            turnManager.StartPlayerTurn();
-            Assert.AreEqual(6, playerData.CurrentHealth());
-            Assert.AreEqual(7, enemyData.CurrentHealth());
-
-            turnManager.StartEnemyTurn();
-            turnManager.StartPlayerTurn();
-            Assert.AreEqual(7, playerData.CurrentHealth());
-            Assert.AreEqual(6, enemyData.CurrentHealth());
-        
-            turnManager.StartEnemyTurn();
-            turnManager.StartPlayerTurn();
-            Assert.AreEqual(8, playerData.CurrentHealth());
-            Assert.AreEqual(5, enemyData.CurrentHealth());
-        
-            turnManager.StartEnemyTurn();
-            turnManager.StartPlayerTurn();
-            Assert.AreEqual(8, playerData.CurrentHealth());
-            Assert.AreEqual(5, enemyData.CurrentHealth());
-        }
-
-        [Test]
-        public void When_PlayerAppliesBleedToEnemy_TakesPhysicalDamage()
-        {
-            var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
-        
-            var wheneverPhysicalDamageTakenByEnemy = WheneverFilterFactory.CreateDealtDamageFilter(
-                DamageType.PHYSICAL,
-                WheneverCombatantTypeFilter.Enemy);
-            var appliesBleedStatus = new WheneverType(wheneverPhysicalDamageTakenByEnemy, EffectFactory.BleedTarget(1, 3));
-            turnManager.AddWhenever(appliesBleedStatus);
-        
-            var wheneverBleedInflictedOnEnemy = WheneverFilterFactory.CreateDotStatusEffectInflictedFilter(
-                DamageType.BLEED,
-                WheneverCombatantTypeFilter.Enemy);
-            var appliesPhysicalDamageToInitiator = new WheneverType(wheneverBleedInflictedOnEnemy, EffectFactory.DamageInitiator(DamageType.PHYSICAL, 1));
-            turnManager.AddWhenever(appliesPhysicalDamageToInitiator);
-        
-            var playerData = turnManager.CombatantData(player);
-            var enemyData = turnManager.CombatantData(enemy);
-        
-            turnManager.StartPlayerTurn();
-            turnManager.InitiateCommand(
-                CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
-                InitiatorFactory.From(player));
-            Assert.AreEqual(9, playerData.CurrentHealth());
-            Assert.AreEqual(9, enemyData.CurrentHealth());
-        
-            turnManager.StartEnemyTurn();
-            turnManager.StartPlayerTurn();
-            Assert.AreEqual(9, playerData.CurrentHealth());
-            Assert.AreEqual(8, enemyData.CurrentHealth());
-        
-            turnManager.StartEnemyTurn();
-            turnManager.StartPlayerTurn();
-            Assert.AreEqual(9, playerData.CurrentHealth());
-            Assert.AreEqual(7, enemyData.CurrentHealth());
-        
-            turnManager.StartEnemyTurn();
-            turnManager.StartPlayerTurn();
-            Assert.AreEqual(9, playerData.CurrentHealth());
-            Assert.AreEqual(6, enemyData.CurrentHealth());
-        
-            turnManager.StartEnemyTurn();
-            turnManager.StartPlayerTurn();
-            Assert.AreEqual(9, playerData.CurrentHealth());
-            Assert.AreEqual(6, enemyData.CurrentHealth());
-        }
-    
         [Test]
         public void When_PhysicalDamageOnEnemy_TriggerPhysicalDamageOnEnemy_OnlyAppliesOnce()
         {

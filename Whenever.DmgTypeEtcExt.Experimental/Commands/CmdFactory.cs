@@ -1,7 +1,7 @@
-﻿using Whenever.Core.WheneverTestDemo;
-using Whenever.Core.WorldInterface;
+﻿using Whenever.Core.WorldInterface;
+using Whenever.DmgTypeEtcExt.Experimental.World;
 
-namespace Whenever.Core.Commands
+namespace Whenever.DmgTypeEtcExt.Experimental.Commands
 {
     public static class CmdFactory
     {

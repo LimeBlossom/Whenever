@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using Whenever.Core.CommandInitiators;
-using Whenever.Core.Commands;
-using Whenever.Core.WheneverTestDemo;
 using Whenever.Core.WorldInterface;
-using Whenever.HealthExt;
+using Whenever.HealthExt.World;
 
-namespace Whenever.Core.StatusEffects
+namespace Whenever.HealthExt.StatusEffects
 {
     public enum StatusEffectCompletion
     {

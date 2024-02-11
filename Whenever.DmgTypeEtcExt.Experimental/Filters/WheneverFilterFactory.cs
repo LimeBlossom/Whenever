@@ -1,7 +1,8 @@
-﻿using Whenever.Core.WheneverTestDemo;
+﻿using Whenever.Core.WheneverFilter;
 using Whenever.Core.WorldInterface;
+using Whenever.DmgTypeEtcExt.Experimental.World;
 
-namespace Whenever.Core.WheneverFilter
+namespace Whenever.DmgTypeEtcExt.Experimental.Filters
 {
     public static class WheneverFilterFactory
     {
@@ -10,7 +11,7 @@ namespace Whenever.Core.WheneverFilter
             DamageType validDamageType,
             WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
-            return new CompositeWheneverFilter(
+            return new CompositeWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>(
                 new DamageIsOfType(validDamageType),
                 new TargetIsOfType(wheneverCombatantTypeFilterType)
             );
@@ -20,7 +21,7 @@ namespace Whenever.Core.WheneverFilter
             DamageType validDamageType,
             WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
-            return new CompositeWheneverFilter(
+            return new CompositeWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>(
                 new DamageIsOfType(validDamageType),
                 new InitiatorIsOfType(wheneverCombatantTypeFilterType)
             );
