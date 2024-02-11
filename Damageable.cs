@@ -26,6 +26,14 @@ public struct DamagePackage
     public float damageAmount;
     public Combatant attacker;
     public Combatant target;
+
+    public DamagePackage(DamageType damageType, float damageAmount, Combatant attacker, Combatant target)
+    {
+        this.damageType = damageType;
+        this.damageAmount = damageAmount;
+        this.attacker = attacker;
+        this.target = target;
+    }
 }
 
 public interface IDamageable
