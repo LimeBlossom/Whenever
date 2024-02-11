@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Whenever.Core.CommandInitiators;
 
 namespace Whenever.Core.WorldInterface
 {
@@ -17,5 +18,23 @@ namespace Whenever.Core.WorldInterface
         public void InitiateCommandBatch(IEnumerable<InitiatedCommand<TCommand>> initiatedCommand);
         
         public void AddWhenever(Whenever<TInspect, TCommand> whenever);
+    }
+    
+    public static class ManageWorldExtensions
+    {
+        public static void InitiateCommand<TInspect, TCommand>(this IManageWorld<TInspect, TCommand> manager, IWorldCommand<TCommand> command, ICommandInitiator initiator)
+            where TInspect : IInspectWorld
+            where TCommand : ICommandWorld
+        {
+            manager.InitiateCommand(new InitiatedCommand<TCommand>(command, initiator));
+        }
+        
+        public static void InitiateCommand<TInspect, TCommand>(this IManageWorld<TInspect, TCommand> manager, InitiatedCommand<TCommand> command)
+            where TInspect : IInspectWorld
+            where TCommand : ICommandWorld
+        {
+            manager.InitiateCommandBatch(new []{command});
+        }
+        
     }
 }

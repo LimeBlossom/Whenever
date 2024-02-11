@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Whenever.Core;
-using Whenever.Core.CommandInitiators;
 using Whenever.Core.WorldInterface;
 using Random = System.Random;
 
@@ -11,7 +9,6 @@ namespace Whenever.DmgTypeEtcExt.Experimental.World
 {
     public class GlobalCombatWorldDemo : IInspectableWorldDemo, ICommandableWorldDemo
     {
-        private List<Whenever<IInspectableWorldDemo, ICommandableWorldDemo>> whenevers = new();
         private Dictionary<CombatantId, Combatant> allCombatants;
         private Random rng;
         public Random GetRng() => rng;
@@ -58,51 +55,11 @@ namespace Whenever.DmgTypeEtcExt.Experimental.World
         {
             return allCombatants[combatantId];
         }
-        public void InitiateCommand(IWorldCommand<ICommandableWorldDemo> commandOld, ICommandInitiator initiator)
+
+        public void SaySomething(CombatantId id, string message)
         {
-            this.InitiateCommand(new InitiatedCommand<ICommandableWorldDemo>(commandOld, initiator));
+            throw new NotImplementedException();
         }
-
-        public void InitiateCommand(InitiatedCommand<ICommandableWorldDemo> command)
-        {
-            var batch = new List<InitiatedCommand<ICommandableWorldDemo>>(){command};
-            InitiateCommandBatch(batch);
-        }
-
-            public void SaySomething(CombatantId id, string message)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void InitiateCommandBatch(IEnumerable<InitiatedCommand<ICommandableWorldDemo>> initiatedCommands)
-            {
-                var commandableWorld = this;
-
-                var currentCommandBatch = new List<InitiatedCommand<ICommandableWorldDemo>>(initiatedCommands);
-
-                foreach (var whenever in whenevers)
-                {
-                    var newCommands = new List<InitiatedCommand<ICommandableWorldDemo>>();
-                    foreach (var initiatedCommand in currentCommandBatch)
-                    {
-                        var triggered = whenever.GetTriggeredCommands(initiatedCommand, this).ToList();
-                        if (!triggered.Any()) continue;
-                        newCommands.AddRange(triggered);
-                    }
-                    currentCommandBatch.AddRange(newCommands);
-                }
-                
-                foreach (var currentCommand in currentCommandBatch)
-                {
-                    Debug.Log("Applying command: " + currentCommand);
-                    currentCommand.command.ApplyCommand(commandableWorld);
-                }
-            }
-
-            public void AddWhenever(Whenever<IInspectableWorldDemo, ICommandableWorldDemo> whenever)
-            {
-                this.whenevers.Add(whenever);
-            }
     }
 
 }

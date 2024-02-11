@@ -28,16 +28,19 @@ namespace Whenever.Test
             Assert.AreEqual("someThing", "someThing");
         }
 
-        private (CombatantId player, CombatantId enemy, GlobalCombatWorldDemo turnManager) GetEnemyAndPlayerTurnContext()
+        private (CombatantId player, CombatantId enemy, IManageWorld<IInspectableWorldDemo, ICommandableWorldDemo> turnManager, GlobalCombatWorldDemo baseWorld) GetEnemyAndPlayerTurnContext()
         {
             var player = new Combatant(10, CombatantType.Player);
             var enemy = new Combatant(10, CombatantType.Enemy);
             var combatants = new[] {player, enemy};
             var turnManager = new GlobalCombatWorldDemo(combatants.ToList(), 197271);
+            var wheneverManager =
+                new WheneverManager<IInspectableWorldDemo, ICommandableWorldDemo>(turnManager, turnManager);
 
             return (
                 turnManager.GetOfType(CombatantType.Player).Single(),
                 turnManager.GetOfType(CombatantType.Enemy).Single(), 
+                wheneverManager,
                 turnManager);
         }
 
@@ -45,7 +48,7 @@ namespace Whenever.Test
         [Test]
         public void WhenPlayerTakesDamage__TakesDamage()
         {
-            var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
+            var (player, enemy, turnManager, baseWorld) = GetEnemyAndPlayerTurnContext();
         
             /* Code that would be called by a turn manager */
         
@@ -54,8 +57,8 @@ namespace Whenever.Test
                 InitiatorFactory.From(enemy));
 
 
-            var playerData = turnManager.CombatantData(player);
-            var enemyData = turnManager.CombatantData(enemy);
+            var playerData = baseWorld.CombatantData(player);
+            var enemyData = baseWorld.CombatantData(enemy);
         
             Assert.AreEqual(9,playerData.CurrentHealth());
             Assert.AreEqual(10, enemyData.CurrentHealth());
@@ -64,7 +67,7 @@ namespace Whenever.Test
         [Test]
         public void WhenPlayer_DealsDamage_HealsSelf()
         {
-            var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
+            var (player, enemy, turnManager, baseWorld) = GetEnemyAndPlayerTurnContext();
         
             // whenever the player deals damage, heal the player
             var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
@@ -78,21 +81,21 @@ namespace Whenever.Test
                 CmdFactory.Damage(DamageType.PHYSICAL, 4, player),
                 InitiatorFactory.From(enemy));
         
-            Assert.AreEqual(6, turnManager.CombatantData(player).CurrentHealth());
-            Assert.AreEqual(10, turnManager.CombatantData(enemy).CurrentHealth());
+            Assert.AreEqual(6, baseWorld.CombatantData(player).CurrentHealth());
+            Assert.AreEqual(10, baseWorld.CombatantData(enemy).CurrentHealth());
         
             // player deals damage
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
                 InitiatorFactory.From(player));
         
-            Assert.AreEqual(9, turnManager.CombatantData(player).CurrentHealth());
-            Assert.AreEqual(9, turnManager.CombatantData(enemy).CurrentHealth());
+            Assert.AreEqual(9, baseWorld.CombatantData(player).CurrentHealth());
+            Assert.AreEqual(9, baseWorld.CombatantData(enemy).CurrentHealth());
         }
         [Test]
         public void WhenPlayer_DealsDamage_HealsSelf_ToMaxHealth()
         {
-            var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
+            var (player, enemy, turnManager, baseWorld) = GetEnemyAndPlayerTurnContext();
         
             // whenever the player deals damage, heal the player
             var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
@@ -106,22 +109,22 @@ namespace Whenever.Test
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, player),
                 InitiatorFactory.From(enemy));
         
-            Assert.AreEqual(9, turnManager.CombatantData(player).CurrentHealth());
-            Assert.AreEqual(10, turnManager.CombatantData(enemy).CurrentHealth());
+            Assert.AreEqual(9, baseWorld.CombatantData(player).CurrentHealth());
+            Assert.AreEqual(10, baseWorld.CombatantData(enemy).CurrentHealth());
         
             // player deals damage
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
                 InitiatorFactory.From(player));
         
-            Assert.AreEqual(10, turnManager.CombatantData(player).CurrentHealth());
-            Assert.AreEqual(9, turnManager.CombatantData(enemy).CurrentHealth());
+            Assert.AreEqual(10, baseWorld.CombatantData(player).CurrentHealth());
+            Assert.AreEqual(9, baseWorld.CombatantData(enemy).CurrentHealth());
         }
     
         [Test]
         public void When_FireDamageTaken_RandomBoulderThrown()
         {
-            var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
+            var (player, enemy, turnManager, baseWorld) = GetEnemyAndPlayerTurnContext();
         
             // whenever anyone takes fire damage, throw a random boulder
             var wheneverFireDamageTaken = WheneverFilterFactory.CreateDealtDamageFilter(
@@ -135,14 +138,14 @@ namespace Whenever.Test
                 CmdFactory.Damage(DamageType.FIRE, 1, enemy),
                 InitiatorFactory.From(player));
         
-            Assert.AreEqual(8, turnManager.CombatantData(player).CurrentHealth());
-            Assert.AreEqual(9, turnManager.CombatantData(enemy).CurrentHealth());
+            Assert.AreEqual(8, baseWorld.CombatantData(player).CurrentHealth());
+            Assert.AreEqual(9, baseWorld.CombatantData(enemy).CurrentHealth());
         }
 
         [Test]
         public void When_PhysicalDamageOnEnemy_TriggerPhysicalDamageOnEnemy_OnlyAppliesOnce()
         {
-            var (player, enemy, turnManager) = GetEnemyAndPlayerTurnContext();
+            var (player, enemy, turnManager, baseWorld) = GetEnemyAndPlayerTurnContext();
         
             var wheneverPhysicalDamageTakenByEnemy = WheneverFilterFactory.CreateDealtDamageFilter(
                 DamageType.PHYSICAL,
@@ -150,8 +153,8 @@ namespace Whenever.Test
             var appliesPhysicalDamage = new WheneverType(wheneverPhysicalDamageTakenByEnemy, EffectFactory.DamageTarget(DamageType.PHYSICAL, 1));
             turnManager.AddWhenever(appliesPhysicalDamage);
         
-            var playerData = turnManager.CombatantData(player);
-            var enemyData = turnManager.CombatantData(enemy);
+            var playerData = baseWorld.CombatantData(player);
+            var enemyData = baseWorld.CombatantData(enemy);
         
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
@@ -183,10 +186,11 @@ namespace Whenever.Test
         
                 return new GlobalCombatWorldDemo(new[] {playerData}.Concat(enemies).ToList(), 197271);   
             }
-            var turnManager = GenerateWorld();
-            float GetHealthOf(float x, float y) => turnManager.CombatantData(turnManager.GetAtLocation(new (x, y))).CurrentHealth();
+            var baseWorld = GenerateWorld();
+            var turnManager = new WheneverManager<IInspectableWorldDemo, ICommandableWorldDemo>(baseWorld, baseWorld);
+            float GetHealthOf(float x, float y) => baseWorld.CombatantData(baseWorld.GetAtLocation(new (x, y))).CurrentHealth();
         
-            var playerId = turnManager.GetAtLocation(new(0, 0));
+            var playerId = baseWorld.GetAtLocation(new(0, 0));
         
             var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
                 DamageType.PHYSICAL,
@@ -195,7 +199,7 @@ namespace Whenever.Test
             turnManager.AddWhenever(appliesPhysicalDamage);
         
             turnManager.InitiateCommand(
-                CmdFactory.Damage(DamageType.PHYSICAL, 1, turnManager.GetAtLocation(new (3, 3))),
+                CmdFactory.Damage(DamageType.PHYSICAL, 1, baseWorld.GetAtLocation(new (3, 3))),
                 InitiatorFactory.From(playerId));
         
             Assert.AreEqual(9, GetHealthOf(3, 3));
@@ -230,11 +234,12 @@ namespace Whenever.Test
         
                 return new GlobalCombatWorldDemo(new[] {playerData}.Concat(enemies).ToList(), 197271);   
             }
-            var turnManager = GenerateWorld();
-            float GetHealthOf(float x, float y) => turnManager.CombatantData(turnManager.GetAtLocation(new (x, y))).CurrentHealth();
-            float GetHealthOfId(CombatantId id) => turnManager.CombatantData(id).CurrentHealth();
+            var baseWorld = GenerateWorld();
+            var turnManager = new WheneverManager<IInspectableWorldDemo, ICommandableWorldDemo>(baseWorld, baseWorld);
+            float GetHealthOf(float x, float y) => baseWorld.CombatantData(baseWorld.GetAtLocation(new (x, y))).CurrentHealth();
+            float GetHealthOfId(CombatantId id) => baseWorld.CombatantData(id).CurrentHealth();
         
-            var playerId = turnManager.GetAtLocation(new(0, 0));
+            var playerId = baseWorld.GetAtLocation(new(0, 0));
         
             var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
                 DamageType.PHYSICAL,
@@ -247,11 +252,11 @@ namespace Whenever.Test
         
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 8, playerId),
-                InitiatorFactory.From(turnManager.GetAtLocation(new (3, 3))));
+                InitiatorFactory.From(baseWorld.GetAtLocation(new (3, 3))));
             Assert.AreEqual(2, GetHealthOfId(playerId));
         
             turnManager.InitiateCommand(
-                CmdFactory.Damage(DamageType.PHYSICAL, 1, turnManager.GetAtLocation(new (3, 3))),
+                CmdFactory.Damage(DamageType.PHYSICAL, 1, baseWorld.GetAtLocation(new (3, 3))),
                 InitiatorFactory.From(playerId));
         
             // the healing whenever trigger occurs after the damage adjacents, so the player deals damage to 4 total:
@@ -286,11 +291,12 @@ namespace Whenever.Test
         
                 return new GlobalCombatWorldDemo(new[] {playerData}.Concat(enemies).ToList(), 197271);   
             }
-            var turnManager = GenerateWorld();
-            float GetHealthOf(float x, float y) => turnManager.CombatantData(turnManager.GetAtLocation(new (x, y))).CurrentHealth();
-            float GetHealthOfId(CombatantId id) => turnManager.CombatantData(id).CurrentHealth();
+            var baseWorld = GenerateWorld();
+            var turnManager = new WheneverManager<IInspectableWorldDemo, ICommandableWorldDemo>(baseWorld, baseWorld);
+            float GetHealthOf(float x, float y) => baseWorld.CombatantData(baseWorld.GetAtLocation(new (x, y))).CurrentHealth();
+            float GetHealthOfId(CombatantId id) => baseWorld.CombatantData(id).CurrentHealth();
         
-            var playerId = turnManager.GetAtLocation(new(0, 0));
+            var playerId = baseWorld.GetAtLocation(new(0, 0));
         
             var wheneverPlayerDealsPhysical = WheneverFilterFactory.CreateDealsDamageFilter(
                 DamageType.PHYSICAL,
@@ -303,11 +309,11 @@ namespace Whenever.Test
         
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 8, playerId),
-                InitiatorFactory.From(turnManager.GetAtLocation(new (3, 3))));
+                InitiatorFactory.From(baseWorld.GetAtLocation(new (3, 3))));
             Assert.AreEqual(2, GetHealthOfId(playerId));
         
             turnManager.InitiateCommand(
-                CmdFactory.Damage(DamageType.PHYSICAL, 1, turnManager.GetAtLocation(new (3, 3))),
+                CmdFactory.Damage(DamageType.PHYSICAL, 1, baseWorld.GetAtLocation(new (3, 3))),
                 InitiatorFactory.From(playerId));
         
             // the healing whenever trigger occurs before the damage adjacents, so the player deals damage to 1 total at this point:
