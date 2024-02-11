@@ -1,5 +1,4 @@
 ﻿using Whenever.Core.WheneverFilter;
-using Whenever.Core.WorldInterface;
 using Whenever.HealthExt.World;
 
 namespace Whenever.HealthExt.Filters

@@ -1,6 +1,5 @@
 ﻿using Whenever.Core;
 using Whenever.Core.Commands;
-using Whenever.Core.WorldInterface;
 using Whenever.HealthExt.StatusEffects;
 using Whenever.HealthExt.World;
 
@@ -10,9 +9,9 @@ namespace Whenever.HealthExt.Commands
     {
         public CombatantId Target { get; }
         
-        public StatusEffect statusEffect;
+        public StatusEffect<ICommandWorldHealth> statusEffect;
     
-        public AddStatusEffectCommand(CombatantId target, StatusEffect effect)
+        public AddStatusEffectCommand(CombatantId target, StatusEffect<ICommandWorldHealth> effect)
         {
             Target = target;
             statusEffect = effect;

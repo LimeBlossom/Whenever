@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Whenever.Core;
 using Whenever.Core.CommandInitiators;
 using Whenever.Core.WorldInterface;
@@ -6,19 +5,8 @@ using Whenever.HealthExt.World;
 
 namespace Whenever.HealthExt.StatusEffects
 {
-    public enum StatusEffectCompletion
-    {
-        Expired,
-        Active
-    }
-
-    public struct StatusEffectResult
-    {
-        public StatusEffectCompletion completion;
-        public IEnumerable<IWorldCommand<ICommandWorldHealth>> commands;
-    }
-
-    public abstract record StatusEffect
+    public abstract record StatusEffect<TCommand>
+        where TCommand: ICommandWorld
     {
         private int turnsLeft;
         private readonly ICommandInitiator initiator;
@@ -38,7 +26,7 @@ namespace Whenever.HealthExt.StatusEffects
         /// returns true when 
         /// </summary>
         /// <returns></returns>
-        public abstract StatusEffectResult ActivateOn(CombatantId target);
+        public abstract StatusEffectResult<TCommand> ActivateOn(CombatantId target);
 
         protected bool NextTurnIsExpired()
         {

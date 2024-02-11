@@ -1,5 +1,4 @@
 ﻿using Whenever.Core;
-using Whenever.Core.Commands;
 using Whenever.Core.WorldInterface;
 using Whenever.HealthExt.StatusEffects;
 using Whenever.HealthExt.World;
@@ -8,7 +7,7 @@ namespace Whenever.HealthExt.Commands
 {
     public static class Factory
     {
-        public static IWorldCommand<ICommandWorldHealth> Status(CombatantId target, StatusEffect effect)
+        public static IWorldCommand<ICommandWorldHealth> Status(CombatantId target, StatusEffect<ICommandWorldHealth> effect)
         {
             return new AddStatusEffectCommand(target, effect);
         }

@@ -8,17 +8,17 @@ using Whenever.HealthExt.World;
 
 namespace Whenever.HealthExt.StatusEffects
 {
-    public record DotStatus : StatusEffect
+    public record DotStatus : StatusEffect<ICommandWorldHealth>
     {
         public float damage;
         public DotStatus(int turnsLeft, ICommandInitiator initiator) : base(turnsLeft, initiator)
         {
         }
-        public override StatusEffectResult ActivateOn(CombatantId target)
+        public override StatusEffectResult<ICommandWorldHealth> ActivateOn(CombatantId target)
         {
             if (NextTurnIsExpired())
             {
-                return new StatusEffectResult
+                return new StatusEffectResult<ICommandWorldHealth>
                 {
                     completion = StatusEffectCompletion.Expired,
                     commands = Enumerable.Empty<IWorldCommand<ICommandWorldHealth>>()
@@ -27,7 +27,7 @@ namespace Whenever.HealthExt.StatusEffects
 
             var damageCommand = new Damage(target, damage);
 
-            return new StatusEffectResult()
+            return new StatusEffectResult<ICommandWorldHealth>()
             {
                 completion = StatusEffectCompletion.Active,
                 commands = new List<IWorldCommand<ICommandWorldHealth>> { damageCommand }

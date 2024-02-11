@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
-using UnityEngine;
 using Whenever.Core;
 using Whenever.Core.Commands;
-using Whenever.Core.WorldInterface;
 using Whenever.HealthExt.StatusEffects;
 using Whenever.HealthExt.World;
 
@@ -37,11 +34,12 @@ namespace Whenever.HealthExt
             combatant.health -= health;
         }
 
-        public void AddStatusEffect(CombatantId id, StatusEffect effect)
+        public void AddStatusEffect(CombatantId id, StatusEffect<ICommandWorldHealth> effect)
         {
             var combatant = InspectCombatant(id);
             combatant.statusEffects.Add(effect);
         }
+        
         public IEnumerable<CombatantId> AllIds()
         {
             return allCombatants.Keys;
@@ -57,7 +55,7 @@ namespace Whenever.HealthExt
             var resultantCommands = new List<InitiatedCommand<ICommandWorldHealth>>();
             foreach (var combatant in allCombatants)
             {
-                resultantCommands.AddRange(combatant.Value.ApplyStatusEffects(combatant.Key));
+                resultantCommands.AddRange(combatant.Value.statusEffects.ApplyStatusEffects(combatant.Key));
             }
 
             return resultantCommands;
@@ -72,28 +70,12 @@ namespace Whenever.HealthExt
     public class HealthCombatant
     {
         public float health;
-        public List<StatusEffect> statusEffects = new();
+        public StatusEffectCollection<ICommandWorldHealth> statusEffects = new();
         [CanBeNull] public CombatantId id; 
         
         public HealthCombatant(float health)
         {
             this.health = health;
         }
-        public IEnumerable<InitiatedCommand<ICommandWorldHealth>> ApplyStatusEffects(CombatantId myId)
-        {
-            foreach(StatusEffect statusEffect in statusEffects.ToArray())
-            {
-                var statusEffectResult = statusEffect.ActivateOn(myId);
-                if (statusEffectResult.completion == StatusEffectCompletion.Expired)
-                {
-                    statusEffects.Remove(statusEffect);
-                }
-                foreach (var command in statusEffectResult.commands)
-                {
-                    yield return new InitiatedCommand<ICommandWorldHealth>(command, Initiators.Factory.From(statusEffect));
-                }
-            }
-        }
-
     }
 }
