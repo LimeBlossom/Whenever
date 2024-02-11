@@ -4,12 +4,13 @@ using Whenever.Core.CommandInitiators;
 using Whenever.Core.Commands;
 using Whenever.Core.WheneverTestDemo;
 using Whenever.Core.WorldInterface;
+using Whenever.HealthExt;
 
 namespace Whenever.Core.StatusEffects
 {
     public record DotStatus : StatusEffect
     {
-        public DamagePackage damagePackage;
+        public float damage;
         public DotStatus(int turnsLeft, ICommandInitiator initiator) : base(turnsLeft, initiator)
         {
         }
@@ -20,16 +21,16 @@ namespace Whenever.Core.StatusEffects
                 return new StatusEffectResult
                 {
                     completion = StatusEffectCompletion.Expired,
-                    commands = Enumerable.Empty<IWorldCommand<ICommandableWorldDemo>>()
+                    commands = Enumerable.Empty<IWorldCommand<ICommandWorldHealth>>()
                 };
             }
 
-            var damageCommand = new DamageCommand(target, damagePackage);
+            var damageCommand = new Commands.Damage(target, damage);
 
             return new StatusEffectResult()
             {
                 completion = StatusEffectCompletion.Active,
-                commands = new List<IWorldCommand<ICommandableWorldDemo>> { damageCommand }
+                commands = new List<IWorldCommand<ICommandWorldHealth>> { damageCommand }
             };
         }
 

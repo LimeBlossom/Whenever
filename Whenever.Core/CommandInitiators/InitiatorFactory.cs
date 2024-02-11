@@ -1,5 +1,4 @@
-﻿using Whenever.Core.StatusEffects;
-using Whenever.Core.WorldInterface;
+﻿using Whenever.Core.WorldInterface;
 
 namespace Whenever.Core.CommandInitiators
 {
@@ -12,12 +11,6 @@ namespace Whenever.Core.CommandInitiators
                 Initiator = combatantId,
             };
         }
-
-        public static ICommandInitiator From(StatusEffect statusEffect)
-        {
-            return statusEffect.GetInitiator();
-        }
-
         public static ICommandInitiator FromEffectOf(ICommandInitiator previousInitiator)
         {
             if (previousInitiator is RecursiveEffectCommandInitiator recursiveInitiator)

@@ -5,22 +5,6 @@ namespace Whenever.Core.Effects
 {
     public static class EffectFactory
     {
-        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> BurnTarget(float damage = 1, int turns = 3)
-        {
-            return new DotStatusTargetEffect
-            {
-                damagePackage = new (DamageType.BURN,  damage),
-                turns = turns
-            };
-        }
-        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> BleedTarget(float bleedDamage, int turns)
-        {
-            return new DotStatusTargetEffect
-            {
-                damagePackage = new (DamageType.BLEED, bleedDamage),
-                turns = turns
-            };
-        }
 
         public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> HealInitiator(float healAmount)
         {
@@ -61,6 +45,16 @@ namespace Whenever.Core.Effects
                 damageAmount = damageAmount,
                 damageType = type
             };
+        }
+
+        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> BurnTarget()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> BleedTarget(int i, int i1)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

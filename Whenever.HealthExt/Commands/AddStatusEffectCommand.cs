@@ -1,10 +1,11 @@
 ﻿using Whenever.Core.StatusEffects;
 using Whenever.Core.WheneverTestDemo;
 using Whenever.Core.WorldInterface;
+using Whenever.HealthExt;
 
 namespace Whenever.Core.Commands
 {
-    public record AddStatusEffectCommand: ITargetedWorldCommand
+    public record AddStatusEffectCommand: IGenericTargetedWorldCommand<ICommandWorldHealth>
     {
         public CombatantId Target { get; }
         
@@ -16,10 +17,9 @@ namespace Whenever.Core.Commands
             statusEffect = effect;
         }
 
-        public void ApplyCommand(ICommandableWorldDemo world)
+        public void ApplyCommand(ICommandWorldHealth world)
         {
-            var target = world.GetCombatantRaw(Target);
-            target.statusEffects.Add(statusEffect);
+            world.AddStatusEffect(Target, statusEffect);
         }
     }
 }

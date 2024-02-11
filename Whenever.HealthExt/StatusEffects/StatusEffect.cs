@@ -3,6 +3,7 @@ using Whenever.Core.CommandInitiators;
 using Whenever.Core.Commands;
 using Whenever.Core.WheneverTestDemo;
 using Whenever.Core.WorldInterface;
+using Whenever.HealthExt;
 
 namespace Whenever.Core.StatusEffects
 {
@@ -15,7 +16,7 @@ namespace Whenever.Core.StatusEffects
     public struct StatusEffectResult
     {
         public StatusEffectCompletion completion;
-        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> commands;
+        public IEnumerable<IWorldCommand<ICommandWorldHealth>> commands;
     }
 
     public abstract record StatusEffect

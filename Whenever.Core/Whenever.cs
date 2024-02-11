@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Whenever.Core.CommandInitiators;
-using Whenever.Core.Effects;
-using Whenever.Core.WheneverFilter;
 using Whenever.Core.WorldInterface;
 
 namespace Whenever.Core

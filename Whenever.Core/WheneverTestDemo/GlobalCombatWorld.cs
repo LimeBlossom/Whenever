@@ -74,17 +74,7 @@ namespace Whenever.Core.WheneverTestDemo
         
         private void GenerateAndApplyStatusEffectsFor(CombatantType type)
         {
-            var playerKvps = allCombatants.Where(x => x.Value.combatantType == type);
-            var resultantCommands = new List<InitiatedCommand<ICommandableWorldDemo>>();
-            foreach (var combatant in playerKvps)
-            {
-                resultantCommands.AddRange(combatant.Value.ApplyStatusEffects(combatant.Key));
-            }
-            
-            foreach (var command in resultantCommands)
-            {
-                InitiateCommand(command);
-            }
+            throw new NotImplementedException();
         }
 
         public void InitiateCommand(IWorldCommand<ICommandableWorldDemo> commandOld, ICommandInitiator initiator)

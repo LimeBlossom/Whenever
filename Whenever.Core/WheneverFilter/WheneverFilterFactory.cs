@@ -25,16 +25,10 @@ namespace Whenever.Core.WheneverFilter
                 new InitiatorIsOfType(wheneverCombatantTypeFilterType)
             );
         }
-        
-        public static IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo> CreateDotStatusEffectInflictedFilter(
-            DamageType dotDamageType,
-            WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
+
+        public static IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo> CreateDotStatusEffectInflictedFilter(DamageType bleed, WheneverCombatantTypeFilter enemy)
         {
-            return new CompositeWheneverFilter(
-                new DotStatusIsOfType(dotDamageType),
-                new TargetIsOfType(wheneverCombatantTypeFilterType)
-            );
+            throw new System.NotImplementedException();
         }
-        
     }
 }

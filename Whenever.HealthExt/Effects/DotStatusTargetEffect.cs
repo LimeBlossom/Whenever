@@ -2,18 +2,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Whenever.Core.Commands;
 using Whenever.Core.StatusEffects;
-using Whenever.Core.WheneverTestDemo;
 using Whenever.Core.WorldInterface;
 
-namespace Whenever.Core.Effects
+namespace Whenever.HealthExt.Effects
 {
-    public record DotStatusTargetEffect: IEffect<IInspectableWorldDemo, ICommandableWorldDemo>
+    public record DotStatusTargetEffect: IEffect<IInspectWorldHealth, ICommandWorldHealth>
     {
-        public DamagePackage damagePackage;
+        public float damage;
         public int turns;
-        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffect(InitiatedCommand<ICommandableWorldDemo> command, IInspectableWorldDemo world)
+        public IEnumerable<IWorldCommand<ICommandWorldHealth>> ApplyEffect(InitiatedCommand<ICommandWorldHealth> command, IInspectWorldHealth world)
         {
-            if (command.command is not ITargetedWorldCommand targetedCommand)
+            if (command.command is not IGenericTargetedWorldCommand<ICommandWorldHealth> targetedCommand)
             {
                 Debug.LogWarning("Burn Target effect can only apply on commands that target at least one combatant");
                 yield break;
@@ -21,7 +20,7 @@ namespace Whenever.Core.Effects
 
             var status = new DotStatus(turns, command.initiator)
             {
-                damagePackage = damagePackage
+                damage = damage
             };
             yield return new AddStatusEffectCommand(targetedCommand.Target, status);
         }

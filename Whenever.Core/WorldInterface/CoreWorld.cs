@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Whenever.Core.WorldInterface
 {
-    public class CoreActorWorld<TCombatant>:
+    public class CoreActorWorld<TCombatant> :
         IInspectWorld,
         ICommandWorld,
         IManageWorld<IInspectWorld, ICommandWorld>
     {
         private List<Whenever<IInspectWorld, ICommandWorld>> whenevers = new();
-        private Dictionary<CombatantId, TCombatant> allCombatants;
+        protected Dictionary<CombatantId, TCombatant> allCombatants;
 
         public CoreActorWorld(List<TCombatant> allCombatants)
         {

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Whenever.Core.CommandInitiators;
-using Whenever.Core.StatusEffects;
 using Whenever.Core.WheneverTestDemo;
 using Whenever.Core.WorldInterface;
 
@@ -24,7 +23,6 @@ namespace Whenever.Core
     {
         public Health health;
         public Damageable damageable;
-        public List<StatusEffect> statusEffects = new();
         public CombatantType combatantType;
         public Vector2 position;
 
@@ -37,22 +35,6 @@ namespace Whenever.Core
             this.position = position;
         }
     
-        public IEnumerable<InitiatedCommand<ICommandableWorldDemo>> ApplyStatusEffects(CombatantId myId)
-        {
-            foreach(StatusEffect statusEffect in statusEffects.ToArray())
-            {
-                var statusEffectResult = statusEffect.ActivateOn(myId);
-                if (statusEffectResult.completion == StatusEffectCompletion.Expired)
-                {
-                    statusEffects.Remove(statusEffect);
-                }
-                foreach (var command in statusEffectResult.commands)
-                {
-                    yield return new InitiatedCommand<ICommandableWorldDemo>(command, InitiatorFactory.From(statusEffect));
-                }
-            }
-        }
-
         public float CurrentHealth()
         {
             return health.GetCurrentHealth();
