@@ -1,6 +1,7 @@
 ﻿using Whenever.Core.CommandInitiators;
+using Whenever.Core.WorldInterface;
 
-namespace Whenever.Core.WorldInterface
+namespace Whenever.Core.Commands
 {
     public record InitiatedCommand<TCommand> where TCommand: ICommandWorld
     {

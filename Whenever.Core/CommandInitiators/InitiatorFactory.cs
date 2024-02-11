@@ -1,6 +1,4 @@
-﻿using Whenever.Core.WorldInterface;
-
-namespace Whenever.Core.CommandInitiators
+﻿namespace Whenever.Core.CommandInitiators
 {
     public static class InitiatorFactory
     {

@@ -1,4 +1,5 @@
 ﻿using Whenever.Core.Commands;
+using Whenever.Core.WheneverFilter;
 using Whenever.Core.WorldInterface;
 using Whenever.HealthExt.Commands;
 using Whenever.HealthExt.StatusEffects;

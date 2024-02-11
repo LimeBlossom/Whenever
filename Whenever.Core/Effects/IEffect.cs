@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using Whenever.Core.Commands;
+using Whenever.Core.WorldInterface;
 
-namespace Whenever.Core.WorldInterface
+namespace Whenever.Core.Effects
 {
     public interface IEffect<in TInspectWorld, TCommandWorld>
         where TInspectWorld : IInspectWorld

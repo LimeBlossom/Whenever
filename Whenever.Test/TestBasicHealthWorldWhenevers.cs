@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Whenever.Core;
 using Whenever.Core.CommandInitiators;
+using Whenever.Core.Commands;
 using Whenever.Core.WorldInterface;
 using Whenever.HealthExt;
 using Whenever.HealthExt.World;

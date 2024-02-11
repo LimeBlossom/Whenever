@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Whenever.Core.Commands;
+using Whenever.Core.Effects;
 using Whenever.Core.WorldInterface;
 using Whenever.DmgTypeEtcExt.Experimental.Commands;
 using Whenever.DmgTypeEtcExt.Experimental.World;

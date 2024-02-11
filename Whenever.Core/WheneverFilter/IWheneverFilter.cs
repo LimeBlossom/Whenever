@@ -1,4 +1,7 @@
-﻿namespace Whenever.Core.WorldInterface
+﻿using Whenever.Core.Commands;
+using Whenever.Core.WorldInterface;
+
+namespace Whenever.Core.WheneverFilter
 {
     public interface IWheneverFilter<in TInspectWorld, TCommandWorld>
         where TInspectWorld : IInspectWorld
