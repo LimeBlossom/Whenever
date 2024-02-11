@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
-using WheneverAbstractions._Project.WheneverAbstractions.Commands;
+using Whenever.Core.CommandInitiators;
+using Whenever.Core.Commands;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
+namespace Whenever.Core.Effects
 {
     public abstract record EffectInitiatorEffect : IEffect
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
+namespace Whenever.Core.WheneverFilter
 {
     [Flags]
     public enum WheneverCombatantTypeFilter

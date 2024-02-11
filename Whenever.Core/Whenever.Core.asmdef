@@ -1,6 +1,6 @@
 {
-    "name": "WheneverAbstractions",
-    "rootNamespace": "WheneverAbstractions",
+    "name": "Whenever Core",
+    "rootNamespace": "Whenever.Core",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions
+namespace Whenever.Core
 {
     public enum DamageType
     {

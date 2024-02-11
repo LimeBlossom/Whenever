@@ -1,4 +1,4 @@
-﻿namespace WheneverAbstractions._Project.WheneverAbstractions.Commands
+﻿namespace Whenever.Core.Commands
 {
     public record AddWheneverCommand : IWorldCommand
     {

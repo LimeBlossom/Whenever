@@ -1,4 +1,4 @@
-namespace WheneverAbstractions._Project.WheneverAbstractions
+namespace Whenever.Core
 {
     public class Health
     {

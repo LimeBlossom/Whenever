@@ -1,4 +1,4 @@
-﻿namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
+﻿namespace Whenever.Core.WheneverFilter
 {
     public interface IWheneverFilter
     {

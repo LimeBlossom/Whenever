@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
-using WheneverAbstractions._Project.WheneverAbstractions.Commands;
+using Whenever.Core.CommandInitiators;
+using Whenever.Core.Commands;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions.StatusEffects
+namespace Whenever.Core.StatusEffects
 {
     public record DotStatus : StatusEffect
     {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
-using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
+using Whenever.Core.CommandInitiators;
+using Whenever.Core.StatusEffects;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions
+namespace Whenever.Core
 {
     public enum CombatantType
     {

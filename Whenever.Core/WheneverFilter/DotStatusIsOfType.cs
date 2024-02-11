@@ -1,7 +1,7 @@
-﻿using WheneverAbstractions._Project.WheneverAbstractions.Commands;
-using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
+﻿using Whenever.Core.Commands;
+using Whenever.Core.StatusEffects;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
+namespace Whenever.Core.WheneverFilter
 {
     public record DotStatusIsOfType : IWheneverFilter
     {

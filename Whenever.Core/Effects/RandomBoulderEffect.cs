@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using WheneverAbstractions._Project.WheneverAbstractions.Commands;
+using Whenever.Core.Commands;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
+namespace Whenever.Core.Effects
 {
     public record RandomBoulderEffect: IEffect
     {

@@ -1,6 +1,6 @@
-﻿using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
+﻿using Whenever.Core.StatusEffects;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators
+namespace Whenever.Core.CommandInitiators
 {
     public static class InitiatorFactory
     {

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
-using WheneverAbstractions._Project.WheneverAbstractions.Commands;
-using WheneverAbstractions._Project.WheneverAbstractions.PrimitiveUtilities;
+using Whenever.Core.CommandInitiators;
+using Whenever.Core.Commands;
+using Whenever.Core.PrimitiveUtilities;
 using Random = System.Random;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions
+namespace Whenever.Core
 {
     public class GlobalCombatWorld : IInspectableWorld
     {

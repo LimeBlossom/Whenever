@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
+namespace Whenever.Core.WheneverFilter
 {
     public record CompositeWheneverFilter: IWheneverFilter
     {

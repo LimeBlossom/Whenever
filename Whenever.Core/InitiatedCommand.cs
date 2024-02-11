@@ -1,7 +1,7 @@
-﻿using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
-using WheneverAbstractions._Project.WheneverAbstractions.Commands;
+﻿using Whenever.Core.CommandInitiators;
+using Whenever.Core.Commands;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions
+namespace Whenever.Core
 {
     public record InitiatedCommand
     {

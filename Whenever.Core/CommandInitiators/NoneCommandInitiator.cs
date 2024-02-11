@@ -1,4 +1,4 @@
-﻿namespace WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators
+﻿namespace Whenever.Core.CommandInitiators
 {
     public record NoneCommandInitiator(string descriptiveName): ICommandInitiator
     {

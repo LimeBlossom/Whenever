@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
-using WheneverAbstractions._Project.WheneverAbstractions.Effects;
-using WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter;
+using Whenever.Core.CommandInitiators;
+using Whenever.Core.Effects;
+using Whenever.Core.WheneverFilter;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions
+namespace Whenever.Core
 {
     public record Whenever
     {

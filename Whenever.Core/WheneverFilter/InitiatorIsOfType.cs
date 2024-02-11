@@ -1,6 +1,6 @@
-﻿using WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators;
+﻿using Whenever.Core.CommandInitiators;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions.WheneverFilter
+namespace Whenever.Core.WheneverFilter
 {
     public record InitiatorIsOfType : IWheneverFilter
     {

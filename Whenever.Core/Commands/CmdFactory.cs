@@ -1,6 +1,6 @@
-﻿using WheneverAbstractions._Project.WheneverAbstractions.StatusEffects;
+﻿using Whenever.Core.StatusEffects;
 
-namespace WheneverAbstractions._Project.WheneverAbstractions.Commands
+namespace Whenever.Core.Commands
 {
     public static class CmdFactory
     {

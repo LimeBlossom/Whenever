@@ -1,4 +1,4 @@
-﻿namespace WheneverAbstractions._Project.WheneverAbstractions.CommandInitiators
+﻿namespace Whenever.Core.CommandInitiators
 {
     public interface ICommandInitiator
     {

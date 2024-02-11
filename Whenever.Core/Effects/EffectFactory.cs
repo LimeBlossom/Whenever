@@ -1,4 +1,4 @@
-﻿namespace WheneverAbstractions._Project.WheneverAbstractions.Effects
+﻿namespace Whenever.Core.Effects
 {
     public static class EffectFactory
     {
