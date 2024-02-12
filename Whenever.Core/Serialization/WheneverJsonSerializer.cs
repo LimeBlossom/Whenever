@@ -9,64 +9,39 @@ namespace Serialization
         where TInspectWorld : IInspectWorld
         where TCommandWorld : ICommandWorld
     {
+        
+        public (IEffect<TInspectWorld, TCommandWorld>? res, string? error) DeserializeEffect(string json)
+        {
+            return PolymorphicDeserialize<IEffect<TInspectWorld, TCommandWorld>>(json);
+        }
+
+        public (IWheneverFilter<TInspectWorld, TCommandWorld>? res, string? error) DeserializeFilter(string json)
+        {
+            return PolymorphicDeserialize<IWheneverFilter<TInspectWorld, TCommandWorld>>(json);
+        }
+        
         private class PartialTypeIndicator
         {
             public string type;
         }
         
-        public (IEffect<TInspectWorld, TCommandWorld>? res, string? error) DeserializeEffect(string json)
+        public (T? res, string? error) PolymorphicDeserialize<T>(string json) where T : class
         {
-            try
-            {
-                var effectType = typeof(IEffect<TInspectWorld, TCommandWorld>);
-                
-                var allEffectTypesFromLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(x => x.GetTypes())
-                    .Where(x => effectType.IsAssignableFrom(x) && !x.IsAbstract)
-                    .Select(type => new
-                    {
-                        type, 
-                        type.GetCustomAttribute<PolymorphicSerializableAttribute>()?.typeKey
-                    })
-                    .Where(x => x.typeKey != null)
-                    .ToArray();
-
-                    var typeIndicator = JsonUtility.FromJson<PartialTypeIndicator>(json);
-                var typeToDeserialize = allEffectTypesFromLoadedAssemblies
-                    .FirstOrDefault(x => x.typeKey == typeIndicator.type)?.type;
-                if(typeToDeserialize == null)
+            var filterType = typeof(T);
+            var allEffectTypesFromLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(x => x.GetTypes())
+                .Where(x => x.GetCustomAttribute<PolymorphicSerializableAttribute>() != null)
+                .Select(x => GetBaseTypeOrGenericisedInstance(x, filterType))
+                .Where(x => x != null)
+                .Select(type => new
                 {
-                    return (null, $"Could not find type {typeIndicator.type}");
-                }
-                
-                var effect = (IEffect<TInspectWorld, TCommandWorld>)JsonUtility.FromJson(json, typeToDeserialize);
-                return (effect, null);
-            }
-            catch (System.ArgumentException e)
-            {
-                return (null, e.Message);
-            }
-        }
-
-        public (IWheneverFilter<TInspectWorld, TCommandWorld>? res, string? error) DeserializeFilter(string json)
-        {
+                    type, 
+                    type.GetCustomAttribute<PolymorphicSerializableAttribute>()?.typeKey
+                })
+                .Where(x => x.typeKey != null)
+                .ToArray();
             try
             {
-                var filterType = typeof(IWheneverFilter<TInspectWorld, TCommandWorld>);
-                
-                var allEffectTypesFromLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(x => x.GetTypes())
-                    .Where(x => x.GetCustomAttribute<PolymorphicSerializableAttribute>() != null)
-                    .Select(x => GetBaseTypeOrGenericisedInstance(x, filterType))
-                    .Where(x => x != null)
-                    .Select(type => new
-                    {
-                        type, 
-                        type.GetCustomAttribute<PolymorphicSerializableAttribute>()?.typeKey
-                    })
-                    .Where(x => x.typeKey != null)
-                    .ToArray();
-                
                 var typeIndicator = JsonUtility.FromJson<PartialTypeIndicator>(json);
                 var typeToDeserialize = allEffectTypesFromLoadedAssemblies
                     .FirstOrDefault(x => x.typeKey == typeIndicator.type)?.type;
@@ -75,7 +50,7 @@ namespace Serialization
                     return (null, $"Could not find type {typeIndicator.type}");
                 }
                 
-                var deserialized = (IWheneverFilter<TInspectWorld, TCommandWorld>)JsonUtility.FromJson(json, typeToDeserialize);
+                var deserialized = (T)JsonUtility.FromJson(json, typeToDeserialize);
                 return (deserialized, null);
             }
             catch (System.ArgumentException e)
@@ -96,6 +71,10 @@ namespace Serialization
                 // assuming they are identical to the target type's type parameters 
                 var targetGenericParameters = targetType.GetGenericArguments();
                 var assemblyGenericParameters = assemblyType.GetGenericArguments();
+                if (targetGenericParameters.Length != assemblyGenericParameters.Length)
+                {
+                    throw new Exception("Generic type parameters do not match");
+                }
                 return assemblyType.MakeGenericType(targetGenericParameters);
             }
 
