@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Whenever.Core.Commands;
+using Whenever.Core;
 using Whenever.Core.Effects;
 using Whenever.Core.WorldInterface;
 using Whenever.HealthExt.Commands;
@@ -7,17 +7,18 @@ using Whenever.HealthExt.World;
 
 namespace Whenever.HealthExt.Effects
 {
-    public class DamageTargetEffect : IEffect<IInspectWorldHealth,ICommandWorldHealth>
+    public record DamageTargetEffect : EffectTargetEffect<IInspectWorldHealth,ICommandWorldHealth>
     {
         public float damage;
         
-        public IEnumerable<IWorldCommand<ICommandWorldHealth>> ApplyEffect(InitiatedCommand<ICommandWorldHealth> command, IInspectWorldHealth world)
+        protected override string DescribeOnTarget()
         {
-            if (command.command is not IGenericTargetedWorldCommand<ICommandWorldHealth> targetedCommand)
-            {
-                yield break;
-            }
-            yield return new Damage(targetedCommand.Target, 1);
+            return $"deal {damage} damage";
+        }
+
+        protected override IEnumerable<IWorldCommand<ICommandWorldHealth>> ApplyEffectToTarget(CombatantId target, IInspectWorldHealth world)
+        {
+            yield return new Damage(target, damage);
         }
     }
 }

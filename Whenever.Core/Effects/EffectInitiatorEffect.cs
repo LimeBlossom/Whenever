@@ -20,7 +20,14 @@ namespace Whenever.Core.Effects
             }
             return this.ApplyEffectToInitiator(initiator.Initiator, world);
         }
+
+        public string Describe()
+        {
+            return DescribeOnInitiator() + " to the initiator";
+        }
         
+        public abstract string DescribeOnInitiator();
+
         protected abstract IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffectToInitiator(CombatantId initiator, TInspectWorld world);
     }
 }

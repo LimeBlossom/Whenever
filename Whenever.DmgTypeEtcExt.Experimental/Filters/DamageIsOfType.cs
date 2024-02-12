@@ -24,5 +24,10 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Filters
 
             return false;
         }
+
+        public string Describe()
+        {
+            return $"damage is {damageType}";
+        }
     }
 }

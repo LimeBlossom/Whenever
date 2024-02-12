@@ -19,6 +19,12 @@ namespace Whenever.Core.Effects
             }
             return this.ApplyEffectToTarget(targetedCommand.Target, world);
         }
+        public string Describe()
+        {
+            return DescribeOnTarget() + " to the target";
+        }
+        
+        protected abstract string DescribeOnTarget();
         
         protected abstract IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffectToTarget(CombatantId target, TInspectWorld world);
     }

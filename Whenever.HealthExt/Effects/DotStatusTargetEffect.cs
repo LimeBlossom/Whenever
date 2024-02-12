@@ -27,5 +27,10 @@ namespace Whenever.HealthExt.Effects
             };
             yield return new AddStatusEffectCommand(targetedCommand.Target, status);
         }
+
+        public string Describe()
+        {
+            return $"apply {damage} damage per turn for {turns} turns to the target";
+        }
     }
 }

@@ -24,5 +24,10 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
             var damagePackage = new DamagePackage(DamageType.CRITICAL, critAmount);
             yield return new DamageCommand(targetedCommand.Target, damagePackage);
         }
+
+        public string Describe()
+        {
+            return $"apply {critDamageMultiplier}x {DamageType.CRITICAL} damage to the target";
+        }
     }
 }

@@ -36,8 +36,7 @@ namespace Whenever.Core
         
         public string Describe()
         {
-            return "TODO";
-            //return $"Whenever {filter.Describe()}; then {effect.Describe()}";
+            return $"whenever {filter.Describe()}; {effect.Describe()}";
         }
     }
 }

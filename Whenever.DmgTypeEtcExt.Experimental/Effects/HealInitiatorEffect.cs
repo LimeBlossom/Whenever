@@ -16,6 +16,7 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
             this.healAmount = healAmount;
         }
 
+
         protected override IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffectToInitiator(CombatantId initiator, IInspectableWorldDemo world)
         {
             var damagePackage = new DamagePackage
@@ -24,6 +25,10 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
                 damageType = DamageType.HEAL
             };
             yield return new DamageCommand(initiator, damagePackage);
+        }
+        public override string DescribeOnInitiator()
+        {
+            return $"heal {healAmount} health";
         }
     }
 }

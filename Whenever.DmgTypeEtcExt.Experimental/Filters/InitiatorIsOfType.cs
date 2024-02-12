@@ -27,5 +27,10 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Filters
             var targetEnumType = combatantType.ToTypeFilter();
             return (combatTypeFilter & targetEnumType) != 0;
         }
+
+        public string Describe()
+        {
+            return $"initiator is {combatTypeFilter}";
+        }
     }
 }

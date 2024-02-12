@@ -19,5 +19,10 @@ namespace Whenever.Core.WheneverFilter
         {
             return filters.All(filter => filter.TriggersOn(initiatedCommand, world));
         }
+
+        public string Describe()
+        {
+            return string.Join(" and ", filters.Select(filter => filter.Describe()));
+        }
     }
 }

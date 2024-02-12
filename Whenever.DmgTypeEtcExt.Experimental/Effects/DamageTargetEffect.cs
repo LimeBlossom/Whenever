@@ -11,9 +11,14 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
     {
         public DamagePackage damagePackage;
 
+
         protected override IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffectToTarget(CombatantId target, IInspectableWorldDemo world)
         {
             yield return new DamageCommand(target, damagePackage);
+        }
+        protected override string DescribeOnTarget()
+        {
+            return $"deal {damagePackage.damageAmount} {damagePackage.damageType} damage";
         }
     }
 }

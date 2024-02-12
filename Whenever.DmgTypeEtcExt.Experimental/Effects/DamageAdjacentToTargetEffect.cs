@@ -21,5 +21,10 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
                 yield return new DamageCommand(adjacentTarget, damagePackage);
             }
         }
+        
+        protected override string DescribeOnTarget()
+        {
+            return $"deal {damageAmount} {damageType} damage to all adjacent";
+        }
     }
 }

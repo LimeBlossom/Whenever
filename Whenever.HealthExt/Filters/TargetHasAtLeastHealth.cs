@@ -5,20 +5,20 @@ using Whenever.HealthExt.World;
 
 namespace Whenever.HealthExt.Filters
 {
-    public record DamageOccurs : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
+    public record TargetHasAtLeastHealth : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
     {
         private readonly float atLeast;
 
-        public DamageOccurs(float atLeast)
+        public TargetHasAtLeastHealth(float atLeast)
         {
             this.atLeast = atLeast;
         }
 
         public bool TriggersOn(InitiatedCommand<ICommandWorldHealth> initiatedCommand, IInspectWorldHealth world)
         {
-            if (initiatedCommand.command is Damage damageCommand)
+            if (initiatedCommand.command is IGenericTargetedWorldCommand<ICommandWorldHealth> targetedCommand)
             {
-                return damageCommand.damage >= atLeast;
+                return world.GetHealth(targetedCommand.Target) >= atLeast;
             }
             
             return false;
@@ -26,7 +26,7 @@ namespace Whenever.HealthExt.Filters
 
         public string Describe()
         {
-            return $"at least {atLeast} damage occurs";
+            return $"target has at least {atLeast} health";
         }
     }
 }

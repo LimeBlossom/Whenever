@@ -20,6 +20,15 @@ namespace Whenever.HealthExt.Filters
                 new DamageOccurs(atLeast)
             );
         }
+
+        public static IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth> TargetHasAtLeastHealth(float atLeast)
+        {
+            return new TargetHasAtLeastHealth(atLeast);
+        }
         
+        public static IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth> Compose(params IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>[] filters)
+        {
+            return new CompositeWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>(filters);
+        }
     }
 }

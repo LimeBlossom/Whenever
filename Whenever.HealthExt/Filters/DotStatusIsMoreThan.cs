@@ -24,5 +24,10 @@ namespace Whenever.HealthExt.Filters
 
             return false;
         }
+
+        public string Describe()
+        {
+            return $"a status effect of at least {atLeast} damage per turn is inflicted";
+        }
     }
 }

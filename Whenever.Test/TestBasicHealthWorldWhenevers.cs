@@ -27,19 +27,16 @@ namespace Whenever.Test
             public void AddWhenever(
                 IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth> filter,
                 IEffect<IInspectWorldHealth, ICommandWorldHealth> effect,
-                string expectedDescription = null)
+                string expectedDescription)
             {
                 var newWhenever = new WheneverType(filter, effect);
                 this.AddWhenever(newWhenever, expectedDescription);
             }
             public void AddWhenever(
                 WheneverType whenever,
-                string expectedDescription = null)
+                string expectedDescription)
             {
-                if (expectedDescription != null)
-                {
-                    Assert.AreEqual(expectedDescription, whenever.Describe());
-                }
+                Assert.AreEqual(expectedDescription, whenever.Describe());
                 turnManager.AddWhenever(whenever);
             }
         }
@@ -82,7 +79,7 @@ namespace Whenever.Test
             ctx.AddWhenever(
                 HealthExt.Filters.Factory.CreateDamageOccursFilter(2), 
                 HealthExt.Effects.Factory.DotTarget(1, 3), 
-                "TODO");
+                "whenever at least 2 damage occurs; apply 1 damage per turn for 3 turns to the target");
             
             Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.enemy));
             
@@ -112,7 +109,7 @@ namespace Whenever.Test
             ctx.AddWhenever(
                 HealthExt.Filters.Factory.CreateDamageOccursFilter(1),
                 HealthExt.Effects.Factory.DamageTarget(1), 
-                "TODO");
+                "whenever at least 1 damage occurs; deal 1 damage to the target");
             
             Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.enemy));
             
@@ -128,8 +125,8 @@ namespace Whenever.Test
             var ctx = GetEnemyAndPlayerTurnContext();
             var filter = HealthExt.Filters.Factory.CreateDamageOccursFilter(1);
             WheneverType damageOccursDealsDamageToTarget = new(filter, HealthExt.Effects.Factory.DamageTarget(1));
-            ctx.AddWhenever(damageOccursDealsDamageToTarget);
-            ctx.AddWhenever(damageOccursDealsDamageToTarget);
+            ctx.AddWhenever(damageOccursDealsDamageToTarget, "whenever at least 1 damage occurs; deal 1 damage to the target");
+            ctx.AddWhenever(damageOccursDealsDamageToTarget, "whenever at least 1 damage occurs; deal 1 damage to the target");
             
             Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.enemy));
             
@@ -144,6 +141,27 @@ namespace Whenever.Test
             // = <1dmg>, <1dmg>, <1dmg>, <2dmg>
             // = 5
             Assert.AreEqual(5, ctx.inspector.GetHealth(ctx.enemy));
+        }
+
+        [Test]
+        public void WheneverPlayerDealsDamage_AndTargetHasAtLeastHealth__DealsMoreDamage()
+        {
+            var ctx = GetEnemyAndPlayerTurnContext();
+            ctx.AddWhenever(
+                HealthExt.Filters.Factory.Compose(
+                    HealthExt.Filters.Factory.TargetHasAtLeastHealth(5),
+                    HealthExt.Filters.Factory.CreateDamageOccursFilter(1)
+                ),
+                HealthExt.Effects.Factory.DamageTarget(2), 
+                "whenever target has at least 5 health and at least 1 damage occurs; deal 2 damage to the target");
+            
+            Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.enemy));
+            
+            var dmg = HealthExt.Commands.Factory.Damage(ctx.enemy, 2);
+            var initiated = new InitiatedCommand<ICommandWorldHealth>(dmg, InitiatorFactory.From(ctx.player));
+            ctx.turnManager.InitiateCommand(initiated);
+            
+            Assert.AreEqual(6, ctx.inspector.GetHealth(ctx.enemy));
         }
     }
     

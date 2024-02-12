@@ -30,5 +30,10 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
             };
             yield return new DamageCommand(target, damagePackage);
         }
+
+        public string Describe()
+        {
+            return $"deal {meteorDamage} {DamageType.PHYSICAL} damage to a random target";
+        }
     }
 }
