@@ -16,29 +16,70 @@ namespace Serialization
         
         public (IEffect<TInspectWorld, TCommandWorld>? res, string? error) DeserializeEffect(string json)
         {
-            var effectType = typeof(IEffect<TInspectWorld, TCommandWorld>);
-            
-            var allEffectTypesFromLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(x => x.GetTypes())
-                .Where(x => effectType.IsAssignableFrom(x) && !x.IsAbstract)
-                .Select(type => new
-                {
-                    type, 
-                    type.GetCustomAttribute<PolymorphicSerializableAttribute>()?.typeKey
-                })
-                .Where(x => x.typeKey != null)
-                .ToArray();
-            
-            var typeIndicator = JsonUtility.FromJson<PartialTypeIndicator>(json);
-            var effectTypeToDeserialize = allEffectTypesFromLoadedAssemblies
-                .FirstOrDefault(x => x.typeKey == typeIndicator.type)?.type;
-            if(effectTypeToDeserialize == null)
+            try
             {
-                return (null, $"Could not find effect type {typeIndicator.type}");
+                var effectType = typeof(IEffect<TInspectWorld, TCommandWorld>);
+                
+                var allEffectTypesFromLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(x => x.GetTypes())
+                    .Where(x => effectType.IsAssignableFrom(x) && !x.IsAbstract)
+                    .Select(type => new
+                    {
+                        type, 
+                        type.GetCustomAttribute<PolymorphicSerializableAttribute>()?.typeKey
+                    })
+                    .Where(x => x.typeKey != null)
+                    .ToArray();
+
+                    var typeIndicator = JsonUtility.FromJson<PartialTypeIndicator>(json);
+                var typeToDeserialize = allEffectTypesFromLoadedAssemblies
+                    .FirstOrDefault(x => x.typeKey == typeIndicator.type)?.type;
+                if(typeToDeserialize == null)
+                {
+                    return (null, $"Could not find type {typeIndicator.type}");
+                }
+                
+                var effect = (IEffect<TInspectWorld, TCommandWorld>)JsonUtility.FromJson(json, typeToDeserialize);
+                return (effect, null);
             }
-            
-            var effect = (IEffect<TInspectWorld, TCommandWorld>)JsonUtility.FromJson(json, effectTypeToDeserialize);
-            return (effect, null);
+            catch (System.ArgumentException e)
+            {
+                return (null, e.Message);
+            }
+        }
+
+        public (IWheneverFilter<TInspectWorld, TCommandWorld>? res, string? error) DeserializeFilter(string json)
+        {
+            try
+            {
+                var filterType = typeof(IWheneverFilter<TInspectWorld, TCommandWorld>);
+                
+                var allEffectTypesFromLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(x => x.GetTypes())
+                    .Where(x => filterType.IsAssignableFrom(x) && !x.IsAbstract)
+                    .Select(type => new
+                    {
+                        type, 
+                        type.GetCustomAttribute<PolymorphicSerializableAttribute>()?.typeKey
+                    })
+                    .Where(x => x.typeKey != null)
+                    .ToArray();
+                
+                var typeIndicator = JsonUtility.FromJson<PartialTypeIndicator>(json);
+                var typeToDeserialize = allEffectTypesFromLoadedAssemblies
+                    .FirstOrDefault(x => x.typeKey == typeIndicator.type)?.type;
+                if(typeToDeserialize == null)
+                {
+                    return (null, $"Could not find type {typeIndicator.type}");
+                }
+                
+                var deserialized = (IWheneverFilter<TInspectWorld, TCommandWorld>)JsonUtility.FromJson(json, typeToDeserialize);
+                return (deserialized, null);
+            }
+            catch (System.ArgumentException e)
+            {
+                return (null, e.Message);
+            }
         }
     }
 }

@@ -1,6 +1,13 @@
-﻿public record TargetHasAtLeastHealth : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
+﻿
+using System;
+using Serialization;
+using UnityEngine;
+
+[PolymorphicSerializable("TargetHasAtLeastHealth"), Serializable]
+public record TargetHasAtLeastHealth : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
 {
-    private readonly float atLeast;
+    [SerializeField]
+    private float atLeast;
 
     public TargetHasAtLeastHealth(float atLeast)
     {

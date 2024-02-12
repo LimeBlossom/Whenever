@@ -1,6 +1,13 @@
-﻿public record DotStatusIsMoreThan : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
+﻿
+using System;
+using Serialization;
+using UnityEngine;
+
+[PolymorphicSerializable("DotStatusIsMoreThan"), Serializable]
+public record DotStatusIsMoreThan : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
 {
-    private readonly float atLeast;
+    [SerializeField]
+    private float atLeast;
 
     public DotStatusIsMoreThan(float atLeast)
     {

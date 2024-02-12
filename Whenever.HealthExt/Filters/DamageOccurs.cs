@@ -1,6 +1,12 @@
-﻿public record DamageOccurs : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
+﻿using System;
+using Serialization;
+using UnityEngine;
+
+[PolymorphicSerializable("DamageOccurs"), Serializable]
+public record DamageOccurs : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
 {
-    private readonly float atLeast;
+    [SerializeField]
+    private float atLeast;
 
     public DamageOccurs(float atLeast)
     {
