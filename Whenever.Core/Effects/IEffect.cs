@@ -11,5 +11,6 @@ namespace Whenever.Core.Effects
         public IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffect(
             InitiatedCommand<TCommandWorld> command,
             TInspectWorld world);
+        //public string Describe();
     }
 }

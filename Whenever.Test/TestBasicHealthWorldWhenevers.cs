@@ -3,6 +3,8 @@ using NUnit.Framework;
 using Whenever.Core;
 using Whenever.Core.CommandInitiators;
 using Whenever.Core.Commands;
+using Whenever.Core.Effects;
+using Whenever.Core.WheneverFilter;
 using Whenever.Core.WorldInterface;
 using Whenever.HealthExt;
 using Whenever.HealthExt.World;
@@ -14,7 +16,35 @@ namespace Whenever.Test
     
     public class TestBasicHealthWorldWhenevers
     {
-        private (CombatantId player, CombatantId enemy, IManageWorld<IInspectWorldHealth, ICommandWorldHealth> manager, IInspectWorldHealth inspector, HealthWorld world) GetEnemyAndPlayerTurnContext()
+        private record TestContext
+        {
+            public CombatantId player;
+            public CombatantId enemy;
+            public IManageWorld<IInspectWorldHealth, ICommandWorldHealth> turnManager;
+            public IInspectWorldHealth inspector;
+            public HealthWorld world;
+            
+            public void AddWhenever(
+                IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth> filter,
+                IEffect<IInspectWorldHealth, ICommandWorldHealth> effect,
+                string expectedDescription = null)
+            {
+                var newWhenever = new WheneverType(filter, effect);
+                this.AddWhenever(newWhenever, expectedDescription);
+            }
+            public void AddWhenever(
+                WheneverType whenever,
+                string expectedDescription = null)
+            {
+                if (expectedDescription != null)
+                {
+                    Assert.AreEqual(expectedDescription, whenever.Describe());
+                }
+                turnManager.AddWhenever(whenever);
+            }
+        }
+        
+        private TestContext GetEnemyAndPlayerTurnContext()
         {
             var player = new HealthCombatant(10);
             var enemy = new HealthCombatant(10);
@@ -22,84 +52,90 @@ namespace Whenever.Test
             var turnManager = new HealthWorld(combatants.ToList());
             var wheneverManager =
                 new WheneverManager<IInspectWorldHealth, ICommandWorldHealth>(turnManager, turnManager);
-            return (
-                player.id,
-                enemy.id,
-                wheneverManager,
-                turnManager,
-                turnManager);
+
+            return new TestContext
+            {
+                player = player.id,
+                enemy = enemy.id,
+                turnManager = wheneverManager,
+                inspector = turnManager,
+                world = turnManager
+            };
         }
         
         [Test]
         public void WhenPlayerTakesDamage__TakesDamage()
         {
-            var (player, _, turnManager, inspector, _) = GetEnemyAndPlayerTurnContext();
-            var dmg = HealthExt.Commands.Factory.Damage(player, 2);
+            var ctx = GetEnemyAndPlayerTurnContext();
+            var dmg = HealthExt.Commands.Factory.Damage(ctx.player, 2);
             var initiated = new InitiatedCommand<ICommandWorldHealth>(dmg, InitiatorFactory.FromNone("test"));
-            Assert.AreEqual(10, inspector.GetHealth(player));
-            turnManager.InitiateCommandBatch(new[] { initiated });
-            Assert.AreEqual(8, inspector.GetHealth(player));
+            Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.player));
+            ctx.turnManager.InitiateCommandBatch(new[] { initiated });
+            Assert.AreEqual(8, ctx.inspector.GetHealth(ctx.player));
         }
 
         [Test]
         public void WheneverPlayerDealsDamage_ApplyDotToTarget__AppliedDot()
         {
-            var (player, enemy, turnManager, inspector, world) = GetEnemyAndPlayerTurnContext();
-            var filter = HealthExt.Filters.Factory.CreateDamageOccursFilter(2);
-            WheneverType damageOccursAppliesDotToTarget = new(filter, HealthExt.Effects.Factory.DotTarget(1, 3));
-            turnManager.AddWhenever(damageOccursAppliesDotToTarget);
+            var ctx = GetEnemyAndPlayerTurnContext();
             
-            Assert.AreEqual(10, inspector.GetHealth(enemy));
+            ctx.AddWhenever(
+                HealthExt.Filters.Factory.CreateDamageOccursFilter(2), 
+                HealthExt.Effects.Factory.DotTarget(1, 3), 
+                "TODO");
             
-            var dmg = HealthExt.Commands.Factory.Damage(enemy, 2);
-            var initiated = new InitiatedCommand<ICommandWorldHealth>(dmg, InitiatorFactory.From(player));
-            turnManager.InitiateCommandBatch(new[] { initiated });
+            Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.enemy));
             
-            Assert.AreEqual(8, inspector.GetHealth(enemy));
+            var dmg = HealthExt.Commands.Factory.Damage(ctx.enemy, 2);
+            var initiated = new InitiatedCommand<ICommandWorldHealth>(dmg, InitiatorFactory.From(ctx.player));
+            ctx.turnManager.InitiateCommandBatch(new[] { initiated });
+            
+            Assert.AreEqual(8, ctx.inspector.GetHealth(ctx.enemy));
 
-            turnManager.InitiateCommandBatch(world.ApplyAllStatusEffects());
-            Assert.AreEqual(7, inspector.GetHealth(enemy));
+            ctx.turnManager.InitiateCommandBatch(ctx.world.ApplyAllStatusEffects());
+            Assert.AreEqual(7, ctx.inspector.GetHealth(ctx.enemy));
             
-            turnManager.InitiateCommandBatch(world.ApplyAllStatusEffects());
-            Assert.AreEqual(6, inspector.GetHealth(enemy));
+            ctx.turnManager.InitiateCommandBatch(ctx.world.ApplyAllStatusEffects());
+            Assert.AreEqual(6, ctx.inspector.GetHealth(ctx.enemy));
             
-            turnManager.InitiateCommandBatch(world.ApplyAllStatusEffects());
-            Assert.AreEqual(5, inspector.GetHealth(enemy));
+            ctx.turnManager.InitiateCommandBatch(ctx.world.ApplyAllStatusEffects());
+            Assert.AreEqual(5, ctx.inspector.GetHealth(ctx.enemy));
             
-            turnManager.InitiateCommandBatch(world.ApplyAllStatusEffects());
-            Assert.AreEqual(5, inspector.GetHealth(enemy));
+            ctx.turnManager.InitiateCommandBatch(ctx.world.ApplyAllStatusEffects());
+            Assert.AreEqual(5, ctx.inspector.GetHealth(ctx.enemy));
         }
         
         [Test]
         public void WheneverPlayerDealsDamage_DealsDamageToTarget_OneWhenever__DealsDamage_Once()
         {
-            var (player, enemy, turnManager, inspector, _) = GetEnemyAndPlayerTurnContext();
-            var filter = HealthExt.Filters.Factory.CreateDamageOccursFilter(1);
-            WheneverType damageOccursDealsDamageToTarget = new(filter, HealthExt.Effects.Factory.DamageTarget(1));
-            turnManager.AddWhenever(damageOccursDealsDamageToTarget);
+            var ctx = GetEnemyAndPlayerTurnContext();
+            ctx.AddWhenever(
+                HealthExt.Filters.Factory.CreateDamageOccursFilter(1),
+                HealthExt.Effects.Factory.DamageTarget(1), 
+                "TODO");
             
-            Assert.AreEqual(10, inspector.GetHealth(enemy));
+            Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.enemy));
             
-            var dmg = HealthExt.Commands.Factory.Damage(enemy, 2);
-            var initiated = new InitiatedCommand<ICommandWorldHealth>(dmg, InitiatorFactory.From(player));
-            turnManager.InitiateCommand(initiated);
+            var dmg = HealthExt.Commands.Factory.Damage(ctx.enemy, 2);
+            var initiated = new InitiatedCommand<ICommandWorldHealth>(dmg, InitiatorFactory.From(ctx.player));
+            ctx.turnManager.InitiateCommand(initiated);
             
-            Assert.AreEqual(7, inspector.GetHealth(enemy));
+            Assert.AreEqual(7, ctx.inspector.GetHealth(ctx.enemy));
         }
         [Test]
         public void WheneverPlayerDealsDamage_DealsDamageToTarget__DealsDamage_OncePerCommand_PerWhenever_InStages()
         {
-            var (player, enemy, turnManager, inspector, _) = GetEnemyAndPlayerTurnContext();
+            var ctx = GetEnemyAndPlayerTurnContext();
             var filter = HealthExt.Filters.Factory.CreateDamageOccursFilter(1);
             WheneverType damageOccursDealsDamageToTarget = new(filter, HealthExt.Effects.Factory.DamageTarget(1));
-            turnManager.AddWhenever(damageOccursDealsDamageToTarget);
-            turnManager.AddWhenever(damageOccursDealsDamageToTarget);
+            ctx.AddWhenever(damageOccursDealsDamageToTarget);
+            ctx.AddWhenever(damageOccursDealsDamageToTarget);
             
-            Assert.AreEqual(10, inspector.GetHealth(enemy));
+            Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.enemy));
             
-            var dmg = HealthExt.Commands.Factory.Damage(enemy, 2);
-            var initiated = new InitiatedCommand<ICommandWorldHealth>(dmg, InitiatorFactory.From(player));
-            turnManager.InitiateCommand(initiated);
+            var dmg = HealthExt.Commands.Factory.Damage(ctx.enemy, 2);
+            var initiated = new InitiatedCommand<ICommandWorldHealth>(dmg, InitiatorFactory.From(ctx.player));
+            ctx.turnManager.InitiateCommand(initiated);
             
             // <2dmg>
             // + <1dmg> / <*dmg> =  + <1dmg>
@@ -107,7 +143,7 @@ namespace Whenever.Test
             // + <1dmg> / <*dmg> =  + <1dmg>, <1dmg>
             // = <1dmg>, <1dmg>, <1dmg>, <2dmg>
             // = 5
-            Assert.AreEqual(5, inspector.GetHealth(enemy));
+            Assert.AreEqual(5, ctx.inspector.GetHealth(ctx.enemy));
         }
     }
     

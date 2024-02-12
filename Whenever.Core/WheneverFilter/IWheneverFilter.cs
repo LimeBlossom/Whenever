@@ -8,5 +8,6 @@ namespace Whenever.Core.WheneverFilter
         where TCommandWorld : ICommandWorld
     {
         public bool TriggersOn(InitiatedCommand<TCommandWorld> initiatedCommand, TInspectWorld world);
+        //public string Describe();
     }
 }

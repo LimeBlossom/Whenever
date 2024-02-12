@@ -33,5 +33,11 @@ namespace Whenever.Core
                 .ApplyEffect(command, world)
                 .Select(x => new InitiatedCommand<TCommandWorld>(x, nextInitiator));
         }
+        
+        public string Describe()
+        {
+            return "TODO";
+            //return $"Whenever {filter.Describe()}; then {effect.Describe()}";
+        }
     }
 }
