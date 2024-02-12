@@ -2,7 +2,7 @@
     "name": "Whenever.DmgTypeEtcExt.Experimental",
     "rootNamespace": "Whenever.DmgTypeEtcExt.Experimental",
     "references": [
-        "GUID:911c827d8749f9340a48b39698b86e99"
+        "GUID:f62bd97b21e4a964c87d0c329ebd9a04"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
