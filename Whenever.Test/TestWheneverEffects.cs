@@ -1,12 +1,7 @@
 using System.Linq;
+using CoreFac;
 using NUnit.Framework;
 using UnityEngine;
-using Whenever.Core;
-using Whenever.Core.CommandInitiators;
-using Whenever.Core.Commands;
-using Whenever.Core.Effects;
-using Whenever.Core.WheneverFilter;
-using Whenever.Core.WorldInterface;
 using Whenever.DmgTypeEtcExt.Experimental;
 using Whenever.DmgTypeEtcExt.Experimental.Commands;
 using Whenever.DmgTypeEtcExt.Experimental.Effects;
@@ -15,7 +10,7 @@ using Whenever.DmgTypeEtcExt.Experimental.World;
 
 namespace Whenever.Test
 {
-    using WheneverType = Whenever.Core.Whenever<IInspectableWorldDemo, ICommandableWorldDemo>;
+    using WheneverType = Whenever<IInspectableWorldDemo, ICommandableWorldDemo>;
     
     public class UnitTestExample
     {
@@ -54,7 +49,7 @@ namespace Whenever.Test
         
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.FIRE, 1, player),
-                InitiatorFactory.From(enemy));
+                Initiators.From(enemy));
 
 
             var playerData = baseWorld.CombatantData(player);
@@ -79,7 +74,7 @@ namespace Whenever.Test
             // player takes damage
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 4, player),
-                InitiatorFactory.From(enemy));
+                Initiators.From(enemy));
         
             Assert.AreEqual(6, baseWorld.CombatantData(player).CurrentHealth());
             Assert.AreEqual(10, baseWorld.CombatantData(enemy).CurrentHealth());
@@ -87,7 +82,7 @@ namespace Whenever.Test
             // player deals damage
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
-                InitiatorFactory.From(player));
+                Initiators.From(player));
         
             Assert.AreEqual(9, baseWorld.CombatantData(player).CurrentHealth());
             Assert.AreEqual(9, baseWorld.CombatantData(enemy).CurrentHealth());
@@ -107,7 +102,7 @@ namespace Whenever.Test
             // player takes damage
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, player),
-                InitiatorFactory.From(enemy));
+                Initiators.From(enemy));
         
             Assert.AreEqual(9, baseWorld.CombatantData(player).CurrentHealth());
             Assert.AreEqual(10, baseWorld.CombatantData(enemy).CurrentHealth());
@@ -115,7 +110,7 @@ namespace Whenever.Test
             // player deals damage
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
-                InitiatorFactory.From(player));
+                Initiators.From(player));
         
             Assert.AreEqual(10, baseWorld.CombatantData(player).CurrentHealth());
             Assert.AreEqual(9, baseWorld.CombatantData(enemy).CurrentHealth());
@@ -136,7 +131,7 @@ namespace Whenever.Test
             // player deals fire damage, triggering a random meteor
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.FIRE, 1, enemy),
-                InitiatorFactory.From(player));
+                Initiators.From(player));
         
             Assert.AreEqual(8, baseWorld.CombatantData(player).CurrentHealth());
             Assert.AreEqual(9, baseWorld.CombatantData(enemy).CurrentHealth());
@@ -158,7 +153,7 @@ namespace Whenever.Test
         
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
-                InitiatorFactory.From(player));
+                Initiators.From(player));
         
             Assert.AreEqual(10, playerData.CurrentHealth());
             Assert.AreEqual(8, enemyData.CurrentHealth());
@@ -200,7 +195,7 @@ namespace Whenever.Test
         
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, baseWorld.GetAtLocation(new (3, 3))),
-                InitiatorFactory.From(playerId));
+                Initiators.From(playerId));
         
             Assert.AreEqual(9, GetHealthOf(3, 3));
             Assert.AreEqual(9, GetHealthOf(3, 4));
@@ -252,12 +247,12 @@ namespace Whenever.Test
         
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 8, playerId),
-                InitiatorFactory.From(baseWorld.GetAtLocation(new (3, 3))));
+                Initiators.From(baseWorld.GetAtLocation(new (3, 3))));
             Assert.AreEqual(2, GetHealthOfId(playerId));
         
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, baseWorld.GetAtLocation(new (3, 3))),
-                InitiatorFactory.From(playerId));
+                Initiators.From(playerId));
         
             // the healing whenever trigger occurs after the damage adjacents, so the player deals damage to 4 total:
             // the original enemy, and the enemies hit by the adjacent factor. healing them for (3 adjacent + 1 direct) = 4
@@ -309,12 +304,12 @@ namespace Whenever.Test
         
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 8, playerId),
-                InitiatorFactory.From(baseWorld.GetAtLocation(new (3, 3))));
+                Initiators.From(baseWorld.GetAtLocation(new (3, 3))));
             Assert.AreEqual(2, GetHealthOfId(playerId));
         
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, baseWorld.GetAtLocation(new (3, 3))),
-                InitiatorFactory.From(playerId));
+                Initiators.From(playerId));
         
             // the healing whenever trigger occurs before the damage adjacents, so the player deals damage to 1 total at this point:
             // the original enemy alone

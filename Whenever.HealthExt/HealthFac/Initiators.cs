@@ -1,10 +1,6 @@
-﻿using Whenever.Core.CommandInitiators;
-using Whenever.Core.WorldInterface;
-using Whenever.HealthExt.StatusEffects;
-
-namespace Whenever.HealthExt.Initiators
+﻿namespace HealthFac
 {
-    public class Factory
+    public static class Initiators
     {
         public static ICommandInitiator From<TCommand>(StatusEffect<TCommand> statusEffect)
             where TCommand: ICommandWorld

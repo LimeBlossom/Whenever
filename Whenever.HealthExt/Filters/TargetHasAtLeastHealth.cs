@@ -1,32 +1,24 @@
-﻿using Whenever.Core.Commands;
-using Whenever.Core.WheneverFilter;
-using Whenever.HealthExt.Commands;
-using Whenever.HealthExt.World;
-
-namespace Whenever.HealthExt.Filters
+﻿public record TargetHasAtLeastHealth : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
 {
-    public record TargetHasAtLeastHealth : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
+    private readonly float atLeast;
+
+    public TargetHasAtLeastHealth(float atLeast)
     {
-        private readonly float atLeast;
+        this.atLeast = atLeast;
+    }
 
-        public TargetHasAtLeastHealth(float atLeast)
+    public bool TriggersOn(InitiatedCommand<ICommandWorldHealth> initiatedCommand, IInspectWorldHealth world)
+    {
+        if (initiatedCommand.command is IGenericTargetedWorldCommand<ICommandWorldHealth> targetedCommand)
         {
-            this.atLeast = atLeast;
+            return world.GetHealth(targetedCommand.Target) >= atLeast;
         }
-
-        public bool TriggersOn(InitiatedCommand<ICommandWorldHealth> initiatedCommand, IInspectWorldHealth world)
-        {
-            if (initiatedCommand.command is IGenericTargetedWorldCommand<ICommandWorldHealth> targetedCommand)
-            {
-                return world.GetHealth(targetedCommand.Target) >= atLeast;
-            }
             
-            return false;
-        }
+        return false;
+    }
 
-        public string Describe()
-        {
-            return $"target has at least {atLeast} health";
-        }
+    public string Describe()
+    {
+        return $"target has at least {atLeast} health";
     }
 }

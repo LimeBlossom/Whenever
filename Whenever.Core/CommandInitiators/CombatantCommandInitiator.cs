@@ -1,7 +1,4 @@
-﻿namespace Whenever.Core.CommandInitiators
+﻿public record CombatantCommandInitiator: ICommandInitiator
 {
-    public record CombatantCommandInitiator: ICommandInitiator
-    {
-        public CombatantId Initiator { get; set; }
-    }
+    public CombatantId Initiator { get; set; }
 }

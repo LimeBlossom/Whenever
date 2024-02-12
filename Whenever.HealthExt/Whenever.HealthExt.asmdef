@@ -1,6 +1,6 @@
 {
     "name": "Whenever.HealthExt",
-    "rootNamespace": "Whenever.HealthExt",
+    "rootNamespace": "",
     "references": [
         "GUID:f62bd97b21e4a964c87d0c329ebd9a04"
     ],

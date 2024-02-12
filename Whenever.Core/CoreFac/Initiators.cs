@@ -1,6 +1,6 @@
-﻿namespace Whenever.Core.CommandInitiators
+﻿namespace CoreFac
 {
-    public static class InitiatorFactory
+    public static class Initiators
     {
         public static ICommandInitiator From(CombatantId combatantId)
         {

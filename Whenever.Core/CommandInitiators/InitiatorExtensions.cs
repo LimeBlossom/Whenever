@@ -1,22 +1,19 @@
-﻿namespace Whenever.Core.CommandInitiators
+﻿public static class InitiatorExtensions
 {
-    public static class InitiatorExtensions
+    public static bool TryAsOrRecursedFrom<T>(this ICommandInitiator initiator, out T res) where T : ICommandInitiator
     {
-        public static bool TryAsOrRecursedFrom<T>(this ICommandInitiator initiator, out T res) where T : ICommandInitiator
+        switch (initiator)
         {
-            switch (initiator)
-            {
-                case T t:
-                    res = t;
-                    return true;
-                case RecursiveEffectCommandInitiator { InitialInitiator: T rec }:
-                    res = rec;
-                    return true;
-                default:
-                    res = default;
-                    return false;
-            }
+            case T t:
+                res = t;
+                return true;
+            case RecursiveEffectCommandInitiator { InitialInitiator: T rec }:
+                res = rec;
+                return true;
+            default:
+                res = default;
+                return false;
         }
-        
     }
+        
 }

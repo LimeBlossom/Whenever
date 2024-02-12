@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Whenever.Core;
-using Whenever.Core.WorldInterface;
 using Random = System.Random;
 
 namespace Whenever.DmgTypeEtcExt.Experimental.World

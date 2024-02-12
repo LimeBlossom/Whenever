@@ -1,8 +1,5 @@
-﻿namespace Whenever.Core.CommandInitiators
+﻿public record RecursiveEffectCommandInitiator: ICommandInitiator
 {
-    public record RecursiveEffectCommandInitiator: ICommandInitiator
-    {
-        public ICommandInitiator InitialInitiator { get; set; }
-        public int EffectDepth { get; set; }
-    }
+    public ICommandInitiator InitialInitiator { get; set; }
+    public int EffectDepth { get; set; }
 }

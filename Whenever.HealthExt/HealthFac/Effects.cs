@@ -1,9 +1,6 @@
-﻿using Whenever.Core.Effects;
-using Whenever.HealthExt.World;
-
-namespace Whenever.HealthExt.Effects
+﻿namespace HealthFac
 {
-    public class Factory
+    public class Effects
     {
         public static IEffect<IInspectWorldHealth, ICommandWorldHealth> DotTarget(float damage = 1, int turns = 3)
         {

@@ -1,7 +1,4 @@
-﻿using Whenever.Core;
-using Whenever.Core.Commands;
-using Whenever.Core.WorldInterface;
-using Whenever.DmgTypeEtcExt.Experimental.World;
+﻿using Whenever.DmgTypeEtcExt.Experimental.World;
 
 namespace Whenever.DmgTypeEtcExt.Experimental.Commands
 {

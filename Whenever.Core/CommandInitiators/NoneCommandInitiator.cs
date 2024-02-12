@@ -1,7 +1,4 @@
-﻿namespace Whenever.Core.CommandInitiators
+﻿public record NoneCommandInitiator(string descriptiveName): ICommandInitiator
 {
-    public record NoneCommandInitiator(string descriptiveName): ICommandInitiator
-    {
-        public string descriptiveName { get; } = descriptiveName;
-    }
+    public string descriptiveName { get; } = descriptiveName;
 }

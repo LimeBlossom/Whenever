@@ -1,9 +1,6 @@
-﻿namespace Whenever.Core.WorldInterface
+﻿public interface IWorldCommand<in TCommand>
+    where TCommand: ICommandWorld
 {
-    public interface IWorldCommand<in TCommand>
-        where TCommand: ICommandWorld
-    {
-        public void ApplyCommand(TCommand world);
-        public string Describe();
-    }
+    public void ApplyCommand(TCommand world);
+    public string Describe();
 }

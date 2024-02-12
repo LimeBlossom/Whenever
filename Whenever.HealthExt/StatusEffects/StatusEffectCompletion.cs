@@ -1,8 +1,5 @@
-﻿namespace Whenever.HealthExt.StatusEffects
+﻿public enum StatusEffectCompletion
 {
-    public enum StatusEffectCompletion
-    {
-        Expired,
-        Active
-    }
+    Expired,
+    Active
 }

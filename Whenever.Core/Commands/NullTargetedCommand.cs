@@ -1,19 +1,14 @@
-﻿using Whenever.Core.WorldInterface;
-
-namespace Whenever.Core.Commands
+﻿public class NullTargetedCommand<TCommand> : IGenericTargetedWorldCommand<TCommand>
+    where TCommand: ICommandWorld
 {
-    public class NullTargetedCommand<TCommand> : IGenericTargetedWorldCommand<TCommand>
-        where TCommand: ICommandWorld
+    public CombatantId Target { get; set;  }
+    public void ApplyCommand(TCommand world)
     {
-        public CombatantId Target { get; set;  }
-        public void ApplyCommand(TCommand world)
-        {
-            // noop
-        }
+        // noop
+    }
 
-        public string Describe()
-        {
-            return "do nothing to a target";
-        }
+    public string Describe()
+    {
+        return "do nothing to a target";
     }
 }

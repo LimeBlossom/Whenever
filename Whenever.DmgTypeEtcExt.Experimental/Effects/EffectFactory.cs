@@ -1,6 +1,4 @@
-﻿using Whenever.Core.Effects;
-using Whenever.Core.WorldInterface;
-using Whenever.DmgTypeEtcExt.Experimental.World;
+﻿using Whenever.DmgTypeEtcExt.Experimental.World;
 
 namespace Whenever.DmgTypeEtcExt.Experimental.Effects
 {
