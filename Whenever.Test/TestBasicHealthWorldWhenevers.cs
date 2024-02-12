@@ -87,7 +87,7 @@ namespace Whenever.Test
             Assert.AreEqual(7, inspector.GetHealth(enemy));
         }
         [Test]
-        public void WheneverPlayerDealsDamage_DealsDamageToTarget__DealsDamage_OncePerWhenever()
+        public void WheneverPlayerDealsDamage_DealsDamageToTarget__DealsDamage_OncePerCommand_PerWhenever_InStages()
         {
             var (player, enemy, turnManager, inspector, _) = GetEnemyAndPlayerTurnContext();
             var filter = HealthExt.Filters.Factory.CreateDamageOccursFilter(1);
@@ -101,7 +101,13 @@ namespace Whenever.Test
             var initiated = new InitiatedCommand<ICommandWorldHealth>(dmg, InitiatorFactory.From(player));
             turnManager.InitiateCommand(initiated);
             
-            Assert.AreEqual(6, inspector.GetHealth(enemy));
+            // <2dmg>
+            // + <1dmg> / <*dmg> =  + <1dmg>
+            // = <1dmg>, <2dmg>
+            // + <1dmg> / <*dmg> =  + <1dmg>, <1dmg>
+            // = <1dmg>, <1dmg>, <1dmg>, <2dmg>
+            // = 5
+            Assert.AreEqual(5, inspector.GetHealth(enemy));
         }
     }
     
