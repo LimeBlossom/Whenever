@@ -45,11 +45,12 @@ namespace Whenever.Core
                     newCommands.AddRange(triggered);
                 }
                 currentCommandBatch.AddRange(newCommands);
+                Debug.Log("Added " + newCommands.Count + " new commands from whenever: " + whenever.Describe());
             }
                 
             foreach (var currentCommand in currentCommandBatch)
             {
-                Debug.Log("Applying command: " + currentCommand);
+                Debug.Log("Applying command: " + currentCommand.Describe());
                 currentCommand.command.ApplyCommand(commander);
             }
         }

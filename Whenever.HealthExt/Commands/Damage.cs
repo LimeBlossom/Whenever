@@ -19,5 +19,10 @@ namespace Whenever.HealthExt.Commands
         {
             world.DoDamage(Target, damage);
         }
+
+        public string Describe()
+        {
+            return $"deal {damage} damage to {Target}";
+        }
     }
 }

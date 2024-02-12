@@ -18,5 +18,10 @@ namespace Whenever.Core.Commands
         {
             return $"[{initiator}] -> [{command}]";
         }
+
+        public string Describe()
+        {
+            return $"{initiator} will {command.Describe()}";
+        }
     }
 }

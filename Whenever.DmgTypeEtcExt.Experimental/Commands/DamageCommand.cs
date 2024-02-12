@@ -22,5 +22,10 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Commands
             var withResistance = target.damageable.ApplyResistances(damagePackage);
             target.health.Change(withResistance.damageAmount);
         }
+
+        public string Describe()
+        {
+            return $"deal {damagePackage.damageAmount} {damagePackage.damageType} to {Target}";
+        }
     }
 }

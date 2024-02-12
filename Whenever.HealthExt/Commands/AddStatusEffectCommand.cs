@@ -21,5 +21,10 @@ namespace Whenever.HealthExt.Commands
         {
             world.AddStatusEffect(Target, statusEffect);
         }
+
+        public string Describe()
+        {
+            return $"add status effect {statusEffect} to {Target}";
+        }
     }
 }

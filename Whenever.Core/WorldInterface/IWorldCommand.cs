@@ -4,5 +4,6 @@
         where TCommand: ICommandWorld
     {
         public void ApplyCommand(TCommand world);
+        public string Describe();
     }
 }
