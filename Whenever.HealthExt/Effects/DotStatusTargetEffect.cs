@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Serialization;
 using UnityEngine;
 
+[PolymorphicSerializable("DotStatusTargetEffect")]
 public record DotStatusTargetEffect: IEffect<IInspectWorldHealth, ICommandWorldHealth>
 {
     public float damage;

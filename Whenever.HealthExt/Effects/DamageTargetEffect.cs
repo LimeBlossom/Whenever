@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Serialization;
 
+[PolymorphicSerializable("DamageTargetEffect")]
 public record DamageTargetEffect : EffectTargetEffect<IInspectWorldHealth,ICommandWorldHealth>
 {
     public float damage;
