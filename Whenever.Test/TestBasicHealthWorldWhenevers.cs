@@ -69,5 +69,40 @@ namespace Whenever.Test
             turnManager.InitiateCommandBatch(world.ApplyAllStatusEffects());
             Assert.AreEqual(5, inspector.GetHealth(enemy));
         }
+        
+        [Test]
+        public void WheneverPlayerDealsDamage_DealsDamageToTarget_OneWhenever__DealsDamage_Once()
+        {
+            var (player, enemy, turnManager, inspector, _) = GetEnemyAndPlayerTurnContext();
+            var filter = HealthExt.Filters.Factory.CreateDamageOccursFilter(1);
+            WheneverType damageOccursDealsDamageToTarget = new(filter, HealthExt.Effects.Factory.DamageTarget(1));
+            turnManager.AddWhenever(damageOccursDealsDamageToTarget);
+            
+            Assert.AreEqual(10, inspector.GetHealth(enemy));
+            
+            var dmg = HealthExt.Commands.Factory.Damage(enemy, 2);
+            var initiated = new InitiatedCommand<ICommandWorldHealth>(dmg, InitiatorFactory.From(player));
+            turnManager.InitiateCommand(initiated);
+            
+            Assert.AreEqual(7, inspector.GetHealth(enemy));
+        }
+        [Test]
+        public void WheneverPlayerDealsDamage_DealsDamageToTarget__DealsDamage_OncePerWhenever()
+        {
+            var (player, enemy, turnManager, inspector, _) = GetEnemyAndPlayerTurnContext();
+            var filter = HealthExt.Filters.Factory.CreateDamageOccursFilter(1);
+            WheneverType damageOccursDealsDamageToTarget = new(filter, HealthExt.Effects.Factory.DamageTarget(1));
+            turnManager.AddWhenever(damageOccursDealsDamageToTarget);
+            turnManager.AddWhenever(damageOccursDealsDamageToTarget);
+            
+            Assert.AreEqual(10, inspector.GetHealth(enemy));
+            
+            var dmg = HealthExt.Commands.Factory.Damage(enemy, 2);
+            var initiated = new InitiatedCommand<ICommandWorldHealth>(dmg, InitiatorFactory.From(player));
+            turnManager.InitiateCommand(initiated);
+            
+            Assert.AreEqual(6, inspector.GetHealth(enemy));
+        }
     }
+    
 }

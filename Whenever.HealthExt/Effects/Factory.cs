@@ -13,5 +13,13 @@ namespace Whenever.HealthExt.Effects
                 turns = turns
             };
         }
+        
+        public static IEffect<IInspectWorldHealth, ICommandWorldHealth> DamageTarget(float damage)
+        {
+            return new DamageTargetEffect
+            {
+                damage = damage
+            };
+        }
     }
 }
