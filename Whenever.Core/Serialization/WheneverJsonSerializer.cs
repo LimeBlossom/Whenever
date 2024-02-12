@@ -56,7 +56,9 @@ namespace Serialization
                 
                 var allEffectTypesFromLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(x => x.GetTypes())
-                    .Where(x => filterType.IsAssignableFrom(x) && !x.IsAbstract)
+                    .Where(x => x.GetCustomAttribute<PolymorphicSerializableAttribute>() != null)
+                    .Select(x => GetBaseTypeOrGenericisedInstance(x, filterType))
+                    .Where(x => x != null)
                     .Select(type => new
                     {
                         type, 
@@ -80,6 +82,24 @@ namespace Serialization
             {
                 return (null, e.Message);
             }
+        }
+        
+        private Type GetBaseTypeOrGenericisedInstance(Type assemblyType, Type targetType)
+        {
+            if(targetType.IsAssignableFrom(assemblyType) && !assemblyType.IsAbstract)
+            {
+                return assemblyType;
+            }
+            if (assemblyType.IsGenericType)
+            {
+                // construct a version of the generic type with correct type parameters,
+                // assuming they are identical to the target type's type parameters 
+                var targetGenericParameters = targetType.GetGenericArguments();
+                var assemblyGenericParameters = assemblyType.GetGenericArguments();
+                return assemblyType.MakeGenericType(targetGenericParameters);
+            }
+
+            return null;
         }
     }
 }
