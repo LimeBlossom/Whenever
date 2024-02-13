@@ -1,3 +1,4 @@
+using HealthExtInternal;
 using NUnit.Framework;
 using Serialization;
 

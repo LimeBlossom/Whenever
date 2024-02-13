@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using HealthExtInternal;
 using HealthFac;
 using NUnit.Framework;
 using Filters = CoreFac.Filters;

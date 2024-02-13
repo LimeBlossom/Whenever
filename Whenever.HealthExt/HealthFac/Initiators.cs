@@ -7,6 +7,5 @@
         {
             return statusEffect.GetInitiator();
         }
-
     }
 }

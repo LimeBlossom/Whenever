@@ -1,6 +1,8 @@
-﻿namespace HealthFac
+﻿using HealthExtInternal;
+
+namespace HealthFac
 {
-    public static class Filters
+    internal static class Filters
     {
         public static IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth> CreateDotStatusEffectInflictedFilter(
             float atLeastDamagePerTurn)

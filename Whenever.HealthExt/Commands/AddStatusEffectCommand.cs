@@ -1,16 +1,17 @@
-﻿public record AddStatusEffectCommand: IGenericTargetedWorldCommand<ICommandWorldHealth>
+﻿public record AddStatusEffectCommand<TCommand>: IGenericTargetedWorldCommand<TCommand>
+    where TCommand : ICommandWorld, ICommandWorldStatusEffects<TCommand>
 {
     public CombatantId Target { get; }
         
-    public StatusEffect<ICommandWorldHealth> statusEffect;
+    public StatusEffect<TCommand> statusEffect;
     
-    public AddStatusEffectCommand(CombatantId target, StatusEffect<ICommandWorldHealth> effect)
+    public AddStatusEffectCommand(CombatantId target, StatusEffect<TCommand> effect)
     {
         Target = target;
         statusEffect = effect;
     }
 
-    public void ApplyCommand(ICommandWorldHealth world)
+    public void ApplyCommand(TCommand world)
     {
         world.AddStatusEffect(Target, statusEffect);
     }

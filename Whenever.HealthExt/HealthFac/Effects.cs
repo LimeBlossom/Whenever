@@ -1,6 +1,8 @@
-﻿namespace HealthFac
+﻿using HealthExtInternal;
+
+namespace HealthFac
 {
-    public class Effects
+    internal class Effects
     {
         public static IEffect<IInspectWorldHealth, ICommandWorldHealth> DotTarget(float damage = 1, int turns = 3)
         {
