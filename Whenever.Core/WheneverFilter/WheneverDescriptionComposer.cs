@@ -23,25 +23,16 @@ namespace DefaultNamespace
         {
             var remainingFilters = filters.ToList();
             var compositeFilters = new List<IWheneverFilter<TI, TC>>();
-            while(remainingFilters.Count > 0)
+            foreach (var consumer in descriptionConsumers)
             {
-                var consumed = false;
-                foreach (var consumer in descriptionConsumers)
+                while(true)
                 {
                     var compositeFilter = consumer.TryConsumeMatch(remainingFilters);
-                    if (compositeFilter != null)
-                    {
-                        compositeFilters.Add(compositeFilter);
-                        consumed = true;
-                        break;
-                    }
+                    if(compositeFilter == null) break;
+                    
+                    compositeFilters.Add(compositeFilter);
                 }
-
-                if (!consumed)
-                {
-                    compositeFilters.Add(remainingFilters[0]);
-                    remainingFilters.RemoveAt(0);
-                }
+                if(remainingFilters.Count <= 0) break;
             }
 
             return new CompositeWheneverFilter<TI, TC>(compositeFilters.ToArray());
