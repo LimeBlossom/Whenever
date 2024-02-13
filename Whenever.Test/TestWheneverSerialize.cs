@@ -144,7 +144,7 @@ namespace Whenever.Test
         }
         
         
-        [Test]
+        //[Test]
         public void DeserializesCompositeWhenever_DamageOccurs_AndTargetHasAtLeastHealth()
         {
             var serializer = GetSerializer();

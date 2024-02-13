@@ -4,7 +4,9 @@ public class StatusEffectCollection<TCommand>
     where TCommand: ICommandWorld
 {
     private List<StatusEffect<TCommand>> statusEffects = new();
-        
+    
+    public int Count => statusEffects.Count;
+    
     public void Add(StatusEffect<TCommand> effect)
     {
         statusEffects.Add(effect);
