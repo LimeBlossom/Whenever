@@ -9,7 +9,7 @@ namespace Whenever.Test
     {
         
         private WheneverDescriptionComposer<IInspectWorldHealth, ICommandWorldHealth> composer => new(
-            new TargetOfHealthTakesDamage());
+            TargetOfHealthTakesDamage.Create());
 
         [Test]
         public void WheneverPlayerDealsDamage_AndTargetHasAtLeastHealth__DealsMoreDamage()

@@ -2,18 +2,13 @@
 
 namespace HealthExtInternal.DescriptionComposer
 {
-    internal class TargetOfHealthTakesDamage: WheneverCompositeDescription<IInspectWorldHealth, ICommandWorldHealth>
+    internal static class TargetOfHealthTakesDamage
     {
-        public TargetOfHealthTakesDamage() : base(typeof(DamageOccurs), typeof(TargetHasAtLeastHealth))
+        public static WheneverCompositeDescription<IInspectWorldHealth, ICommandWorldHealth> Create()
         {
-        }
-        
-        protected override string DescribeMatch(IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>[] consumedFilters)
-        {
-            var dmgOccurs = consumedFilters[0] as DamageOccurs;
-            var atLeastHealth = consumedFilters[1] as TargetHasAtLeastHealth;
-
-            return $"a target with at least {atLeastHealth!.atLeast} health takes {dmgOccurs!.atLeast} damage";
+            return WheneverCompositeDescriptionFactory<IInspectWorldHealth, ICommandWorldHealth>
+                .Create<DamageOccurs, TargetHasAtLeastHealth>((dmgOccurs, atLeastHealth) => 
+                    $"a target with at least {atLeastHealth.atLeast} health takes {dmgOccurs.atLeast} damage");
         }
     }
 }
