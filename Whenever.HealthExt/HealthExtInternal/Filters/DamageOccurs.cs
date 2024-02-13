@@ -7,8 +7,7 @@ namespace HealthExtInternal
     [PolymorphicSerializable("DamageOccurs"), Serializable]
     internal record DamageOccurs : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
     {
-        [SerializeField]
-        private float atLeast;
+        public float atLeast;
 
         public DamageOccurs(float atLeast)
         {

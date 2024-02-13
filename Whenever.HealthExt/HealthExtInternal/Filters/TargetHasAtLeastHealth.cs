@@ -7,8 +7,7 @@ namespace HealthExtInternal
     [PolymorphicSerializable("TargetHasAtLeastHealth"), Serializable]
     internal record TargetHasAtLeastHealth : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
     {
-        [SerializeField]
-        private float atLeast;
+        public float atLeast;
 
         public TargetHasAtLeastHealth(float atLeast)
         {

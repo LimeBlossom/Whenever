@@ -22,21 +22,19 @@ namespace DefaultNamespace
         /// <returns></returns>
         public CompositeWheneverFilter<TI, TC> TryConsumeMatch(List<IWheneverFilter<TI, TC>> filters)
         {
-            var consumedIndexes = new int[filterTypes.Length];
+            var consumedFilters = new IWheneverFilter<TI, TC>[filterTypes.Length];
 
-            for (int i = 0; i < consumedIndexes.Length; i++)
+            for (int i = 0; i < consumedFilters.Length; i++)
             {
                 var targetType = filterTypes[i];
                 var filterIndex = filters.FindIndex(f => FilterMatchesType(targetType, f));
-                if(filterIndex <=  -1) return null;
-                consumedIndexes[i] = filterIndex;
+                if(filterIndex <= -1) return null;
+                consumedFilters[i] = filters[filterIndex];
             }
             
-            var consumedFilters = new IWheneverFilter<TI, TC>[consumedIndexes.Length];
-            for (int i = consumedFilters.Length - 1; i >= 0; i--)
+            foreach (var consumedFilter in consumedFilters)
             {
-                consumedFilters[i] = filters[consumedIndexes[i]];
-                filters.RemoveAt(consumedIndexes[i]);
+                filters.Remove(consumedFilter);
             }
             
             var description = DescribeMatch(consumedFilters);
@@ -48,7 +46,6 @@ namespace DefaultNamespace
             return type.IsInstanceOfType(filter);
         }
 
-        protected abstract string DescribeMatch(
-            IWheneverFilter<TI, TC>[] consumedFilters);
+        protected abstract string DescribeMatch(IWheneverFilter<TI, TC>[] consumedFilters);
     }
 }

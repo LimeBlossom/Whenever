@@ -1,27 +1,27 @@
-﻿using System.Linq;
+﻿using DefaultNamespace;
 using HealthExtInternal;
-using HealthFac;
+using HealthExtInternal.DescriptionComposer;
 using NUnit.Framework;
-using Filters = CoreFac.Filters;
-using Initiators = CoreFac.Initiators;
 
 namespace Whenever.Test
 {
-    using WheneverType = Whenever<IInspectWorldHealth, ICommandWorldHealth>;
-
     public class TestWheneverDescriptions
     {
+        
+        private WheneverDescriptionComposer<IInspectWorldHealth, ICommandWorldHealth> composer => new(
+            new TargetOfHealthTakesDamage());
 
         [Test]
         public void WheneverPlayerDealsDamage_AndTargetHasAtLeastHealth__DealsMoreDamage()
         {
             var filters =
-                Filters.Compose(
+                composer.ForceRegenerateComposites(
                     HealthFac.Filters.TargetHasAtLeastHealth(5),
                     HealthFac.Filters.CreateDamageOccursFilter(1)
                 );
 var effects = HealthFac.Effects.DamageTarget(2);
             var whenever = new Whenever<IInspectWorldHealth, ICommandWorldHealth>(filters, effects);
+            Assert.AreEqual("whenever a target with at least 5 health takes 1 damage; deal 2 damage to the target", whenever.Describe());
         }
     }
     

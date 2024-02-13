@@ -8,7 +8,7 @@ public record CompositeWheneverFilter<TInspectWorld, TCommandWorld> : IWheneverF
     where TCommandWorld : ICommandWorld
 {
     private readonly string overrideDescription = null;
-    private IWheneverFilter<TInspectWorld, TCommandWorld>[] filters;
+    internal IWheneverFilter<TInspectWorld, TCommandWorld>[] filters;
     
     public CompositeWheneverFilter(params IWheneverFilter<TInspectWorld, TCommandWorld>[] filters)
     {
