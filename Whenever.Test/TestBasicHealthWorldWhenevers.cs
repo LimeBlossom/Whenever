@@ -2,7 +2,6 @@
 using HealthExtInternal;
 using HealthFac;
 using NUnit.Framework;
-using Filters = CoreFac.Filters;
 using Initiators = CoreFac.Initiators;
 
 namespace Whenever.Test
@@ -143,7 +142,7 @@ namespace Whenever.Test
         {
             var ctx = GetEnemyAndPlayerTurnContext();
             ctx.AddWhenever(
-                Filters.Compose(
+                new CompositeWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>(
                     HealthFac.Filters.TargetHasAtLeastHealth(5),
                     HealthFac.Filters.CreateDamageOccursFilter(1)
                 ),
