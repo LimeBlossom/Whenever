@@ -3,16 +3,21 @@ using System.Linq;
 using Serialization;
 using UnityEngine;
 
-[PolymorphicSerializable("CompositeWhenever"), Serializable]
 public record CompositeWheneverFilter<TInspectWorld, TCommandWorld> : IWheneverFilter<TInspectWorld, TCommandWorld>
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
-    [SerializeField]
+    private readonly string overrideDescription = null;
     private IWheneverFilter<TInspectWorld, TCommandWorld>[] filters;
     
     public CompositeWheneverFilter(params IWheneverFilter<TInspectWorld, TCommandWorld>[] filters)
     {
+        this.filters = filters;
+    }
+    
+    public CompositeWheneverFilter(string overrideDescription, params IWheneverFilter<TInspectWorld, TCommandWorld>[] filters)
+    {
+        this.overrideDescription = overrideDescription;
         this.filters = filters;
     }
 
@@ -23,6 +28,8 @@ public record CompositeWheneverFilter<TInspectWorld, TCommandWorld> : IWheneverF
 
     public string Describe()
     {
+        if (overrideDescription != null) return overrideDescription;
+        
         return string.Join(" and ", filters?.Select(filter => filter.Describe()) ?? Array.Empty<string>());
     }
 }
