@@ -22,9 +22,9 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Filters
             return (combatTypeFilter & targetEnumType) != 0;
         }
         
-        public string Describe()
+        public string Describe(IDescriptionContext context)
         {
-            return $"target is {combatTypeFilter}";
+            return $"{context.TargetName} is {combatTypeFilter}";
         }
     }
 }

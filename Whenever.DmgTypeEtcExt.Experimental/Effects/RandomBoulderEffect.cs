@@ -28,7 +28,7 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
             yield return new DamageCommand(target, damagePackage);
         }
 
-        public string Describe()
+        public string Describe(IDescriptionContext context)
         {
             return $"deal {meteorDamage} {DamageType.PHYSICAL} damage to a random target";
         }

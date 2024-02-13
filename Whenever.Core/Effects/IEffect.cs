@@ -7,5 +7,5 @@ public interface IEffect<in TInspectWorld, TCommandWorld>
     public IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffect(
         InitiatedCommand<TCommandWorld> command,
         TInspectWorld world);
-    public string Describe();
+    public string Describe(IDescriptionContext context);
 }

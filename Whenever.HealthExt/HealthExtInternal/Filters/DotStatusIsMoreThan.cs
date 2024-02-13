@@ -25,7 +25,7 @@ namespace HealthExtInternal
             return false;
         }
 
-        public string Describe()
+        public string Describe(IDescriptionContext context)
         {
             return $"a status effect of at least {atLeast} damage per turn is inflicted";
         }

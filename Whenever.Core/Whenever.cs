@@ -28,8 +28,8 @@ public record Whenever<TInspectWorld, TCommandWorld>
             .Select(x => new InitiatedCommand<TCommandWorld>(x, nextInitiator));
     }
         
-    public string Describe()
+    public string Describe(IDescriptionContext context)
     {
-        return $"whenever {filter.Describe()}; {effect.Describe()}";
+        return $"whenever {filter.Describe(context)}; {effect.Describe(context)}";
     }
 }

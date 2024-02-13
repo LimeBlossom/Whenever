@@ -26,10 +26,10 @@ public record CompositeWheneverFilter<TInspectWorld, TCommandWorld> : IWheneverF
         return filters.All(filter => filter.TriggersOn(initiatedCommand, world));
     }
 
-    public string Describe()
+    public string Describe(IDescriptionContext context)
     {
         if (overrideDescription != null) return overrideDescription;
         
-        return string.Join(" and ", filters?.Select(filter => filter.Describe()) ?? Array.Empty<string>());
+        return string.Join(" and ", filters?.Select(filter => filter.Describe(context)) ?? Array.Empty<string>());
     }
 }

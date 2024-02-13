@@ -41,7 +41,7 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
                 newCommands.AddRange(triggered);
             }
             currentCommandBatch.AddRange(newCommands);
-            Debug.Log("Added " + newCommands.Count + " new commands from whenever: " + whenever.Describe());
+            Debug.Log("Added " + newCommands.Count + " new commands from whenever: " + whenever.Describe(new SimpleDescriptionContext()));
         }
                 
         foreach (var currentCommand in currentCommandBatch)

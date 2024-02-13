@@ -24,7 +24,7 @@ namespace HealthExtInternal
             return false;
         }
 
-        public string Describe()
+        public string Describe(IDescriptionContext context)
         {
             return $"at least {atLeast} damage occurs";
         }

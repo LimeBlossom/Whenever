@@ -30,7 +30,7 @@ namespace Whenever.Test
                 WheneverType whenever,
                 string expectedDescription)
             {
-                Assert.AreEqual(expectedDescription, whenever.Describe());
+                Assert.AreEqual(expectedDescription, whenever.Describe(new SimpleDescriptionContext()));
                 turnManager.AddWhenever(whenever);
             }
         }
@@ -147,7 +147,7 @@ namespace Whenever.Test
                     HealthFac.Filters.CreateDamageOccursFilter(1)
                 ),
                 Effects.DamageTarget(2), 
-                "whenever target has at least 5 health and at least 1 damage occurs; deal 2 damage to the target");
+                "whenever the target has at least 5 health and at least 1 damage occurs; deal 2 damage to the target");
             
             Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.enemy));
             

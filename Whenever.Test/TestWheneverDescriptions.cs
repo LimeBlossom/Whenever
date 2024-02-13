@@ -13,6 +13,7 @@ namespace Whenever.Test
         [Test]
         public void WheneverPlayerDealsDamage_AndTargetHasAtLeastHealth__DealsMoreDamage()
         {
+            var descriptionContext = new SimpleDescriptionContext("bob", "uncle");
             var filters =
                 composer.ForceRegenerateComposites(
                     HealthFac.Filters.TargetHasAtLeastHealth(5),
@@ -20,7 +21,7 @@ namespace Whenever.Test
                 );
 var effects = HealthFac.Effects.DamageTarget(2);
             var whenever = new Whenever<IInspectWorldHealth, ICommandWorldHealth>(filters, effects);
-            Assert.AreEqual("whenever a target with at least 5 health takes 1 damage; deal 2 damage to the target", whenever.Describe());
+            Assert.AreEqual("whenever a uncle with at least 5 health takes 1 damage; deal 2 damage to the uncle", whenever.Describe(descriptionContext));
         }
     }
     

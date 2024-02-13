@@ -24,9 +24,9 @@ namespace HealthExtInternal
             yield return new AddStatusEffectCommand<ICommandWorldHealth>(targetedCommand.Target, status);
         }
 
-        public string Describe()
+        public string Describe(IDescriptionContext context)
         {
-            return $"apply {damage} damage per turn for {turns} turns to the target";
+            return $"apply {damage} damage per turn for {turns} turns to {context.TargetName}";
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Whenever.Test
             var (effect, error) = serializer.DeserializeEffect(json);
             Assert.IsNull(error);
             Assert.IsNotNull(effect);
-            Assert.AreEqual("deal 3 damage to the target", effect.Describe());
+            Assert.AreEqual("deal 3 damage to the target", effect.Describe(new SimpleDescriptionContext()));
             Assert.AreEqual(typeof(DamageTargetEffect), effect.GetType());
         }
 
@@ -46,7 +46,7 @@ namespace Whenever.Test
             var (effect, error) = serializer.DeserializeEffect(json);
             Assert.IsNull(error);
             Assert.IsNotNull(effect);
-            Assert.AreEqual("apply 1 damage per turn for 3 turns to the target", effect.Describe());
+            Assert.AreEqual("apply 1 damage per turn for 3 turns to the target", effect.Describe(new SimpleDescriptionContext()));
             Assert.AreEqual(typeof(DotStatusTargetEffect), effect.GetType());
         }
         
@@ -104,7 +104,7 @@ namespace Whenever.Test
             var (effect, error) = serializer.DeserializeEffect(json);
             Assert.IsNull(error);
             Assert.IsNotNull(effect);
-            Assert.AreEqual("apply 0 damage per turn for 3 turns to the target", effect.Describe());
+            Assert.AreEqual("apply 0 damage per turn for 3 turns to the target", effect.Describe(new SimpleDescriptionContext()));
             Assert.AreEqual(typeof(DotStatusTargetEffect), effect.GetType());
         }
 
@@ -122,7 +122,7 @@ namespace Whenever.Test
             var (filter, error) = serializer.DeserializeFilter(json);
             Assert.IsNull(error);
             Assert.IsNotNull(filter);
-            Assert.AreEqual("at least 5 damage occurs", filter.Describe());
+            Assert.AreEqual("at least 5 damage occurs", filter.Describe(new SimpleDescriptionContext()));
             Assert.AreEqual(typeof(DamageOccurs), filter.GetType());
         }
         
@@ -140,7 +140,7 @@ namespace Whenever.Test
             var (filter, error) = serializer.DeserializeFilter(json);
             Assert.IsNull(error);
             Assert.IsNotNull(filter);
-            Assert.AreEqual("target has at least 5 health", filter.Describe());
+            Assert.AreEqual("the target has at least 5 health", filter.Describe(new SimpleDescriptionContext()));
             Assert.AreEqual(typeof(TargetHasAtLeastHealth), filter.GetType());
         }
         
@@ -164,7 +164,7 @@ namespace Whenever.Test
             Assert.IsNull(error);
             Assert.IsNotNull(filter);
             Assert.AreEqual(typeof(CompositeWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>), filter.GetType());
-            Assert.AreEqual("at least 2 damage occurs and target has at least 6 health", filter.Describe());
+            Assert.AreEqual("at least 2 damage occurs and target has at least 6 health", filter.Describe(new SimpleDescriptionContext()));
         }
     }
 }

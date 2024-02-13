@@ -22,7 +22,7 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
             yield return new DamageCommand(targetedCommand.Target, damagePackage);
         }
 
-        public string Describe()
+        public string Describe(IDescriptionContext context)
         {
             return $"apply {critDamageMultiplier}x {DamageType.CRITICAL} damage to the target";
         }

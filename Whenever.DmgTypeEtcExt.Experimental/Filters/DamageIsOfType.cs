@@ -22,7 +22,7 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Filters
             return false;
         }
 
-        public string Describe()
+        public string Describe(IDescriptionContext context)
         {
             return $"damage is {damageType}";
         }

@@ -16,9 +16,9 @@ public abstract record EffectInitiatorEffect<TInspectWorld, TCommandWorld> : IEf
         return this.ApplyEffectToInitiator(initiator.Initiator, world);
     }
 
-    public string Describe()
+    public string Describe(IDescriptionContext context)
     {
-        return DescribeOnInitiator() + " to the initiator";
+        return DescribeOnInitiator() + $" to {context.InitiatorName}";
     }
         
     public abstract string DescribeOnInitiator();

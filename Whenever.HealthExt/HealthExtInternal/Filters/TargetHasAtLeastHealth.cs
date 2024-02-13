@@ -24,9 +24,9 @@ namespace HealthExtInternal
             return false;
         }
 
-        public string Describe()
+        public string Describe(IDescriptionContext context)
         {
-            return $"target has at least {atLeast} health";
+            return $"{context.TargetName} has at least {atLeast} health";
         }
     }
 }
