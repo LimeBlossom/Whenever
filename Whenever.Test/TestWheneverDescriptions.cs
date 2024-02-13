@@ -1,5 +1,4 @@
-﻿using DefaultNamespace;
-using HealthExtInternal;
+﻿using HealthExtInternal;
 using HealthExtInternal.DescriptionComposer;
 using NUnit.Framework;
 

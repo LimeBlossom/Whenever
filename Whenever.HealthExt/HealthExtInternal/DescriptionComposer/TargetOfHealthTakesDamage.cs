@@ -1,6 +1,4 @@
-﻿using DefaultNamespace;
-
-namespace HealthExtInternal.DescriptionComposer
+﻿namespace HealthExtInternal.DescriptionComposer
 {
     internal static class TargetOfHealthTakesDamage
     {
