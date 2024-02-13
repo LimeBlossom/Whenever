@@ -24,7 +24,15 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
         
     public void AddWhenever(Whenever<TInspectWorld, TCommandWorld> whenever)
     {
-        whenevers.Add(whenever);
+        if(whenever != null)
+        {
+            whenevers.Add(whenever);
+        }
+    }
+
+    public void Clear()
+    {
+        whenevers.Clear();
     }
         
     public void InitiateCommandBatch(IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands)
