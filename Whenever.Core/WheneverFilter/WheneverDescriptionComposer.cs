@@ -78,6 +78,6 @@ public class WheneverDescriptionComposer<TI, TC>
             if(remainingFilters.Count <= 0) break;
         }
 
-        return new CompositeWheneverFilter<TI, TC>(compositeFilters.ToArray());
+        return new CompositeWheneverFilter<TI, TC>(compositeFilters.Concat(remainingFilters).ToArray());
     }
 }
