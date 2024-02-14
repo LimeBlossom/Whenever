@@ -34,43 +34,12 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
     {
         whenevers.Clear();
     }
-    
-    
-    public record WheneverExecutionEvent
-    {
-        public InitiatedCommand<TCommandWorld> triggeringCommand { get; private set; }
-        public Whenever<TInspectWorld, TCommandWorld> triggeredWhenever { get; private set; }
-        public InitiatedCommand<TCommandWorld> generatedCommand { get; private set; }
-        
-        private WheneverExecutionEvent()
-        {
-        }
-        
-        public static WheneverExecutionEvent FromOriginCommand(InitiatedCommand<TCommandWorld> command)
-        {
-            return new WheneverExecutionEvent
-            {
-                triggeringCommand = null,
-                triggeredWhenever = null,
-                generatedCommand = command,
-            };
-        }
-        
-        public static WheneverExecutionEvent FromTriggeredCommand(InitiatedCommand<TCommandWorld> command, Whenever<TInspectWorld, TCommandWorld> source, InitiatedCommand<TCommandWorld> triggeredBy)
-        {
-            return new WheneverExecutionEvent
-            {
-                triggeringCommand = triggeredBy,
-                triggeredWhenever = source,
-                generatedCommand = command,
-            };
-        }
-    }
-    
-    public IEnumerable<WheneverExecutionEvent> GetAllExecutedEvents(IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands)
+
+
+    public IEnumerable<WheneverExecutionEvent<TInspectWorld, TCommandWorld>> GetAllExecutedEvents(IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands)
     {
         var currentCommandBatch = new List<InitiatedCommand<TCommandWorld>>(initiatedCommands);
-        var events = currentCommandBatch.Select(WheneverExecutionEvent.FromOriginCommand).ToList();
+        var events = currentCommandBatch.Select(WheneverExecutionEvent<TInspectWorld, TCommandWorld>.FromOriginCommand).ToList();
         foreach (var whenever in whenevers)
         {
             var newCommands = new List<InitiatedCommand<TCommandWorld>>();
@@ -79,7 +48,7 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
                 var triggered = whenever.GetTriggeredCommands(initiatedCommand, inspector).ToList();
                 if (!triggered.Any()) continue;
                 newCommands.AddRange(triggered);
-                events.AddRange(triggered.Select(c => WheneverExecutionEvent.FromTriggeredCommand(c, whenever, initiatedCommand)));
+                events.AddRange(triggered.Select(c => WheneverExecutionEvent<TInspectWorld, TCommandWorld>.FromTriggeredCommand(c, whenever, initiatedCommand)));
             }
             currentCommandBatch.AddRange(newCommands);
         }
@@ -94,5 +63,41 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
             Debug.Log("Applying command: " + currentCommand.generatedCommand.Describe());
             currentCommand.generatedCommand.command.ApplyCommand(commander);
         }
+    }
+}
+
+public record WheneverExecutionEvent<TInspect, TCommand> 
+    where TInspect : IInspectWorld
+    where TCommand : ICommandWorld
+{
+    public InitiatedCommand<TCommand> triggeringCommand { get; private set; }
+    public Whenever<TInspect, TCommand> triggeredWhenever { get; private set; }
+    public InitiatedCommand<TCommand> generatedCommand { get; private set; }
+        
+    private WheneverExecutionEvent()
+    {
+    }
+        
+    public static WheneverExecutionEvent<TInspect, TCommand>  FromOriginCommand(InitiatedCommand<TCommand> command)
+    {
+        return new WheneverExecutionEvent<TInspect, TCommand> 
+        {
+            triggeringCommand = null,
+            triggeredWhenever = null,
+            generatedCommand = command,
+        };
+    }
+        
+    public static WheneverExecutionEvent<TInspect, TCommand>  FromTriggeredCommand(
+        InitiatedCommand<TCommand> command,
+        Whenever<TInspect, TCommand> source, 
+        InitiatedCommand<TCommand> triggeredBy)
+    {
+        return new WheneverExecutionEvent<TInspect, TCommand> 
+        {
+            triggeringCommand = triggeredBy,
+            triggeredWhenever = source,
+            generatedCommand = command,
+        };
     }
 }

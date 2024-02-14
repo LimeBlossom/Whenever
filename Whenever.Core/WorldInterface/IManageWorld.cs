@@ -13,6 +13,7 @@ public interface IManageWorld<TInspect, TCommand>
     /// </summary>
     /// <param name="initiatedCommand"></param>
     public void InitiateCommandBatch(IEnumerable<InitiatedCommand<TCommand>> initiatedCommand);
+    public IEnumerable<WheneverExecutionEvent<TInspect, TCommand> > GetAllExecutedEvents(IEnumerable<InitiatedCommand<TCommand>> initiatedCommand);
         
     public void AddWhenever(Whenever<TInspect, TCommand> whenever);
 }

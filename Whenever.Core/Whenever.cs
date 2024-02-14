@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CoreFac;
@@ -8,6 +9,11 @@ public record Whenever<TInspectWorld, TCommandWorld>
 {
     public IWheneverFilter<TInspectWorld, TCommandWorld> filter;
     public IEffect<TInspectWorld, TCommandWorld> effect;
+    
+    /// <summary>
+    /// a unique id which cannot be changed. used for equality comparisons.
+    /// </summary>
+    public Guid Id { get; } = Guid.NewGuid();
 
     public Whenever(IWheneverFilter<TInspectWorld, TCommandWorld> filter, IEffect<TInspectWorld, TCommandWorld> effect)
     {
