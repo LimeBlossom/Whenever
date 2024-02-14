@@ -34,11 +34,43 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
     {
         whenevers.Clear();
     }
+    
+    
+    public record WheneverExecutionEvent
+    {
+        public InitiatedCommand<TCommandWorld> triggeringCommand { get; private set; }
+        public Whenever<TInspectWorld, TCommandWorld> triggeredWhenever { get; private set; }
+        public InitiatedCommand<TCommandWorld> generatedCommand { get; private set; }
         
-    public void InitiateCommandBatch(IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands)
+        private WheneverExecutionEvent()
+        {
+        }
+        
+        public static WheneverExecutionEvent FromOriginCommand(InitiatedCommand<TCommandWorld> command)
+        {
+            return new WheneverExecutionEvent
+            {
+                triggeringCommand = null,
+                triggeredWhenever = null,
+                generatedCommand = command,
+            };
+        }
+        
+        public static WheneverExecutionEvent FromTriggeredCommand(InitiatedCommand<TCommandWorld> command, Whenever<TInspectWorld, TCommandWorld> source, InitiatedCommand<TCommandWorld> triggeredBy)
+        {
+            return new WheneverExecutionEvent
+            {
+                triggeringCommand = triggeredBy,
+                triggeredWhenever = source,
+                generatedCommand = command,
+            };
+        }
+    }
+    
+    public IEnumerable<WheneverExecutionEvent> GetAllExecutedEvents(IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands)
     {
         var currentCommandBatch = new List<InitiatedCommand<TCommandWorld>>(initiatedCommands);
-
+        var events = currentCommandBatch.Select(WheneverExecutionEvent.FromOriginCommand).ToList();
         foreach (var whenever in whenevers)
         {
             var newCommands = new List<InitiatedCommand<TCommandWorld>>();
@@ -47,15 +79,20 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
                 var triggered = whenever.GetTriggeredCommands(initiatedCommand, inspector).ToList();
                 if (!triggered.Any()) continue;
                 newCommands.AddRange(triggered);
+                events.AddRange(triggered.Select(c => WheneverExecutionEvent.FromTriggeredCommand(c, whenever, initiatedCommand)));
             }
             currentCommandBatch.AddRange(newCommands);
-            Debug.Log("Added " + newCommands.Count + " new commands from whenever: " + whenever.Describe(new SimpleDescriptionContext()));
         }
-                
-        foreach (var currentCommand in currentCommandBatch)
+        return events;
+    }
+    
+    public void InitiateCommandBatch(IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands)
+    {
+        var allExecutedEvents = GetAllExecutedEvents(initiatedCommands);
+        foreach (var currentCommand in allExecutedEvents)
         {
-            Debug.Log("Applying command: " + currentCommand.Describe());
-            currentCommand.command.ApplyCommand(commander);
+            Debug.Log("Applying command: " + currentCommand.generatedCommand.Describe());
+            currentCommand.generatedCommand.command.ApplyCommand(commander);
         }
     }
 }
