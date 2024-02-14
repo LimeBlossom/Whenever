@@ -55,14 +55,14 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
         return events;
     }
     
-    public void InitiateCommandBatch(IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands)
+    public void InitiateCommandBatch(IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands, IDescribeCombatants descriptionContext)
     {
         var allExecutedEvents = GetAllExecutedEvents(initiatedCommands);
         
-        var context = new SimpleDescriptionContext();
+        descriptionContext ??= new SimpleDescriptionContext();
         foreach (var currentCommand in allExecutedEvents)
         {
-            Debug.Log("Applying command: " + currentCommand.generatedCommand.Describe(context));
+            Debug.Log("Applying command: " + currentCommand.generatedCommand.Describe(descriptionContext));
             currentCommand.generatedCommand.command.ApplyCommand(commander);
         }
     }
