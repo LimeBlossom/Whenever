@@ -16,6 +16,6 @@
 
     public string Describe(IDescribeCombatants context)
     {
-        return $"{initiator} will {command.Describe(context)}";
+        return $"{initiator.Describe(context)} will {command.Describe(context)}";
     }
 }
