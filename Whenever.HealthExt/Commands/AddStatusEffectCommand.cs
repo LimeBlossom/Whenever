@@ -16,8 +16,8 @@
         world.AddStatusEffect(Target, statusEffect);
     }
 
-    public string Describe()
+    public string Describe(IDescribeCombatants context)
     {
-        return $"add status effect {statusEffect} to {Target}";
+        return $"add status effect {statusEffect} to {context.NameOf(Target)}";
     }
 }

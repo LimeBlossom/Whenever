@@ -16,9 +16,9 @@
             world.DoDamage(Target, damage);
         }
 
-        public string Describe()
+        public string Describe(IDescribeCombatants context)
         {
-            return $"deal {damage} damage to {Target}";
+            return $"deal {damage} damage to {context.NameOf(Target)}";
         }
     }
 }

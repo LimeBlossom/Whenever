@@ -1,4 +1,9 @@
-﻿public interface IDescriptionContext
+﻿public interface IDescribeCombatants
+{
+    public string NameOf(CombatantId id);
+}
+
+public interface IDescriptionContext : IDescribeCombatants
 {
     public string InitiatorName { get; }
     public string TargetName { get; }
@@ -17,4 +22,8 @@ public class SimpleDescriptionContext : IDescriptionContext
 
     public string InitiatorName { get; set; }
     public string TargetName { get; set;  }
+    public string NameOf(CombatantId id)
+    {
+        return "Combatant #" + id.ToString();
+    }
 }

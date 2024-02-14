@@ -2,5 +2,5 @@
     where TCommand: ICommandWorld
 {
     public void ApplyCommand(TCommand world);
-    public string Describe();
+    public string Describe(IDescribeCombatants context);
 }

@@ -14,8 +14,8 @@
         return $"[{initiator}] -> [{command}]";
     }
 
-    public string Describe()
+    public string Describe(IDescribeCombatants context)
     {
-        return $"{initiator} will {command.Describe()}";
+        return $"{initiator} will {command.Describe(context)}";
     }
 }

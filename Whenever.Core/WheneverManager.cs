@@ -58,9 +58,11 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
     public void InitiateCommandBatch(IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands)
     {
         var allExecutedEvents = GetAllExecutedEvents(initiatedCommands);
+        
+        var context = new SimpleDescriptionContext();
         foreach (var currentCommand in allExecutedEvents)
         {
-            Debug.Log("Applying command: " + currentCommand.generatedCommand.Describe());
+            Debug.Log("Applying command: " + currentCommand.generatedCommand.Describe(context));
             currentCommand.generatedCommand.command.ApplyCommand(commander);
         }
     }

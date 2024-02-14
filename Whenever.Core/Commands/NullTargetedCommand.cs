@@ -7,8 +7,8 @@
         // noop
     }
 
-    public string Describe()
+    public string Describe(IDescribeCombatants context)
     {
-        return "do nothing to a target";
+        return "do nothing to " + context.NameOf(Target);
     }
 }

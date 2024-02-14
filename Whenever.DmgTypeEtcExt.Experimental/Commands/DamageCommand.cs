@@ -20,9 +20,9 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Commands
             target.health.Change(withResistance.damageAmount);
         }
 
-        public string Describe()
+        public string Describe(IDescribeCombatants context)
         {
-            return $"deal {damagePackage.damageAmount} {damagePackage.damageType} to {Target}";
+            return $"deal {damagePackage.damageAmount} {damagePackage.damageType} to {context.NameOf(Target)}";
         }
     }
 }
