@@ -40,18 +40,28 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
     {
         var currentCommandBatch = new List<InitiatedCommand<TCommandWorld>>(initiatedCommands);
         var events = currentCommandBatch.Select(WheneverExecutionEvent<TInspectWorld, TCommandWorld>.FromOriginCommand).ToList();
-        foreach (var whenever in whenevers)
+        var remainingWhenevers = whenevers.ToList();
+        while (remainingWhenevers.Count > 0)
         {
+            // the first whenever in the list which is triggered by any of the current commands
+            var matchedWhenever = remainingWhenevers.FirstOrDefault(whenever => currentCommandBatch
+                    .Any(c => whenever.filter.TriggersOn(c, inspector)));
+            // if no whenevers match, we're done
+            if (matchedWhenever == null) break;
+            remainingWhenevers.Remove(matchedWhenever);
+            
             var newCommands = new List<InitiatedCommand<TCommandWorld>>();
             foreach (var initiatedCommand in currentCommandBatch)
             {
-                var triggered = whenever.GetTriggeredCommands(initiatedCommand, inspector).ToList();
+                var triggered = matchedWhenever.GetTriggeredCommands(initiatedCommand, inspector).ToList();
                 if (!triggered.Any()) continue;
                 newCommands.AddRange(triggered);
-                events.AddRange(triggered.Select(c => WheneverExecutionEvent<TInspectWorld, TCommandWorld>.FromTriggeredCommand(c, whenever, initiatedCommand)));
+                events.AddRange(triggered.Select(c => 
+                    WheneverExecutionEvent<TInspectWorld, TCommandWorld>.FromTriggeredCommand(c, matchedWhenever, initiatedCommand)));
             }
             currentCommandBatch.AddRange(newCommands);
         }
+        
         return events;
     }
     
