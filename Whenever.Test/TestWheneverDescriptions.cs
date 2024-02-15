@@ -21,7 +21,7 @@ namespace Whenever.Test
                 );
 var effects = HealthFac.Effects.DamageTarget(2);
             var whenever = new Whenever<IInspectWorldHealth, ICommandWorldHealth>(filters, effects);
-            Assert.AreEqual("whenever a uncle with at least 5 health takes 1 damage; deal 2 damage to the uncle", whenever.Describe(descriptionContext));
+            Assert.AreEqual("whenever a uncle with at least 5 health takes 1 damage; deal 2 damage to uncle", whenever.Describe(descriptionContext));
         }
     }
     

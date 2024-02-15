@@ -7,7 +7,7 @@ public record CompositeWheneverFilter<TInspectWorld, TCommandWorld> : IWheneverF
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
-    private readonly string overrideDescription = null;
+    private readonly Func<IDescriptionContext, string> overrideDescription = null;
     internal IWheneverFilter<TInspectWorld, TCommandWorld>[] filters;
     
     public CompositeWheneverFilter(params IWheneverFilter<TInspectWorld, TCommandWorld>[] filters)
@@ -15,7 +15,7 @@ public record CompositeWheneverFilter<TInspectWorld, TCommandWorld> : IWheneverF
         this.filters = filters;
     }
     
-    public CompositeWheneverFilter(string overrideDescription, params IWheneverFilter<TInspectWorld, TCommandWorld>[] filters)
+    public CompositeWheneverFilter(Func<IDescriptionContext, string> overrideDescription, params IWheneverFilter<TInspectWorld, TCommandWorld>[] filters)
     {
         this.overrideDescription = overrideDescription;
         this.filters = filters;
@@ -28,7 +28,7 @@ public record CompositeWheneverFilter<TInspectWorld, TCommandWorld> : IWheneverF
 
     public string Describe(IDescriptionContext context)
     {
-        if (overrideDescription != null) return overrideDescription;
+        if (overrideDescription != null) return overrideDescription(context);
         
         return string.Join(" and ", filters?.Select(filter => filter.Describe(context)) ?? Array.Empty<string>());
     }

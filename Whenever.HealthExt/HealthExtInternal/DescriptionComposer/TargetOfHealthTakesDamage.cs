@@ -5,8 +5,8 @@
         public static WheneverCompositeDescription<IInspectWorldHealth, ICommandWorldHealth> Create()
         {
             return WheneverCompositeDescriptionFactory<IInspectWorldHealth, ICommandWorldHealth>
-                .Create<DamageOccurs, TargetHasAtLeastHealth>((dmgOccurs, atLeastHealth) => 
-                    $"a target with at least {atLeastHealth.atLeast} health takes {dmgOccurs.atLeast} damage");
+                .Create<DamageOccurs, TargetHasAtLeastHealth>((ctx, dmgOccurs, atLeastHealth) => 
+                    $"a {ctx.TargetName} with at least {atLeastHealth.atLeast} health takes {dmgOccurs.atLeast} damage");
         }
     }
 }

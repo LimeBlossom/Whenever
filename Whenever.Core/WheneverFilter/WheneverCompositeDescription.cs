@@ -62,5 +62,5 @@ public abstract class WheneverCompositeDescription<TI, TC>
         return success;
     }
 
-    protected abstract string DescribeMatch(IWheneverFilter<TI, TC>[] consumedFilters);
+    protected abstract Func<IDescriptionContext, string> DescribeMatch(IWheneverFilter<TI, TC>[] consumedFilters);
 }
