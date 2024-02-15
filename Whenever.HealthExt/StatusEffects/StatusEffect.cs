@@ -14,12 +14,24 @@ public abstract record StatusEffect<TCommand>
     {
         return initiator;
     }
+    
+    public int GetTurnsLeft()
+    {
+        return turnsLeft;
+    }
 
     /// <summary>
     /// returns true when 
     /// </summary>
     /// <returns></returns>
     public abstract StatusEffectResult<TCommand> ActivateOn(CombatantId target);
+
+    public string Describe(IDescribeCombatants context)
+    {
+        return $"{DescribePerTurnEffect(context)} per turn for {GetTurnsLeft()} turns";
+    }
+    
+    protected abstract string DescribePerTurnEffect(IDescribeCombatants context);
 
     protected bool NextTurnIsExpired()
     {

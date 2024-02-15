@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace HealthExtInternal
@@ -29,5 +30,9 @@ namespace HealthExtInternal
             };
         }
 
+        protected override string DescribePerTurnEffect(IDescribeCombatants context)
+        {
+            return damage.ToString(CultureInfo.InvariantCulture);
+        }
     }
 }

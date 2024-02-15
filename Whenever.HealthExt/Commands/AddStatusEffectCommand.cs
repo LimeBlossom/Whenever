@@ -18,6 +18,6 @@
 
     public string Describe(IDescribeCombatants context)
     {
-        return $"add status effect {statusEffect} to {context.NameOf(Target)}";
+        return $"add {statusEffect.Describe(context)} to {context.NameOf(Target)}";
     }
 }
