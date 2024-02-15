@@ -11,9 +11,9 @@ public record Whenever<TInspectWorld, TCommandWorld>
     public IEffect<TInspectWorld, TCommandWorld> effect;
     
     /// <summary>
-    /// a unique id which cannot be changed. used for equality comparisons.
+    /// a unique id. will be unique for each unique whenever contained inside a wheneverManager.
     /// </summary>
-    public Guid Id { get; } = Guid.NewGuid();
+    public Guid Id { get; private set; } = Guid.NewGuid();
 
     public Whenever(IWheneverFilter<TInspectWorld, TCommandWorld> filter, IEffect<TInspectWorld, TCommandWorld> effect)
     {
@@ -33,7 +33,13 @@ public record Whenever<TInspectWorld, TCommandWorld>
             .ApplyEffect(command, world)
             .Select(x => new InitiatedCommand<TCommandWorld>(x, nextInitiator));
     }
-        
+    internal Whenever<TInspectWorld, TCommandWorld> ForceRegenerateIdentifier()
+    {
+        return this with
+        {
+            Id = Guid.NewGuid()
+        };
+    }
     public string Describe(IDescriptionContext context)
     {
         return $"whenever {filter.Describe(context)}; {effect.Describe(context)}";

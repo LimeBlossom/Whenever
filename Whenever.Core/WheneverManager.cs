@@ -26,7 +26,7 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
     {
         if(whenever != null)
         {
-            whenevers.Add(whenever);
+            whenevers.Add(whenever.ForceRegenerateIdentifier());
         }
     }
 
