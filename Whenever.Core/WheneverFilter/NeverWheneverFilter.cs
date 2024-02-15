@@ -2,6 +2,14 @@
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
+    private readonly string description;
+
+    public NeverWheneverFilter(string description = "never")
+    {
+        this.description = description;
+    }
+
+
     public bool TriggersOn(InitiatedCommand<TCommandWorld> initiatedCommand, TInspectWorld world)
     {
         return false;
@@ -9,6 +17,6 @@
 
     public string Describe(IDescriptionContext context)
     {
-        return "never";
+        return description;
     }
 }
