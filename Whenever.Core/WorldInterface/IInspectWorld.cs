@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 /// <summary>
 /// An interface used by Effects to determine if, or how, to generate a Command.
@@ -13,4 +14,12 @@
 public interface IInspectWorld
 {
     IEnumerable<CombatantId> AllIds();
+}
+
+public static class IInspectWorldExtensions
+{
+    public static bool Contains(this IInspectWorld world, CombatantId id)
+    {
+        return world.AllIds().Contains(id);
+    }
 }
