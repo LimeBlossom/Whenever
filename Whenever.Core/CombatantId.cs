@@ -9,6 +9,11 @@
     {
         return new CombatantId(id.id + 1);
     }
+
+    public CombatantId Next()
+    {
+        return CombatantId.Next(this);
+    }
     
     private CombatantId(int id)
     {

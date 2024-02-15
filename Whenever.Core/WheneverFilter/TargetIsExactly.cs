@@ -2,7 +2,7 @@
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
-    private readonly CombatantId id;
+    public readonly CombatantId id;
 
     public TargetIsExactly(CombatantId id)
     {
@@ -18,6 +18,6 @@
 
     public string Describe(IDescriptionContext context)
     {
-        return $"{context.TargetName} is {id}";
+        return $"{context.TargetName} is {context.NameOf(id)}";
     }
 }

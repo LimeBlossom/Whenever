@@ -2,7 +2,7 @@
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
-    private readonly CombatantId id;
+    public readonly CombatantId id;
 
     public InitiatorIsExactly(CombatantId id)
     {
@@ -21,6 +21,6 @@
 
     public string Describe(IDescriptionContext context)
     {
-        return $"{context.InitiatorName} is {id}";
+        return $"{context.InitiatorName} is {context.NameOf(id)}";
     }
 }

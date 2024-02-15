@@ -13,9 +13,13 @@ public interface IDescriptionContext : IDescribeCombatants
 
 public class SimpleDescriptionContext : IDescriptionContext
 {
+    public SimpleDescriptionContext(Dictionary<CombatantId, string> name) : this("the initiator", "the target", name)
+    {
+    }
     public SimpleDescriptionContext(): this("the initiator", "the target")
     {
     }
+    
     public SimpleDescriptionContext(string initiatorName, string targetName)
     {
         this.InitiatorName = initiatorName;
@@ -26,7 +30,7 @@ public class SimpleDescriptionContext : IDescriptionContext
     {
         this.InitiatorName = initiatorName;
         this.TargetName = targetName;
-        this.names = names;
+        this.names = names ?? new();
     }
     
     private Dictionary<CombatantId, string> names = new();
