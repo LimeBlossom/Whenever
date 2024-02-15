@@ -11,6 +11,11 @@ public class StatusEffectCollection<TCommand>
     {
         statusEffects.Add(effect);
     }
+
+    public List<StatusEffect<TCommand>> List()
+    {
+        return statusEffects;
+    }
         
     public IEnumerable<InitiatedCommand<TCommand>> ApplyStatusEffects(CombatantId myId)
     {
