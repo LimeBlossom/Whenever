@@ -21,6 +21,8 @@ public interface IManageWorld<TInspect, TCommand>
     public Guid? AddWhenever(Whenever<TInspect, TCommand> whenever);
     public void RemoveWhenever(Guid wheneverId);
     public Whenever<TInspect, TCommand> GetWhenever(Guid wheneverId);
+
+    public IEnumerable<Guid> GetAllWhenevers();
 }
     
 public static class ManageWorldExtensions

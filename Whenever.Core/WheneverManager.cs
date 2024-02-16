@@ -22,6 +22,8 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
         this.inspector = inspector;
         this.commander = commander;
     }
+    
+    
         
     public Guid? AddWhenever(Whenever<TInspectWorld, TCommandWorld> whenever)
     {
@@ -39,6 +41,11 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
         {
             whenevers.Remove(toRemove);
         }
+    }
+    
+    public IEnumerable<Guid> GetAllWhenevers()
+    {
+        return whenevers.Select(w => w.Id);
     }
     
     public Whenever<TInspectWorld, TCommandWorld> GetWhenever(Guid wheneverId)
