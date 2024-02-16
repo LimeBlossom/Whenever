@@ -12,9 +12,14 @@ public class StatusEffectCollection<TCommand>
         statusEffects.Add(effect);
     }
 
-    public List<StatusEffect<TCommand>> List()
+    public IEnumerable<StatusEffect<TCommand>> List()
     {
         return statusEffects;
+    }
+
+    public void Clear()
+    {
+        statusEffects.Clear();
     }
         
     public IEnumerable<InitiatedCommand<TCommand>> ApplyStatusEffects(CombatantId myId)
