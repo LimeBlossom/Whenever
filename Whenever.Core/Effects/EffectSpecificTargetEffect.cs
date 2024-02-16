@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ public abstract record EffectSpecificTargetEffect<TInspectWorld, TCommandWorld> 
 
     public EffectSpecificTargetEffect(CombatantId specificTarget)
     {
-        this.specificTarget = specificTarget;
+        this.specificTarget = specificTarget ?? throw new ArgumentNullException(nameof(specificTarget));
     }
     
     public IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffect(InitiatedCommand<TCommandWorld> command, TInspectWorld world)

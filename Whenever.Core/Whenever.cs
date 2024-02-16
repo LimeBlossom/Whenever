@@ -7,8 +7,8 @@ public record Whenever<TInspectWorld, TCommandWorld>
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
-    public IWheneverFilter<TInspectWorld, TCommandWorld> filter;
-    public IEffect<TInspectWorld, TCommandWorld> effect;
+    public readonly IWheneverFilter<TInspectWorld, TCommandWorld> filter;
+    public readonly IEffect<TInspectWorld, TCommandWorld> effect;
     
     /// <summary>
     /// a unique id. will be unique for each unique whenever contained inside a wheneverManager.

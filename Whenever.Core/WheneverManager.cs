@@ -29,6 +29,19 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
             whenevers.Add(whenever.ForceRegenerateIdentifier());
         }
     }
+    
+    public void RemoveWhenever(Whenever<TInspectWorld, TCommandWorld> whenever)
+    {
+        var toRemove = whenevers.FirstOrDefault(w => w.Id == whenever.Id);
+        if (toRemove != null)
+        {
+            if(toRemove != whenever)
+            {
+                Debug.LogWarning("WheneverManager: requested to remove a whenever, but found whenever is not exact match for removed whenever.");
+            }
+            whenevers.Remove(toRemove);
+        }
+    }
 
     public void Clear()
     {
