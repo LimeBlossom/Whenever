@@ -43,7 +43,7 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
         }
     }
 
-    public void Clear()
+    public void ClearAll()
     {
         whenevers.Clear();
     }
