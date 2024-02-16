@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -22,25 +23,27 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
         this.commander = commander;
     }
         
-    public void AddWhenever(Whenever<TInspectWorld, TCommandWorld> whenever)
+    public Guid? AddWhenever(Whenever<TInspectWorld, TCommandWorld> whenever)
     {
-        if(whenever != null)
+        if (whenever == null) return null;
+        
+        var newWhenever = whenever.ForceRegenerateIdentifier(); 
+        whenevers.Add(newWhenever);
+        return newWhenever.Id;
+    }
+    
+    public void RemoveWhenever(Guid wheneverId)
+    {
+        var toRemove = GetWhenever(wheneverId);
+        if (toRemove != null)
         {
-            whenevers.Add(whenever.ForceRegenerateIdentifier());
+            whenevers.Remove(toRemove);
         }
     }
     
-    public void RemoveWhenever(Whenever<TInspectWorld, TCommandWorld> whenever)
+    public Whenever<TInspectWorld, TCommandWorld> GetWhenever(Guid wheneverId)
     {
-        var toRemove = whenevers.FirstOrDefault(w => w.Id == whenever.Id);
-        if (toRemove != null)
-        {
-            if(toRemove != whenever)
-            {
-                Debug.LogWarning("WheneverManager: requested to remove a whenever, but found whenever is not exact match for removed whenever.");
-            }
-            whenevers.Remove(toRemove);
-        }
+        return whenevers.FirstOrDefault(w => w.Id == wheneverId);
     }
 
     public void ClearAll()

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// Used to manage the world from the main game loop. The only way to trigger changes externally.
@@ -16,7 +18,9 @@ public interface IManageWorld<TInspect, TCommand>
     public void InitiateCommandBatch(IEnumerable<InitiatedCommand<TCommand>> initiatedCommand, IDescribeCombatants descriptionContext = null);
     public IEnumerable<WheneverExecutionEvent<TInspect, TCommand> > GetAllExecutedEvents(IEnumerable<InitiatedCommand<TCommand>> initiatedCommand);
         
-    public void AddWhenever(Whenever<TInspect, TCommand> whenever);
+    public Guid? AddWhenever(Whenever<TInspect, TCommand> whenever);
+    public void RemoveWhenever(Guid wheneverId);
+    public Whenever<TInspect, TCommand> GetWhenever(Guid wheneverId);
 }
     
 public static class ManageWorldExtensions
@@ -33,6 +37,21 @@ public static class ManageWorldExtensions
         where TCommand : ICommandWorld
     {
         manager.InitiateCommandBatch(new []{command}, descriptionContext);
+    }
+    
+    public static void RemoveWhenever<TInspect, TCommand>(this IManageWorld<TInspect, TCommand> manager, Whenever<TInspect, TCommand> whenever)
+        where TInspect : IInspectWorld
+        where TCommand : ICommandWorld
+    {
+        var toRemove = manager.GetWhenever(whenever.Id);
+        if (toRemove != null)
+        {
+            if(toRemove != whenever)
+            {
+                Debug.LogWarning("WheneverManager: requested to remove a whenever, but found whenever is not exact match for removed whenever.");
+            }
+            manager.RemoveWhenever(whenever.Id);
+        }
     }
         
 }
