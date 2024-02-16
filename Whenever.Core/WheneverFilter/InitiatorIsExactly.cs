@@ -1,4 +1,6 @@
-﻿public class InitiatorIsExactly<TInspectWorld, TCommandWorld>: IWheneverFilter<TInspectWorld, TCommandWorld>
+﻿using UnityEngine;
+
+public class InitiatorIsExactly<TInspectWorld, TCommandWorld>: IWheneverFilter<TInspectWorld, TCommandWorld>
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
@@ -13,6 +15,12 @@
     {
         if (!initiatedCommand.initiator.TryAsOrRecursedFrom<CombatantCommandInitiator>(out var initiator))
         {
+            return false;
+        }
+
+        if (!world.Contains(initiator.Initiator))
+        {
+            Debug.LogWarning("Attempted to trigger an effect with a dead initiator, " + initiator.Initiator);
             return false;
         }
 
