@@ -42,6 +42,6 @@ public record Whenever<TInspectWorld, TCommandWorld>
     }
     public string Describe(IDescriptionContext context)
     {
-        return $"whenever {filter.Describe(context)}; {effect.Describe(context)}";
+        return $"When {filter.Describe(context)}; {effect.Describe(context)}";
     }
 }
