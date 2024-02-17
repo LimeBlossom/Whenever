@@ -73,7 +73,7 @@ namespace Whenever.Test
             ctx.AddWhenever(
                 HealthFac.Filters.CreateDamageOccursFilter(2), 
                 Effects.DotTarget(1, 3), 
-                "whenever at least 2 damage occurs; apply 1 damage per turn for 3 turns to the target");
+                "When at least 2 damage occurs; apply 1 damage per turn for 3 turns to the target");
             
             Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.enemy));
             
@@ -103,7 +103,7 @@ namespace Whenever.Test
             ctx.AddWhenever(
                 HealthFac.Filters.CreateDamageOccursFilter(1),
                 Effects.DamageTarget(1), 
-                "whenever at least 1 damage occurs; deal 1 damage to the target");
+                "When at least 1 damage occurs; deal 1 damage to the target");
             
             Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.enemy));
             
@@ -119,8 +119,8 @@ namespace Whenever.Test
             var ctx = GetEnemyAndPlayerTurnContext();
             var filter = HealthFac.Filters.CreateDamageOccursFilter(1);
             WheneverType damageOccursDealsDamageToTarget = new(filter, Effects.DamageTarget(1));
-            ctx.AddWhenever(damageOccursDealsDamageToTarget, "whenever at least 1 damage occurs; deal 1 damage to the target");
-            ctx.AddWhenever(damageOccursDealsDamageToTarget, "whenever at least 1 damage occurs; deal 1 damage to the target");
+            ctx.AddWhenever(damageOccursDealsDamageToTarget, "When at least 1 damage occurs; deal 1 damage to the target");
+            ctx.AddWhenever(damageOccursDealsDamageToTarget, "When at least 1 damage occurs; deal 1 damage to the target");
             
             Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.enemy));
             
@@ -147,7 +147,7 @@ namespace Whenever.Test
                     HealthFac.Filters.CreateDamageOccursFilter(1)
                 ),
                 Effects.DamageTarget(2), 
-                "whenever the target has at least 5 health and at least 1 damage occurs; deal 2 damage to the target");
+                "When the target has at least 5 health and at least 1 damage occurs; deal 2 damage to the target");
             
             Assert.AreEqual(10, ctx.inspector.GetHealth(ctx.enemy));
             
