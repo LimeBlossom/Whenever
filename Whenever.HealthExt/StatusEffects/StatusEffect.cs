@@ -15,6 +15,16 @@ public abstract record StatusEffect<TCommand>
         return initiator;
     }
     
+    public bool WasInitiatedBy(CombatantId id)
+    {
+        if(initiator.TryAsOrRecursedFrom<CombatantCommandInitiator>(out var combatantInitiator))
+        {
+            return combatantInitiator.Initiator == id;
+        }
+
+        return false;
+    }
+    
     public int GetTurnsLeft()
     {
         return turnsLeft;

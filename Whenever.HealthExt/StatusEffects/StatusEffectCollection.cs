@@ -21,6 +21,10 @@ public class StatusEffectCollection<TCommand>
     {
         statusEffects.Clear();
     }
+    public void RemoveAllInitiatedBy(CombatantId id)
+    {
+        statusEffects.RemoveAll(effect => effect.WasInitiatedBy(id));
+    }
         
     public IEnumerable<InitiatedCommand<TCommand>> ApplyStatusEffects(CombatantId myId)
     {
