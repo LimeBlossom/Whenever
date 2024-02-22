@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Serialization;
-using UnityEngine;
 
 public record CompositeWheneverFilter<TInspectWorld, TCommandWorld> : IWheneverFilter<TInspectWorld, TCommandWorld>
     where TInspectWorld : IInspectWorld
@@ -32,4 +31,19 @@ public record CompositeWheneverFilter<TInspectWorld, TCommandWorld> : IWheneverF
         
         return string.Join(" and ", filters?.Select(filter => filter.Describe(context)) ?? Array.Empty<string>());
     }
+}
+
+public static class OptionallyCompositeWheneverFilters{
+    
+    public static IEnumerable<IWheneverFilter<TInspect, TCommand>> Flatten<TInspect, TCommand>(this IWheneverFilter<TInspect, TCommand> filter)
+        where TInspect : IInspectWorld
+        where TCommand : ICommandWorld
+    {
+        if (filter is CompositeWheneverFilter<TInspect, TCommand> composite)
+        {
+            return composite.filters.SelectMany(Flatten);
+        }
+        return new[] {filter};
+    }
+    
 }
