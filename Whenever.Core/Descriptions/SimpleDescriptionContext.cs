@@ -1,45 +1,5 @@
 ﻿using System.Collections.Generic;
 
-public interface IDescribeCombatants
-{
-    public string NameOf(CombatantId id);
-}
-
-public interface IDescriptionContext : IDescribeCombatants
-{
-    public string InitiatorName { get; }
-    public string TargetName { get; }
-}
-
-public static class DescriptionContextExtensions
-{
-    public static string ToTargetAsDirectSubject(this IDescriptionContext context)
-    {
-        var targetName = context.TargetName;
-        if (string.IsNullOrWhiteSpace(targetName))
-        {
-            return "";
-        }
-        else
-        {
-            return " to " + targetName;
-        }
-    }
-    
-    public static string ToInitiatorAsDirectSubject(this IDescriptionContext context)
-    {
-        var initiatorName = context.InitiatorName;
-        if (string.IsNullOrWhiteSpace(initiatorName))
-        {
-            return "";
-        }
-        else
-        {
-            return " to " + initiatorName;
-        }
-    }
-}
-
 public class SimpleDescriptionContext : IDescriptionContext
 {
     public SimpleDescriptionContext(Dictionary<CombatantId, string> name) : this("the initiator", "the target", name)

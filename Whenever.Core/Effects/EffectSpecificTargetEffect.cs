@@ -22,10 +22,10 @@ public abstract record EffectSpecificTargetEffect<TInspectWorld, TCommandWorld> 
 
     public string Describe(IDescriptionContext context)
     {
-        return DescribeEffect() + $" to {context.NameOf(specificTarget)}";
+        return DescribeEffect() + context.ToSpecificAsDirectSubject(specificTarget);
     }
         
-    public abstract string DescribeEffect();
+    protected abstract string DescribeEffect();
 
     protected abstract IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffectTo(CombatantId target, TInspectWorld world);
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CoreFac;
 
-public record Whenever<TInspectWorld, TCommandWorld>
+public record Whenever<TInspectWorld, TCommandWorld> : IDescribableWithContext
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {

@@ -1,7 +1,6 @@
-﻿public interface IWheneverFilter<in TInspectWorld, TCommandWorld>
+﻿public interface IWheneverFilter<in TInspectWorld, TCommandWorld> : IDescribableWithContext
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
     public bool TriggersOn(InitiatedCommand<TCommandWorld> initiatedCommand, TInspectWorld world);
-    public string Describe(IDescriptionContext context);
 }

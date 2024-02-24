@@ -20,5 +20,13 @@ namespace HealthFac
                 damage = damage
             };
         }
+        
+        public static IEffect<IInspectWorldHealth, ICommandWorldHealth> DamageSpecificTarget(float damage, CombatantId specificTarget)
+        {
+            return new DamageSpecificEffect(specificTarget)
+            {
+                damage = damage
+            };
+        }
     }
 }
