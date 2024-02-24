@@ -26,7 +26,7 @@ namespace HealthExtInternal
 
         public string Describe(IDescriptionContext context)
         {
-            return $"apply {damage} damage per turn for {turns} turns to {context.TargetName}";
+            return $"apply {damage} damage per turn for {turns} turns{context.ToTargetAsDirectSubject()}";
         }
     }
 }

@@ -11,6 +11,22 @@ public interface IDescriptionContext : IDescribeCombatants
     public string TargetName { get; }
 }
 
+public static class DescriptionContextExtensions
+{
+    public static string ToTargetAsDirectSubject(this IDescriptionContext context)
+    {
+        var targetName = context.TargetName;
+        if (string.IsNullOrWhiteSpace(targetName))
+        {
+            return "";
+        }
+        else
+        {
+            return " to " + targetName;
+        }
+    }
+}
+
 public class SimpleDescriptionContext : IDescriptionContext
 {
     public SimpleDescriptionContext(Dictionary<CombatantId, string> name) : this("the initiator", "the target", name)

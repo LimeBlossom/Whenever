@@ -17,7 +17,7 @@ public abstract record EffectTargetEffect<TInspectWorld, TCommandWorld> : IEffec
     }
     public string Describe(IDescriptionContext context)
     {
-        return DescribeOnTarget() + $" to {context.TargetName}";
+        return DescribeOnTarget() + context.ToTargetAsDirectSubject();
     }
         
     protected abstract string DescribeOnTarget();

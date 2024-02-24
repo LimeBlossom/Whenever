@@ -23,6 +23,15 @@ var effects = HealthFac.Effects.DamageTarget(2);
             var whenever = new Whenever<IInspectWorldHealth, ICommandWorldHealth>(filters, effects);
             Assert.AreEqual("When a uncle with at least 5 health takes 1 damage; deal 2 damage to uncle", whenever.Describe(descriptionContext));
         }
+
+        [Test]
+        public void PlayerDealsDamage_EmptyTargetName_OmitsTargetAsSubject()
+        {
+            var descriptionContext = new SimpleDescriptionContext("George", "");
+            var effect = HealthFac.Effects.DamageTarget(2);
+            
+            Assert.AreEqual("deal 2 damage", effect.Describe(descriptionContext));
+        }
     }
     
 }
