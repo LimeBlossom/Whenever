@@ -25,6 +25,19 @@ public static class DescriptionContextExtensions
             return " to " + targetName;
         }
     }
+    
+    public static string ToInitiatorAsDirectSubject(this IDescriptionContext context)
+    {
+        var initiatorName = context.InitiatorName;
+        if (string.IsNullOrWhiteSpace(initiatorName))
+        {
+            return "";
+        }
+        else
+        {
+            return " to " + initiatorName;
+        }
+    }
 }
 
 public class SimpleDescriptionContext : IDescriptionContext
