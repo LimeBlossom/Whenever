@@ -54,7 +54,10 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
         
         public static EffectType CritDamage(CombatantAlias alias, float critDamageMultiplier = 1)
         {
-            throw new NotImplementedException();
+            return new ApplyCriticalDamageEffect(alias)
+            {
+                critDamageMultiplier = critDamageMultiplier
+            };
         }
         
         public static EffectType DamageAdjacentTo(CombatantAlias alias, DamageType type, float damageAmount)
