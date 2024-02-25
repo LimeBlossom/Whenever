@@ -5,28 +5,19 @@ using Whenever.DmgTypeEtcExt.Experimental.World;
 
 namespace Whenever.DmgTypeEtcExt.Experimental.Effects
 {
-    public record DamageAdjacentToCombatantEffect: IEffect<IInspectableWorldDemo, ICommandableWorldDemo>
+    public record DamageAdjacentToCombatantEffect: EffectAliasedTargetEffect<IInspectableWorldDemo, ICommandableWorldDemo>
     {
         public float damageAmount;
         public DamageType damageType;
-        private readonly CombatantAlias alias;
 
-        public DamageAdjacentToCombatantEffect(CombatantAlias alias)
+        public DamageAdjacentToCombatantEffect(CombatantAlias alias) : base(alias)
         {
-            this.alias = alias;
         }
-        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffect(
+        protected override IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffectToTarget(
+            CombatantId target,
             InitiatedCommand<ICommandableWorldDemo> command,
-            IAliasCombatantIds aliaser,
             IInspectableWorldDemo world)
         {
-            var target = aliaser.GetIdForAlias(alias);
-            if (target == null)
-            {
-                Debug.LogWarning($"Could not find target for alias '{alias}'");
-                yield break;
-            }
-            
             var newTargets = world.GetAdjacentCombatants(target);
             foreach (var adjacentTarget in newTargets)
             {
@@ -35,9 +26,9 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
             }
         }
         
-        public string Describe(IDescriptionContext context)
+        protected override string DescribeOnTarget()
         {
-            return $"deal {damageAmount} {damageType} damage to all adjacent{context.ToAliasAsDirectSubject(alias)}";
+            return $"deal {damageAmount} {damageType} damage to all adjacent";
         }
     }
 }

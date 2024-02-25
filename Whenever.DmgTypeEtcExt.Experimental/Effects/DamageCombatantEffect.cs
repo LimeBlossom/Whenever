@@ -5,33 +5,24 @@ using Whenever.DmgTypeEtcExt.Experimental.World;
 
 namespace Whenever.DmgTypeEtcExt.Experimental.Effects
 {
-    public record DamageCombatantEffect: IEffect<IInspectableWorldDemo, ICommandableWorldDemo>
+    public record DamageCombatantEffect: EffectAliasedTargetEffect<IInspectableWorldDemo, ICommandableWorldDemo>
     {
         public DamagePackage damagePackage;
-        private readonly CombatantAlias alias;
         
-        public DamageCombatantEffect(CombatantAlias alias)
+        public DamageCombatantEffect(CombatantAlias alias) : base(alias)
         {
-            this.alias = alias;
         }
-        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffect(
+        protected override IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffectToTarget(
+            CombatantId target,
             InitiatedCommand<ICommandableWorldDemo> command,
-            IAliasCombatantIds aliaser,
             IInspectableWorldDemo world)
         {
-            var target = aliaser.GetIdForAlias(alias);
-            if (target == null)
-            {
-                Debug.LogWarning($"Could not find target for alias '{alias}'");
-                yield break;
-            }
-
             yield return new DamageCommand(target, damagePackage);
         }
 
-        public string Describe(IDescriptionContext context)
+        protected override string DescribeOnTarget()
         {
-            return $"deal {damagePackage.damageAmount} {damagePackage.damageType} damage{context.ToAliasAsDirectSubject(alias)}";
+            return $"deal {damagePackage.damageAmount} {damagePackage.damageType} damage";
         }
     }
 }
