@@ -1,21 +1,37 @@
 using System.Collections.Generic;
+using UnityEngine;
 using Whenever.DmgTypeEtcExt.Experimental.Commands;
 using Whenever.DmgTypeEtcExt.Experimental.World;
 
 namespace Whenever.DmgTypeEtcExt.Experimental.Effects
 {
-    public record DamageTargetEffect: EffectTargetEffect<IInspectableWorldDemo, ICommandableWorldDemo>
+    public record DamageCombatantEffect: IEffect<IInspectableWorldDemo, ICommandableWorldDemo>
     {
         public DamagePackage damagePackage;
-
-
-        protected override IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffectToTarget(CombatantId target, IInspectableWorldDemo world)
+        private readonly CombatantAlias alias;
+        
+        public DamageCombatantEffect(CombatantAlias alias)
         {
+            this.alias = alias;
+        }
+        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffect(
+            InitiatedCommand<ICommandableWorldDemo> command,
+            IAliasCombatantIds aliaser,
+            IInspectableWorldDemo world)
+        {
+            var target = aliaser.GetIdForAlias(alias);
+            if (target == null)
+            {
+                Debug.LogWarning($"Could not find target for alias '{alias}'");
+                yield break;
+            }
+
             yield return new DamageCommand(target, damagePackage);
         }
-        protected override string DescribeOnTarget()
+
+        public string Describe(IDescriptionContext context)
         {
-            return $"deal {damagePackage.damageAmount} {damagePackage.damageType} damage";
+            return $"deal {damagePackage.damageAmount} {damagePackage.damageType} damage{context.ToAliasAsDirectSubject(alias)}";
         }
     }
 }

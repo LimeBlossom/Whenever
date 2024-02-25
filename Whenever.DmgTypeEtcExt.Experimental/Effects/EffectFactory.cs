@@ -38,12 +38,18 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
         
         public static EffectType Heal(CombatantAlias alias, float healAmount)
         {
-            throw new NotImplementedException();
+            return new DamageCombatantEffect(alias)
+            {
+                damagePackage = new(DamageType.HEAL, healAmount)
+            };
         }
         
         public static EffectType Damage(CombatantAlias alias, DamageType type, float damageAmount)
         {
-            throw new NotImplementedException();
+            return new DamageCombatantEffect(alias)
+            {
+                damagePackage = new(type, damageAmount)
+            };
         }
         
         public static EffectType CritDamage(CombatantAlias alias, float critDamageMultiplier = 1)
