@@ -10,7 +10,7 @@ namespace HealthExtInternal.DescriptionComposer
             yield return Create<DamageOccurs, TargetHasAtLeastHealth>((ctx, dmgOccurs, atLeastHealth) => 
                     $"a {ctx.TargetName} with at least {atLeastHealth.atLeast} health takes {dmgOccurs.atLeast} damage");
             yield return Create<DamageOccurs, CombatantHasAtLeastHealth>((ctx, dmgOccurs, atLeastHealth) =>
-                $"{ctx.NameOf(atLeastHealth.alias)} with at least {atLeastHealth.atLeast} health takes {dmgOccurs.atLeast} damage");
+                $"{ctx.NameOf(atLeastHealth.combatant)} with at least {atLeastHealth.atLeast} health takes {dmgOccurs.atLeast} damage");
                 
         }
     }

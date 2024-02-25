@@ -4,14 +4,15 @@ using UnityEngine;
 
 namespace HealthExtInternal
 {
+    [PolymorphicSerializable("CombatantHasAtLeastHealth"), Serializable]
     internal record CombatantHasAtLeastHealth : IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>
     {
-        public readonly CombatantAlias alias;
+        public CombatantAlias combatant;
         public float atLeast;
 
-        public CombatantHasAtLeastHealth(CombatantAlias alias, float atLeast)
+        public CombatantHasAtLeastHealth(CombatantAlias combatant, float atLeast)
         {
-            this.alias = alias;
+            this.combatant = combatant;
             this.atLeast = atLeast;
         }
 
@@ -20,10 +21,10 @@ namespace HealthExtInternal
             IAliasCombatantIds aliaser,
             IInspectWorldHealth world)
         {
-            var target = aliaser.GetIdForAlias(alias);
+            var target = aliaser.GetIdForAlias(combatant);
             if (target == null)
             {
-                Debug.LogWarning($"Could not find target for alias '{alias}'");
+                Debug.LogWarning($"Could not find target for alias '{combatant}'");
                 return false;
             }
             
@@ -32,7 +33,7 @@ namespace HealthExtInternal
 
         public string Describe(IDescriptionContext context)
         {
-            return $"{context.NameOf(alias)} has at least {atLeast} health";
+            return $"{context.NameOf(combatant)} has at least {atLeast} health";
         }
     }
 }

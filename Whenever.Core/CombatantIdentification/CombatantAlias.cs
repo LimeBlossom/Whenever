@@ -1,6 +1,12 @@
-﻿public class CombatantAlias
+﻿using System;
+using UnityEngine;
+
+[Serializable]
+public class CombatantAlias
 {
-    private readonly string alias;
+    [SerializeField]
+    private string alias;
+    [SerializeField]
     private string readableDescription;
     
     public static CombatantAlias FromId(string alias)
