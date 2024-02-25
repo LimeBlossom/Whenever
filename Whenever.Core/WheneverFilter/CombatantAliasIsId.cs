@@ -1,4 +1,6 @@
-﻿public record CombatantAliasIsId<TInspectWorld, TCommandWorld>: IWheneverFilter<TInspectWorld, TCommandWorld>
+﻿using UnityEngine;
+
+public record CombatantAliasIsId<TInspectWorld, TCommandWorld>: IWheneverFilter<TInspectWorld, TCommandWorld>
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
@@ -20,6 +22,11 @@
         TInspectWorld world)
     {
         var variableId = aliaser.GetIdForAlias(variableAlias);
+        if (variableId == null)
+        {
+            Debug.LogWarning($"Could not find target for alias '{variableAlias}'");
+            return false;
+        }
         return variableId == expectedId;
     }
         

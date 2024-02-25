@@ -1,4 +1,6 @@
-﻿public record CombatantsAreSame<TInspectWorld, TCommandWorld>: IWheneverFilter<TInspectWorld, TCommandWorld>
+﻿using UnityEngine;
+
+public record CombatantsAreSame<TInspectWorld, TCommandWorld>: IWheneverFilter<TInspectWorld, TCommandWorld>
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
@@ -17,7 +19,17 @@
         TInspectWorld world)
     {
         var variableId = aliaser.GetIdForAlias(variableAlias);
+        if (variableId == null)
+        {
+            Debug.LogWarning($"Could not find target for alias '{variableAlias}'");
+            return false;
+        }
         var expectedId = aliaser.GetIdForAlias(expectedAlias);
+        if (expectedId == null)
+        {
+            Debug.LogWarning($"Could not find target for alias '{expectedAlias}'");
+            return false;
+        }
         return variableId == expectedId;
     }
         
