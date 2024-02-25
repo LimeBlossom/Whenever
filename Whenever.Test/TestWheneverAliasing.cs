@@ -43,16 +43,18 @@ namespace Whenever.Test
             var healCaster = EffectFactory.Heal(StandardAliases.Initiator, 3);
             
             var aliaser = new SimpleCombatantAliaser();
-            aliaser.SetAlias(CombatantAlias.FromId("#cardCaster"), player);
-            aliaser.SetAlias(CombatantAlias.FromId("#cardTarget"), enemy);
+            var targetedAliaser = aliaser.WithOverrides(
+                ("#cardTarget", enemy),
+                ("#cardCaster", player)
+            );
             var whenever = new WheneverType(wheneverCardTargetTakesPhysicalDamage, healCaster);
-            whenever = whenever.BakeCombatantAlias(aliaser);
+            whenever = whenever.BakeCombatantAlias(targetedAliaser);
             
             turnManager.AddWhenever(whenever);
             
             // player takes damage
             turnManager.InitiateCommand(
-                CmdFactory.Damage(DamageType.PHYSICAL, 4, enemy),
+                CmdFactory.Damage(DamageType.PHYSICAL, 4, player),
                 Initiators.From(enemy));
         
             Assert.AreEqual(6, baseWorld.CombatantData(player).CurrentHealth());
@@ -68,12 +70,14 @@ namespace Whenever.Test
             Assert.AreEqual(9, baseWorld.CombatantData(enemy).CurrentHealth());
             
             // enemy deals damage, overrides aliasing with baked alias
-            aliaser.SetAlias(CombatantAlias.FromId("#cardCaster"), enemy);
-            aliaser.SetAlias(CombatantAlias.FromId("#cardTarget"), player);
+            targetedAliaser = aliaser.WithOverrides(
+                ("#cardTarget", player),
+                ("#cardCaster", enemy)
+            );
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, player),
                 Initiators.From(enemy),
-                aliaser: aliaser);
+                aliaser: targetedAliaser);
             
             Assert.AreEqual(8, baseWorld.CombatantData(player).CurrentHealth());
             Assert.AreEqual(9, baseWorld.CombatantData(enemy).CurrentHealth());
