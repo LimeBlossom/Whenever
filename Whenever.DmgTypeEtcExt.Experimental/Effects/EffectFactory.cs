@@ -40,7 +40,7 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
         {
             return new DamageCombatantEffect(alias)
             {
-                damagePackage = new(DamageType.HEAL, healAmount)
+                damagePackage = new(DamageType.HEAL, -healAmount)
             };
         }
         
