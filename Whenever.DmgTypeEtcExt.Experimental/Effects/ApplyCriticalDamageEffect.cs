@@ -8,7 +8,10 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
     public record ApplyCriticalDamageEffect: IEffect<IInspectableWorldDemo, ICommandableWorldDemo>
     {
         public float critDamageMultiplier;
-        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffect(InitiatedCommand<ICommandableWorldDemo> command, IInspectableWorldDemo world)
+        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffect(
+            InitiatedCommand<ICommandableWorldDemo> command,
+            IAliasCombatantIds aliaser,
+            IInspectableWorldDemo world)
         {
             if (command.command is not DamageCommand targetedCommand)
             {

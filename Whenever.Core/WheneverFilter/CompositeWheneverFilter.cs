@@ -20,9 +20,12 @@ public record CompositeWheneverFilter<TInspectWorld, TCommandWorld> : IWheneverF
         this.filters = filters;
     }
 
-    public bool TriggersOn(InitiatedCommand<TCommandWorld> initiatedCommand, TInspectWorld world)
+    public bool TriggersOn(
+        InitiatedCommand<TCommandWorld> initiatedCommand,
+        IAliasCombatantIds aliaser,
+        TInspectWorld world)
     {
-        return filters.All(filter => filter.TriggersOn(initiatedCommand, world));
+        return filters.All(filter => filter.TriggersOn(initiatedCommand, aliaser, world));
     }
 
     public string Describe(IDescriptionContext context)

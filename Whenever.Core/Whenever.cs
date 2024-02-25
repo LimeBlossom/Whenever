@@ -9,28 +9,43 @@ public record Whenever<TInspectWorld, TCommandWorld> : IDescribableWithContext
 {
     public readonly IWheneverFilter<TInspectWorld, TCommandWorld> filter;
     public readonly IEffect<TInspectWorld, TCommandWorld> effect;
+
+    private readonly IAliasCombatantIds aliaser;
     
     /// <summary>
     /// a unique id. will be unique for each unique whenever contained inside a wheneverManager.
     /// </summary>
     public Guid Id { get; private set; } = Guid.NewGuid();
 
-    public Whenever(IWheneverFilter<TInspectWorld, TCommandWorld> filter, IEffect<TInspectWorld, TCommandWorld> effect)
+    public Whenever(
+        IWheneverFilter<TInspectWorld, TCommandWorld> filter,
+        IEffect<TInspectWorld, TCommandWorld> effect,
+        IAliasCombatantIds bakedAliases = null)
     {
         this.filter = filter;
         this.effect = effect;
+        this.aliaser = bakedAliases;
+    }
+    
+    public Whenever<TInspectWorld, TCommandWorld> BakeCombatantAlias(IAliasCombatantIds aliases)
+    {
+        return new Whenever<TInspectWorld, TCommandWorld>(filter, effect, aliases);
     }
 
     public IEnumerable<InitiatedCommand<TCommandWorld>> GetTriggeredCommands(
         InitiatedCommand<TCommandWorld> command,
+        IAliasCombatantIds contextAliaser,
         TInspectWorld world)
     {
-        if (!filter.TriggersOn(command, world)) return Enumerable.Empty<InitiatedCommand<TCommandWorld>>();
+        var aliasContext = contextAliaser
+            .OverrideWith(aliaser)
+            .OverrideWithCommandContext(command);
+        if (!filter.TriggersOn(command, aliasContext, world)) return Enumerable.Empty<InitiatedCommand<TCommandWorld>>();
 
         var nextInitiator = Initiators.FromEffectOf(command.initiator);
             
         return effect
-            .ApplyEffect(command, world)
+            .ApplyEffect(command, aliasContext, world)
             .Select(x => new InitiatedCommand<TCommandWorld>(x, nextInitiator));
     }
     internal Whenever<TInspectWorld, TCommandWorld> ForceRegenerateIdentifier()

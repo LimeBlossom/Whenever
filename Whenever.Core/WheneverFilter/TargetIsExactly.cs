@@ -9,7 +9,10 @@
         this.id = id;
     }
     
-    public bool TriggersOn(InitiatedCommand<TCommandWorld> initiatedCommand, TInspectWorld world)
+    public bool TriggersOn(
+        InitiatedCommand<TCommandWorld> initiatedCommand,
+        IAliasCombatantIds aliaser,
+        TInspectWorld world)
     {
         if (initiatedCommand.command is not IGenericTargetedWorldCommand<TCommandWorld> targetedCommand) return false;
         

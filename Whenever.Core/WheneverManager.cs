@@ -59,8 +59,12 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
     }
 
 
-    public IEnumerable<WheneverExecutionEvent<TInspectWorld, TCommandWorld>> GetAllExecutedEvents(IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands)
+    public IEnumerable<WheneverExecutionEvent<TInspectWorld, TCommandWorld>> GetAllExecutedEvents(
+        IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands,
+        IAliasCombatantIds aliaser = null
+        )
     {
+        aliaser ??= new SimpleCombatantAliaser();
         var currentCommandBatch = new List<InitiatedCommand<TCommandWorld>>(initiatedCommands);
         var events = currentCommandBatch.Select(WheneverExecutionEvent<TInspectWorld, TCommandWorld>.FromOriginCommand).ToList();
         var remainingWhenevers = whenevers.ToList();
@@ -68,7 +72,7 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
         {
             // the first whenever in the list which is triggered by any of the current commands
             var matchedWhenever = remainingWhenevers.FirstOrDefault(whenever => currentCommandBatch
-                    .Any(c => whenever.filter.TriggersOn(c, inspector)));
+                    .Any(c => whenever.filter.TriggersOn(c, aliaser, inspector)));
             // if no whenevers match, we're done
             if (matchedWhenever == null) break;
             remainingWhenevers.Remove(matchedWhenever);
@@ -76,7 +80,7 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
             var newCommands = new List<InitiatedCommand<TCommandWorld>>();
             foreach (var initiatedCommand in currentCommandBatch)
             {
-                var triggered = matchedWhenever.GetTriggeredCommands(initiatedCommand, inspector).ToList();
+                var triggered = matchedWhenever.GetTriggeredCommands(initiatedCommand, aliaser, inspector).ToList();
                 if (!triggered.Any()) continue;
                 newCommands.AddRange(triggered);
                 events.AddRange(triggered.Select(c => 
@@ -88,11 +92,16 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
         return events;
     }
     
-    public void InitiateCommandBatch(IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands, IDescribeCombatants descriptionContext)
+    public void InitiateCommandBatch(
+        IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands,
+        IDescribeCombatants descriptionContext = null,
+        IAliasCombatantIds aliaser = null)
     {
-        var allExecutedEvents = GetAllExecutedEvents(initiatedCommands);
-        
+        aliaser ??= new SimpleCombatantAliaser();
         descriptionContext ??= new SimpleDescriptionContext();
+        
+        var allExecutedEvents = GetAllExecutedEvents(initiatedCommands, aliaser);
+        
         foreach (var currentCommand in allExecutedEvents)
         {
             Debug.Log("Applying command: " + currentCommand.generatedCommand.Describe(descriptionContext));

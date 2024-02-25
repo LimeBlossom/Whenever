@@ -2,5 +2,8 @@
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
-    public bool TriggersOn(InitiatedCommand<TCommandWorld> initiatedCommand, TInspectWorld world);
+    public bool TriggersOn(
+        InitiatedCommand<TCommandWorld> initiatedCommand,
+        IAliasCombatantIds aliaser,
+        TInspectWorld world);
 }

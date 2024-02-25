@@ -14,7 +14,10 @@ public abstract record EffectSpecificTargetEffect<TInspectWorld, TCommandWorld> 
         this.specificTarget = specificTarget ?? throw new ArgumentNullException(nameof(specificTarget));
     }
     
-    public IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffect(InitiatedCommand<TCommandWorld> command, TInspectWorld world)
+    public IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffect(
+        InitiatedCommand<TCommandWorld> command,
+        IAliasCombatantIds aliaser,
+        TInspectWorld world)
     {
         if(!world.Contains(specificTarget)) return Enumerable.Empty<IWorldCommand<TCommandWorld>>();
         return ApplyEffectTo(specificTarget, world);

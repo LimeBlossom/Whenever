@@ -6,7 +6,10 @@ public abstract record EffectTargetEffect<TInspectWorld, TCommandWorld> : IEffec
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
-    public IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffect(InitiatedCommand<TCommandWorld> command, TInspectWorld world)
+    public IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffect(
+        InitiatedCommand<TCommandWorld> command,
+        IAliasCombatantIds aliaser,
+        TInspectWorld world)
     {
         if (command.command is not IGenericTargetedWorldCommand<TCommandWorld> targetedCommand)
         {

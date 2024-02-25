@@ -10,13 +10,13 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Filters
             DamageType validDamageType,
             WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
-            return new CompositeWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>(
+            return Compose(
                 DamageIs(validDamageType),
                 TargetIs(wheneverCombatantTypeFilterType)
             );
         }
 
-        private static FilterType DamageIs(DamageType validDamageType)
+        public static FilterType DamageIs(DamageType validDamageType)
         {
             return new DamageIsOfType(validDamageType);
         }
@@ -25,26 +25,36 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Filters
             DamageType validDamageType,
             WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
-            return new CompositeWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>(
+            return Compose(
                 DamageIs(validDamageType),
                 InitiatorIs(wheneverCombatantTypeFilterType)
             );
         }
 
-        private static FilterType TargetIs(WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
+        public static FilterType TargetIs(WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
             return new CombatantIsOfType(StandardAliases.Target, wheneverCombatantTypeFilterType);
         }
+        public static FilterType TargetIs(CombatantAlias alias)
+        {
+            return new CombatantsAreSame(alias, StandardAliases.Target);
+        }
 
-        private static FilterType InitiatorIs(WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
+        public static FilterType InitiatorIs(WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
             return new CombatantIsOfType(StandardAliases.Initiator, wheneverCombatantTypeFilterType);
         }
 
 
+
         public static FilterType CreateDotStatusEffectInflictedFilter(DamageType bleed, WheneverCombatantTypeFilter enemy)
         {
             throw new System.NotImplementedException();
+        }
+        
+        public static FilterType Compose(params FilterType[] filters)
+        {
+            return new CompositeWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>(filters);
         }
     }
 }

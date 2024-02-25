@@ -15,8 +15,13 @@ public interface IManageWorld<TInspect, TCommand>
     /// </summary>
     /// <param name="initiatedCommand"></param>
     /// <param name="descriptionContext"></param>
-    public void InitiateCommandBatch(IEnumerable<InitiatedCommand<TCommand>> initiatedCommand, IDescribeCombatants descriptionContext = null);
-    public IEnumerable<WheneverExecutionEvent<TInspect, TCommand> > GetAllExecutedEvents(IEnumerable<InitiatedCommand<TCommand>> initiatedCommand);
+    public void InitiateCommandBatch(
+        IEnumerable<InitiatedCommand<TCommand>> initiatedCommand,
+        IDescribeCombatants descriptionContext = null,
+        IAliasCombatantIds aliaser = null);
+    public IEnumerable<WheneverExecutionEvent<TInspect, TCommand> > GetAllExecutedEvents(
+        IEnumerable<InitiatedCommand<TCommand>> initiatedCommand,
+        IAliasCombatantIds aliaser = null);
         
     public Guid? AddWhenever(Whenever<TInspect, TCommand> whenever);
     public void RemoveWhenever(Guid wheneverId);
@@ -27,21 +32,32 @@ public interface IManageWorld<TInspect, TCommand>
     
 public static class ManageWorldExtensions
 {
-    public static void InitiateCommand<TInspect, TCommand>(this IManageWorld<TInspect, TCommand> manager, IWorldCommand<TCommand> command, ICommandInitiator initiator, IDescribeCombatants descriptionContext = null)
+    public static void InitiateCommand<TInspect, TCommand>(
+        this IManageWorld<TInspect, TCommand> manager,
+        IWorldCommand<TCommand> command,
+        ICommandInitiator initiator,
+        IDescribeCombatants descriptionContext = null,
+        IAliasCombatantIds aliaser = null)
         where TInspect : IInspectWorld
         where TCommand : ICommandWorld
     {
-        manager.InitiateCommand(new InitiatedCommand<TCommand>(command, initiator), descriptionContext);
+        manager.InitiateCommand(new InitiatedCommand<TCommand>(command, initiator), descriptionContext, aliaser);
     }
         
-    public static void InitiateCommand<TInspect, TCommand>(this IManageWorld<TInspect, TCommand> manager, InitiatedCommand<TCommand> command, IDescribeCombatants descriptionContext = null)
+    public static void InitiateCommand<TInspect, TCommand>(
+        this IManageWorld<TInspect, TCommand> manager,
+        InitiatedCommand<TCommand> command,
+        IDescribeCombatants descriptionContext = null,
+        IAliasCombatantIds aliaser = null)
         where TInspect : IInspectWorld
         where TCommand : ICommandWorld
     {
-        manager.InitiateCommandBatch(new []{command}, descriptionContext);
+        manager.InitiateCommandBatch(new []{command}, descriptionContext, aliaser);
     }
     
-    public static void RemoveWhenever<TInspect, TCommand>(this IManageWorld<TInspect, TCommand> manager, Whenever<TInspect, TCommand> whenever)
+    public static void RemoveWhenever<TInspect, TCommand>(
+        this IManageWorld<TInspect, TCommand> manager, 
+        Whenever<TInspect, TCommand> whenever)
         where TInspect : IInspectWorld
         where TCommand : ICommandWorld
     {

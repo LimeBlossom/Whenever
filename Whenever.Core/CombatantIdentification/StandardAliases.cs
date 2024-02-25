@@ -1,6 +1,6 @@
 ﻿
 public static class StandardAliases
 {
-    public static CombatantAlias Initiator => new CombatantAlias("#initiator", "initiator");
-    public static CombatantAlias Target => new CombatantAlias("#target", "target");
+    public static CombatantAlias Initiator => CombatantAlias.FromId("#initiator", "initiator");
+    public static CombatantAlias Target => CombatantAlias.FromId("#target", "target");
 }

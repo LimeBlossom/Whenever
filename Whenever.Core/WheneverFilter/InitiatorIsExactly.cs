@@ -11,7 +11,10 @@ public class InitiatorIsExactly<TInspectWorld, TCommandWorld>: IWheneverFilter<T
         this.id = id;
     }
     
-    public bool TriggersOn(InitiatedCommand<TCommandWorld> initiatedCommand, TInspectWorld world)
+    public bool TriggersOn(
+        InitiatedCommand<TCommandWorld> initiatedCommand,
+        IAliasCombatantIds aliaser,
+        TInspectWorld world)
     {
         if (!initiatedCommand.initiator.TryAsOrRecursedFrom<CombatantCommandInitiator>(out var initiator))
         {

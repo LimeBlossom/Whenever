@@ -3,7 +3,21 @@
     private readonly string alias;
     private string readableDescription;
     
-    public CombatantAlias(string alias, string readableDescription)
+    public static CombatantAlias FromId(string alias)
+    {
+        return new CombatantAlias(alias);
+    }
+    
+    public static CombatantAlias FromId(string alias, string readableDescription)
+    {
+        return new CombatantAlias(alias, readableDescription);
+    }
+    
+    private CombatantAlias(string alias) : this(alias, alias)
+    {
+    }
+    
+    private CombatantAlias(string alias, string readableDescription)
     {
         this.alias = alias;
         this.readableDescription = readableDescription;
@@ -11,6 +25,10 @@
     
     public string ReadableDescription => readableDescription;
     
+    public static implicit operator CombatantAlias(string alias)
+    {
+        return new CombatantAlias(alias, alias);
+    } 
 
     public override bool Equals(object obj)
     {

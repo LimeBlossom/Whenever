@@ -11,7 +11,10 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Filters
             this.combatTypeFilter = combatTypeFilter;
         }
 
-        public bool TriggersOn(InitiatedCommand<ICommandableWorldDemo> initiatedCommand, IInspectableWorldDemo world)
+        public bool TriggersOn(
+            InitiatedCommand<ICommandableWorldDemo> initiatedCommand,
+            IAliasCombatantIds aliaser,
+            IInspectableWorldDemo world)
         {
             if (initiatedCommand.command is not IGenericTargetedWorldCommand<ICommandableWorldDemo> targetedCommand) return false;
             

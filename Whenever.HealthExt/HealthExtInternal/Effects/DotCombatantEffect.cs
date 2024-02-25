@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace HealthExtInternal
 {
-    [PolymorphicSerializable("DotStatusTargetEffect")]
-    internal record DotStatusTargetEffect: IEffect<IInspectWorldHealth, ICommandWorldHealth>
+    internal record DotCombatantEffect: IEffect<IInspectWorldHealth, ICommandWorldHealth>
     {
         public float damage;
         public int turns;
+        public readonly CombatantAlias alias;
         public IEnumerable<IWorldCommand<ICommandWorldHealth>> ApplyEffect(
             InitiatedCommand<ICommandWorldHealth> command,
             IAliasCombatantIds aliaser,
@@ -16,7 +16,7 @@ namespace HealthExtInternal
         {
             if (command.command is not IGenericTargetedWorldCommand<ICommandWorldHealth> targetedCommand)
             {
-                Debug.LogWarning("Burn Target effect can only apply on commands that target at least one combatant");
+                Debug.LogWarning("Dot effect can only apply on commands that target a combatant");
                 yield break;
             }
 
