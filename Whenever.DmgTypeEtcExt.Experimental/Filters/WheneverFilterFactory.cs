@@ -37,7 +37,7 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Filters
         }
         public static FilterType TargetIs(CombatantAlias alias)
         {
-            return new CombatantsAreSame(alias, StandardAliases.Target);
+            return new CombatantsAreSame<IInspectableWorldDemo, ICommandableWorldDemo>(alias, StandardAliases.Target);
         }
 
         public static FilterType InitiatorIs(WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
