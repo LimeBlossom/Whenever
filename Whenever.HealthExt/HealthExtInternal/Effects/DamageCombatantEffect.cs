@@ -4,13 +4,12 @@ using UnityEngine;
 
 namespace HealthExtInternal
 {
-    internal record DotCombatantEffect: IEffect<IInspectWorldHealth, ICommandWorldHealth>
+    internal record DamageCombatantEffect: IEffect<IInspectWorldHealth, ICommandWorldHealth>
     {
         public float damage;
-        public int turns;
         public readonly CombatantAlias alias;
 
-        public DotCombatantEffect(CombatantAlias alias)
+        public DamageCombatantEffect(CombatantAlias alias)
         {
             this.alias = alias;
         }
@@ -25,16 +24,13 @@ namespace HealthExtInternal
                 Debug.LogWarning($"Could not find target for alias '{alias}'");
                 yield break;
             }
-            var status = new DotStatus(turns, command.initiator)
-            {
-                damage = damage
-            };
-            yield return new AddStatusEffectCommand<ICommandWorldHealth>(target, status);
+
+            yield return new Damage(target, damage);
         }
 
         public string Describe(IDescriptionContext context)
         {
-            return $"apply {damage} damage per turn for {turns} turns{context.ToAliasAsDirectSubject(alias)}";
+            return $"deal {damage} damage{context.ToAliasAsDirectSubject(alias)}";
         }
     }
 }

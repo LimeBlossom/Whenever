@@ -74,6 +74,19 @@ public static class DescriptionContextExtensions
         return new SpecificOverrideDescriptionContext(context, specific, specificName);
     }
     
+    public static string ToAliasAsDirectSubject(this IDescriptionContext context, CombatantAlias alias)
+    {
+        var name = context.NameOf(alias);
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return "";
+        }
+        else
+        {
+            return " to " + name;
+        }
+    }
+    
     public static string ToTargetAsDirectSubject(this IDescriptionContext context)
     {
         var targetName = context.TargetName;

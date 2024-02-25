@@ -38,6 +38,8 @@ public class SimpleDescriptionContext : IDescriptionContext
     }
     public string NameOf(CombatantAlias alias)
     {
+        if (alias.Equals(StandardAliases.Target)) return TargetName;
+        if (alias.Equals(StandardAliases.Initiator)) return InitiatorName;
         var idForAlias = aliaser.GetIdForAlias(alias);
         return idForAlias == null ? alias.ReadableDescription : NameOf(idForAlias);
     }

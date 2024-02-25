@@ -10,7 +10,7 @@ public class SimpleCombatantAliaser : IAliasCombatantIds
     
     public CombatantId GetIdForAlias(CombatantAlias alias)
     {
-        return aliasToId[alias];
+        return aliasToId.GetValueOrDefault(alias);
     }
 
     public void SetAlias(CombatantAlias alias, CombatantId id)

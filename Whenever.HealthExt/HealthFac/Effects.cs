@@ -26,12 +26,19 @@ namespace HealthFac
         
         public static IEffect<IInspectWorldHealth, ICommandWorldHealth> Dot(CombatantAlias alias, float damage = 1, int turns = 3)
         {
-            throw new NotImplementedException();
+            return new DotCombatantEffect(alias)
+            {
+                damage = damage,
+                turns = turns,
+            };
         }
         
         public static IEffect<IInspectWorldHealth, ICommandWorldHealth> Damage(CombatantAlias alias, float damage)
         {
-            throw new NotImplementedException();
+            return new DamageCombatantEffect(alias)
+            {
+                damage = damage
+            };
         }
     }
 }

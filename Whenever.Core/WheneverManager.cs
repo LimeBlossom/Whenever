@@ -72,7 +72,7 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
         {
             // the first whenever in the list which is triggered by any of the current commands
             var matchedWhenever = remainingWhenevers.FirstOrDefault(whenever => currentCommandBatch
-                    .Any(c => whenever.filter.TriggersOn(c, aliaser, inspector)));
+                .Any(c => whenever.TriggersOn(c, aliaser, inspector)));
             // if no whenevers match, we're done
             if (matchedWhenever == null) break;
             remainingWhenevers.Remove(matchedWhenever);

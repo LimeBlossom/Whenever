@@ -44,4 +44,9 @@
     {
         return (alias != null ? alias.GetHashCode() : 0);
     }
+
+    public override string ToString()
+    {
+        return readableDescription;
+    }
 }

@@ -4,9 +4,10 @@ using static StandardAliases;
 
 namespace HealthFac
 {
+    using FilterType = IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>;
     internal static class Filters
     {
-        public static IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth> CreateDotStatusEffectInflictedFilter(
+        public static FilterType CreateDotStatusEffectInflictedFilter(
             float atLeastDamagePerTurn)
         {
             return new CompositeWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>(
@@ -14,21 +15,21 @@ namespace HealthFac
             );
         }
         
-        public static IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth> CreateDamageOccursFilter(float atLeast)
+        public static FilterType CreateDamageOccursFilter(float atLeast)
         {
             return new CompositeWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>(
                 new DamageOccurs(atLeast)
             );
         }
 
-        public static IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth> TargetHasAtLeastHealth(float atLeast)
+        public static FilterType TargetHasAtLeastHealth(float atLeast)
         {
             return HasAtLeastHealth(Target, atLeast);
         }
         
-        public static IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth> HasAtLeastHealth(CombatantAlias alias, float atLeast)
+        public static FilterType HasAtLeastHealth(CombatantAlias alias, float atLeast)
         {
-            throw new NotImplementedException();
+            return new CombatantHasAtLeastHealth(alias, atLeast);
         }
     }
 }
