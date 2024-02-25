@@ -1,4 +1,6 @@
-﻿using HealthExtInternal;
+﻿using System;
+using HealthExtInternal;
+using static StandardAliases;
 
 namespace HealthFac
 {
@@ -6,19 +8,12 @@ namespace HealthFac
     {
         public static IEffect<IInspectWorldHealth, ICommandWorldHealth> DotTarget(float damage = 1, int turns = 3)
         {
-            return new DotStatusTargetEffect
-            {
-                damage = damage,
-                turns = turns
-            };
+            return Dot(Target, damage, turns);
         }
         
         public static IEffect<IInspectWorldHealth, ICommandWorldHealth> DamageTarget(float damage)
         {
-            return new DamageTargetEffect
-            {
-                damage = damage
-            };
+            return Damage(Target, damage);
         }
         
         public static IEffect<IInspectWorldHealth, ICommandWorldHealth> DamageSpecificTarget(float damage, CombatantId specificTarget)
@@ -27,6 +22,16 @@ namespace HealthFac
             {
                 damage = damage
             };
+        }
+        
+        public static IEffect<IInspectWorldHealth, ICommandWorldHealth> Dot(CombatantAlias alias, float damage = 1, int turns = 3)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public static IEffect<IInspectWorldHealth, ICommandWorldHealth> Damage(CombatantAlias alias, float damage)
+        {
+            throw new NotImplementedException();
         }
     }
 }

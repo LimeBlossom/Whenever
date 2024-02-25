@@ -2,30 +2,47 @@
 
 namespace Whenever.DmgTypeEtcExt.Experimental.Filters
 {
+    using FilterType = IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>;
     public static class WheneverFilterFactory
     {
         
-        public static IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo> CreateDealtDamageFilter(
+        public static FilterType CreateDealtDamageFilter(
             DamageType validDamageType,
             WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
         {
             return new CompositeWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>(
-                new DamageIsOfType(validDamageType),
-                new TargetIsOfType(wheneverCombatantTypeFilterType)
-            );
-        }
-        
-        public static IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo> CreateDealsDamageFilter(
-            DamageType validDamageType,
-            WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
-        {
-            return new CompositeWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>(
-                new DamageIsOfType(validDamageType),
-                new InitiatorIsOfType(wheneverCombatantTypeFilterType)
+                DamageIs(validDamageType),
+                TargetIs(wheneverCombatantTypeFilterType)
             );
         }
 
-        public static IWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo> CreateDotStatusEffectInflictedFilter(DamageType bleed, WheneverCombatantTypeFilter enemy)
+        private static FilterType DamageIs(DamageType validDamageType)
+        {
+            return new DamageIsOfType(validDamageType);
+        }
+
+        public static FilterType CreateDealsDamageFilter(
+            DamageType validDamageType,
+            WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
+        {
+            return new CompositeWheneverFilter<IInspectableWorldDemo, ICommandableWorldDemo>(
+                DamageIs(validDamageType),
+                InitiatorIs(wheneverCombatantTypeFilterType)
+            );
+        }
+
+        private static FilterType TargetIs(WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
+        {
+            return new CombatantIsOfType(StandardAliases.Target, wheneverCombatantTypeFilterType);
+        }
+
+        private static FilterType InitiatorIs(WheneverCombatantTypeFilter wheneverCombatantTypeFilterType)
+        {
+            return new CombatantIsOfType(StandardAliases.Initiator, wheneverCombatantTypeFilterType);
+        }
+
+
+        public static FilterType CreateDotStatusEffectInflictedFilter(DamageType bleed, WheneverCombatantTypeFilter enemy)
         {
             throw new System.NotImplementedException();
         }

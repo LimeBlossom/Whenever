@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HealthExtInternal;
 using HealthExtInternal.DescriptionComposer;
 using NUnit.Framework;
@@ -7,8 +8,8 @@ namespace Whenever.Test
 {
     public class TestWheneverDescriptions
     {
-        private WheneverDescriptionComposer<IInspectWorldHealth, ICommandWorldHealth> composer => new(
-            TargetOfHealthTakesDamage.Create());
+        private WheneverDescriptionComposer<IInspectWorldHealth, ICommandWorldHealth> composer => 
+            new(TargetOfHealthTakesDamage.CreateAll().ToArray());
 
         [Test]
         public void WheneverPlayerDealsDamage_AndTargetHasAtLeastHealth__DealsMoreDamage()

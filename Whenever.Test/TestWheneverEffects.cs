@@ -12,7 +12,7 @@ namespace Whenever.Test
 {
     using WheneverType = Whenever<IInspectableWorldDemo, ICommandableWorldDemo>;
     
-    public class UnitTestExample
+    public class TestWheneverEffects
     {
         [Test]
         public void MyTest()

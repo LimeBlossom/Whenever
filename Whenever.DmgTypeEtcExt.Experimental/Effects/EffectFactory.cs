@@ -1,49 +1,59 @@
-﻿using Whenever.DmgTypeEtcExt.Experimental.World;
+﻿using System;
+using Whenever.DmgTypeEtcExt.Experimental.World;
+using static StandardAliases;
 
 namespace Whenever.DmgTypeEtcExt.Experimental.Effects
 {
+    using EffectType = IEffect<IInspectableWorldDemo, ICommandableWorldDemo>;
     public static class EffectFactory
     {
 
-        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> HealInitiator(float healAmount)
+        public static EffectType HealInitiator(float healAmount)
         {
-            return new HealInitiatorEffect(healAmount);
+            return Heal(Initiator, healAmount);
         }
-        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> RandomBoulder(float meteorDamage)
+        public static EffectType RandomBoulder(float meteorDamage)
         {
             return new RandomBoulderEffect(meteorDamage);
         }
         
-        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> CriticalDamage(float critDamageMultiplier = 1)
+        public static EffectType CriticalDamage(float critDamageMultiplier = 1)
         {
-            return new ApplyCriticalDamageEffect
-            {
-                critDamageMultiplier = critDamageMultiplier
-            };
+            return CritDamage(Target, critDamageMultiplier);
         }
         
-        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> DamageTarget(DamageType damageType, float damageAmount)
+        public static EffectType DamageTarget(DamageType damageType, float damageAmount)
         {
-            return new DamageTargetEffect
-            {
-                damagePackage = new(damageType, damageAmount)
-            };
+            return Damage(Target, damageType, damageAmount);
         }
-        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> DamageInitiator(DamageType damageType, float damageAmount)
+        public static EffectType DamageInitiator(DamageType damageType, float damageAmount)
         {
-            return new DamageInitiatorEffect
-            {
-                damagePackage = new(damageType, damageAmount)
-            };
+            return Damage(Initiator, damageType, damageAmount);
         }
 
-        public static IEffect<IInspectableWorldDemo, ICommandableWorldDemo> DamageAdjacentTargets(DamageType type, float damageAmount)
+        public static EffectType DamageAdjacentTargets(DamageType type, float damageAmount)
         {
-            return new DamageAdjacentToTargetEffect
-            {
-                damageAmount = damageAmount,
-                damageType = type
-            };
+            return DamageAdjacentTo(Target, type, damageAmount);
+        }
+        
+        public static EffectType Heal(CombatantAlias alias, float healAmount)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public static EffectType Damage(CombatantAlias alias, DamageType type, float damageAmount)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public static EffectType CritDamage(CombatantAlias alias, float critDamageMultiplier = 1)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public static EffectType DamageAdjacentTo(CombatantAlias alias, DamageType type, float damageAmount)
+        {
+            throw new NotImplementedException();
         }
     }
 }

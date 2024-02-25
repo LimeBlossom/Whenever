@@ -1,4 +1,6 @@
-﻿using HealthExtInternal;
+﻿using System;
+using HealthExtInternal;
+using static StandardAliases;
 
 namespace HealthFac
 {
@@ -21,7 +23,12 @@ namespace HealthFac
 
         public static IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth> TargetHasAtLeastHealth(float atLeast)
         {
-            return new TargetHasAtLeastHealth(atLeast);
+            return HasAtLeastHealth(Target, atLeast);
+        }
+        
+        public static IWheneverFilter<IInspectWorldHealth, ICommandWorldHealth> HasAtLeastHealth(CombatantAlias alias, float atLeast)
+        {
+            throw new NotImplementedException();
         }
     }
 }
