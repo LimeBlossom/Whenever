@@ -1,0 +1,16 @@
+{
+    "name": "Whenever.DmgTypeEtcExt.Experimental",
+    "rootNamespace": "Whenever.DmgTypeEtcExt.Experimental",
+    "references": [
+        "GUID:f62bd97b21e4a964c87d0c329ebd9a04"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

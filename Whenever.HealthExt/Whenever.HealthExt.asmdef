@@ -1,0 +1,16 @@
+{
+    "name": "Whenever.HealthExt",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f62bd97b21e4a964c87d0c329ebd9a04"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
