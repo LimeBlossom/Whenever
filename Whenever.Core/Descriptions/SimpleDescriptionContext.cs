@@ -13,6 +13,7 @@ public class SimpleDescriptionContext : IDescriptionContext
     {
         this.InitiatorName = initiatorName;
         this.TargetName = targetName;
+        this.aliaser = new SimpleCombatantAliaser();
     }
 
     public SimpleDescriptionContext(string initiatorName, string targetName, Dictionary<CombatantId, string> names)
@@ -20,11 +21,13 @@ public class SimpleDescriptionContext : IDescriptionContext
         this.InitiatorName = initiatorName;
         this.TargetName = targetName;
         this.names = names ?? new();
+        this.aliaser = new SimpleCombatantAliaser();
     }
     
     private Dictionary<CombatantId, string> names = new();
     public string InitiatorName { get; set; }
     public string TargetName { get; set;  }
+    private IAliasCombatantIds aliaser;
     public string NameOf(CombatantId id)
     {
         if(names.TryGetValue(id, out var name))
@@ -32,5 +35,10 @@ public class SimpleDescriptionContext : IDescriptionContext
             return name;
         }
         return "Combatant #" + id.ToString();
+    }
+    public string NameOf(CombatantAlias alias)
+    {
+        var idForAlias = aliaser.GetIdForAlias(alias);
+        return idForAlias == null ? alias.ReadableDescription : NameOf(idForAlias);
     }
 }

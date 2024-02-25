@@ -1,9 +1,14 @@
-﻿public interface IDescribeCombatants
+﻿public interface IDescribeAliases
+{
+    public string NameOf(CombatantAlias alias);
+}
+
+public interface IDescribeCombatants
 {
     public string NameOf(CombatantId id);
 }
 
-public interface IDescriptionContext : IDescribeCombatants
+public interface IDescriptionContext : IDescribeCombatants, IDescribeAliases
 {
     public string InitiatorName { get; }
     public string TargetName { get; }
@@ -28,6 +33,10 @@ public static class DescriptionContextExtensions
         public string InitiatorName => context.InitiatorName;
 
         public string TargetName => targetName;
+        public string NameOf(CombatantAlias alias)
+        {
+            return context.NameOf(alias);
+        }
     }
     
     public static IDescriptionContext WithTargetOverride(this IDescriptionContext context, string targetName)
@@ -54,6 +63,10 @@ public static class DescriptionContextExtensions
         public string InitiatorName => context.InitiatorName;
 
         public string TargetName => context.TargetName;
+        public string NameOf(CombatantAlias alias)
+        {
+            return context.NameOf(alias);
+        }
     }
     
     public static IDescriptionContext WithSpecificOverride(this IDescriptionContext context, CombatantId specific, string specificName)
