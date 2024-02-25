@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using Whenever.DmgTypeEtcExt.Experimental.World;
 
 namespace Whenever.DmgTypeEtcExt.Experimental.Filters
@@ -19,11 +20,14 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Filters
             IAliasCombatantIds aliaser,
             IInspectableWorldDemo world)
         {
-            if (initiatedCommand.command is not IGenericTargetedWorldCommand<ICommandableWorldDemo> targetedCommand) return false;
-            throw new NotImplementedException();
+            var target = aliaser.GetIdForAlias(alias);
+            if (target == null)
+            {
+                Debug.LogWarning($"Could not find target for alias '{alias}'");
+                return false;
+            }
             
-            var combatantType = world.CombatantData(targetedCommand.Target).GetCombatantType();
-                
+            var combatantType = world.CombatantData(target).GetCombatantType();
 
             var targetEnumType = combatantType.ToTypeFilter();
             return (combatTypeFilter & targetEnumType) != 0;
