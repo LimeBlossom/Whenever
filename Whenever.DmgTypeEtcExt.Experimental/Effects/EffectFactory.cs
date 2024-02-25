@@ -59,7 +59,11 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
         
         public static EffectType DamageAdjacentTo(CombatantAlias alias, DamageType type, float damageAmount)
         {
-            throw new NotImplementedException();
+            return new DamageAdjacentToCombatantEffect(alias)
+            {
+                damageType = type,
+                damageAmount = damageAmount
+            };
         }
     }
 }
