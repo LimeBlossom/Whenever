@@ -60,6 +60,28 @@ namespace Whenever.Test
         }
 
         [Test]
+        public void WhenEnemy_TakesDamage_DealsCritDamage_WithMultiplier()
+        {
+            var (player, enemy, turnManager, baseWorld) = GetEnemyAndPlayerTurnContext();
+            
+            // whenever the enemy takes damage, deal 2.5x critical damage
+            var wheneverEnemyTakesDamage = WheneverFilterFactory.CreateDealtDamageFilter(
+                DamageType.PHYSICAL,
+                WheneverCombatantTypeFilter.Enemy);
+            var critDamage = new WheneverType(wheneverEnemyTakesDamage, EffectFactory.CriticalDamage(2.5f));
+            turnManager.AddWhenever(critDamage);
+            
+            // player deals damage
+            turnManager.InitiateCommand(
+                CmdFactory.Damage(DamageType.PHYSICAL, 1, enemy),
+                Initiators.From(player));
+            
+            Assert.AreEqual(10, baseWorld.CombatantData(player).CurrentHealth());
+            // 10 - (1 + 2.5) = 6.5
+            Assert.AreEqual(6.5f, baseWorld.CombatantData(enemy).CurrentHealth());
+        }
+
+        [Test]
         public void WhenPlayer_DealsDamage_HealsSelf()
         {
             var (player, enemy, turnManager, baseWorld) = GetEnemyAndPlayerTurnContext();
