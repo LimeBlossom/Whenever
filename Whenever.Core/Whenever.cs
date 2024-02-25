@@ -27,6 +27,12 @@ public record Whenever<TInspectWorld, TCommandWorld> : IDescribableWithContext
         this.aliaser = bakedAliases;
     }
     
+    /// <summary>
+    /// Will return a new whenever which has baked-in the provided combatant aliases. Useful to bake in permanent context
+    ///     such as "the caster of the card which caused this whenever"
+    /// </summary>
+    /// <param name="aliases"></param>
+    /// <returns></returns>
     public Whenever<TInspectWorld, TCommandWorld> BakeCombatantAlias(IAliasCombatantIds aliases)
     {
         return new Whenever<TInspectWorld, TCommandWorld>(filter, effect, aliases);

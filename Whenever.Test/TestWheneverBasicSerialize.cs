@@ -29,7 +29,7 @@ namespace Whenever.Test
             Assert.IsNotNull(effect);
             Assert.AreEqual("deal 3 damage to the target", effect.Describe(new SimpleDescriptionContext()));
             Assert.AreEqual(typeof(DamageCombatantEffect), effect.GetType());
-            Assert.AreEqual(StandardAliases.Target,(effect as DamageCombatantEffect)?.combatant);
+            Assert.AreEqual(StandardAliases.Target,(effect as DamageCombatantEffect)?.CombatantTarget);
         }
         
         [Test]
@@ -50,7 +50,7 @@ namespace Whenever.Test
             Assert.IsNotNull(effect);
             Assert.AreEqual("deal 3 damage to the custom card target", effect.Describe(new SimpleDescriptionContext()));
             Assert.AreEqual(typeof(DamageCombatantEffect), effect.GetType());
-            Assert.AreEqual(CombatantAlias.FromId("#cardTargetCustom"),(effect as DamageCombatantEffect)?.combatant);
+            Assert.AreEqual(CombatantAlias.FromId("#cardTargetCustom"),(effect as DamageCombatantEffect)?.CombatantTarget);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace Whenever.Test
             Assert.IsNotNull(effect);
             Assert.AreEqual("apply 1 damage per turn for 3 turns to the target", effect.Describe(new SimpleDescriptionContext()));
             Assert.AreEqual(typeof(DotCombatantEffect), effect.GetType());
-            Assert.AreEqual(StandardAliases.Target,(effect as DotCombatantEffect)?.combatant);
+            Assert.AreEqual(StandardAliases.Target,(effect as DotCombatantEffect)?.CombatantTarget);
         }
         
 
@@ -132,7 +132,7 @@ namespace Whenever.Test
             Assert.IsNotNull(effect);
             Assert.AreEqual("apply 0 damage per turn for 3 turns to the target", effect.Describe(new SimpleDescriptionContext()));
             Assert.AreEqual(typeof(DotCombatantEffect), effect.GetType());
-            Assert.AreEqual(StandardAliases.Target,(effect as DotCombatantEffect)?.combatant);
+            Assert.AreEqual(StandardAliases.Target,(effect as DotCombatantEffect)?.CombatantTarget);
         }
 
         [Test]

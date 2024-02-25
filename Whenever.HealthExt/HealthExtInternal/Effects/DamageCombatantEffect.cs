@@ -5,33 +5,24 @@ using UnityEngine;
 namespace HealthExtInternal
 {
     [PolymorphicSerializable("DamageCombatantEffect")]
-    internal record DamageCombatantEffect: IEffect<IInspectWorldHealth, ICommandWorldHealth>
+    internal record DamageCombatantEffect: EffectAliasedTargetEffect<IInspectWorldHealth, ICommandWorldHealth>
     {
         public float damage;
-        public CombatantAlias combatant;
 
-        public DamageCombatantEffect(CombatantAlias combatant)
+        public DamageCombatantEffect(CombatantAlias combatant) : base(combatant)
         {
-            this.combatant = combatant;
         }
-        public IEnumerable<IWorldCommand<ICommandWorldHealth>> ApplyEffect(
+        protected override IEnumerable<IWorldCommand<ICommandWorldHealth>> ApplyEffectToTarget(
+            CombatantId target,
             InitiatedCommand<ICommandWorldHealth> command,
-            IAliasCombatantIds aliaser,
             IInspectWorldHealth world)
         {
-            var target = aliaser.GetIdForAlias(combatant);
-            if (target == null)
-            {
-                Debug.LogWarning($"Could not find target for alias '{combatant}'");
-                yield break;
-            }
-
             yield return new Damage(target, damage);
         }
 
-        public string Describe(IDescriptionContext context)
+        protected override string DescribeOnTarget()
         {
-            return $"deal {damage} damage{context.ToAliasAsDirectSubject(combatant)}";
+            return $"deal {damage} damage";
         }
     }
 }
