@@ -1,6 +1,6 @@
 ﻿public interface IDescribeAliases
 {
-    public string NameOf(CombatantAlias alias);
+    public string TryNameOf(CombatantAlias alias);
     public IAliasCombatantIds GetInternalAliaser();
 }
 
@@ -15,6 +15,11 @@ public interface IDescriptionContext : IDescribeCombatants, IDescribeAliases
 
 public static class DescriptionContextExtensions
 {
+    public static string NameOf(this IDescribeAliases context, CombatantAlias alias)
+    {
+        return context.TryNameOf(alias) ?? alias.ReadableDescription;
+    }
+    
     private class OverrideAliasWhenNotDefined : IDescriptionContext
     {
         private readonly IDescriptionContext context;
@@ -31,14 +36,11 @@ public static class DescriptionContextExtensions
             return context.NameOf(id);
         }
 
-        public string NameOf(CombatantAlias alias)
+        public string TryNameOf(CombatantAlias alias)
         {
-            if(!aliasOverride.Equals(alias)) return context.NameOf(alias);
-            
-            var idFromUnderlying = context.GetInternalAliaser().GetIdForAlias(alias);
-            return idFromUnderlying == null ?
-                specificName : 
-                context.NameOf(alias);
+            var underlyingName = context.TryNameOf(alias);
+            if (!aliasOverride.Equals(alias)) return underlyingName;
+            return underlyingName ?? specificName;
         }
 
         public IAliasCombatantIds GetInternalAliaser()
@@ -74,10 +76,10 @@ public static class DescriptionContextExtensions
             return underlyingDescription.NameOf(id);
         }
 
-        public string NameOf(CombatantAlias alias)
+        public string TryNameOf(CombatantAlias alias)
         {
             var overrideAliasId = overrideAlias.GetIdForAlias(alias);
-            if (overrideAliasId == null) return underlyingDescription.NameOf(alias);
+            if (overrideAliasId == null) return underlyingDescription.TryNameOf(alias);
             return underlyingDescription.NameOf(overrideAliasId);
         }
 
@@ -100,7 +102,7 @@ public static class DescriptionContextExtensions
     
     public static string ToAliasAsDirectSubject(this IDescriptionContext context, CombatantAlias alias)
     {
-        var name = context.NameOf(alias);
+        var name = context.TryNameOf(alias);
         if (string.IsNullOrWhiteSpace(name))
         {
             return "";

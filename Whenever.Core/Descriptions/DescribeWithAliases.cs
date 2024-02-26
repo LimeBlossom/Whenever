@@ -22,7 +22,7 @@ public class DescribeWithAliases: IDescriptionContext
         return combatantDescriber.NameOf(id);
     }
 
-    public string NameOf(CombatantAlias alias)
+    public string TryNameOf(CombatantAlias alias)
     {
         if(aliasNames.TryGetValue(alias, out var name))
         {
@@ -31,7 +31,7 @@ public class DescribeWithAliases: IDescriptionContext
         var idFromUnderlying = aliaser.GetIdForAlias(alias);
         if(idFromUnderlying == null)
         {
-            return alias.ReadableDescription;
+            return null;
         }
         return combatantDescriber.NameOf(idFromUnderlying);
     }
