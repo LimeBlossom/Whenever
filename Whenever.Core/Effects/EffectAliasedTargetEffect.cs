@@ -25,7 +25,7 @@ public abstract record EffectAliasedTargetEffect<TInspectWorld, TCommandWorld> :
         var target = aliaser.GetIdForAlias(combatant);
         if (target == null)
         {
-            Debug.LogWarning($"Could not find target for alias '{combatant}'");
+            Debug.LogWarning($"#{this.GetType().Name}: Could not find target for alias '{combatant}'");
             return Enumerable.Empty<IWorldCommand<TCommandWorld>>();
         }
 

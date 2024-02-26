@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 public class CommandContextAwareCombatantAliaser<TCommand>  : IAliasCombatantIds
     where TCommand: ICommandWorld
@@ -23,6 +22,12 @@ public class CommandContextAwareCombatantAliaser<TCommand>  : IAliasCombatantIds
             return initiator?.Initiator;
         }
         return null;
+    }
+
+    public IEnumerable<CombatantAlias> AllDefinedAliases()
+    {
+        yield return StandardAliases.Initiator;
+        yield return StandardAliases.Target;
     }
 }
 

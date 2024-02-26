@@ -18,6 +18,11 @@ public class OverrideCombatantAliaser : IAliasCombatantIds
     {
         return overrideAliaser.GetIdForAlias(alias) ?? underlyingAliaser.GetIdForAlias(alias);
     }
+
+    public IEnumerable<CombatantAlias> AllDefinedAliases()
+    {
+        return underlyingAliaser.AllDefinedAliases().Concat(overrideAliaser.AllDefinedAliases()).Distinct();
+    }
 }
 
 public static class OverrideAliaserExtensions

@@ -22,6 +22,11 @@ public class SimpleCombatantAliaser : IAliasCombatantIds
         return aliasToId.GetValueOrDefault(alias);
     }
 
+    public IEnumerable<CombatantAlias> AllDefinedAliases()
+    {
+        return aliasToId.Keys;
+    }
+
     public void SetAlias(CombatantAlias alias, CombatantId id)
     {
         aliasToId[alias] = id;
@@ -39,5 +44,24 @@ public class SimpleCombatantAliaser : IAliasCombatantIds
                 .Select(x => (x.Key, x.Value))
                 .ToArray()
             );
+    }
+}
+
+public static class SimpleCombatantAliaserExtensions
+{
+    /// <summary>
+    /// Bakes the currently defined aliases in the aliaser into a new SimpleCombatantAliaser. Effectively is a clone
+    /// of the current state, clearing any refererences to the original aliaser.
+    /// </summary>
+    /// <param name="aliaser"></param>
+    /// <returns></returns>
+    public static SimpleCombatantAliaser BakeInto(this IAliasCombatantIds aliaser)
+    {
+        var newAliaser = new SimpleCombatantAliaser();
+        foreach (var alias in aliaser.AllDefinedAliases())
+        {
+            newAliaser.SetAlias(alias, aliaser.GetIdForAlias(alias));
+        }
+        return newAliaser;
     }
 }

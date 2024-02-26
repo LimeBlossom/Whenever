@@ -75,7 +75,7 @@ public record Whenever<TInspectWorld, TCommandWorld> : IDescribableWithContext
     }
     public string Describe(IDescriptionContext context)
     {
-        // TODO: better way to compose all these
+        // TODO: better way to compose all these. or don't allow accepting an external alias at all?
         var overridenContext = context.WithAliasOverride(this.aliaser);
         return $"When {filter.Describe(overridenContext)}; {effect.Describe(overridenContext)}";
     }
