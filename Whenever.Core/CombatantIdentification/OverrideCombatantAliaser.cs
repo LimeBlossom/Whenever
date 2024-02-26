@@ -27,12 +27,8 @@ public static class OverrideAliaserExtensions
 {
     public static IAliasCombatantIds WithOverrides(this IAliasCombatantIds aliaser, params (CombatantAlias, CombatantId)[] overrides)
     {
-        var overrideAliaser = new SimpleCombatantAliaser();
-        foreach (var (alias, id) in overrides)
-        {
-            overrideAliaser.SetAlias(alias, id);
-        }
-        return new OverrideCombatantAliaser(aliaser, overrideAliaser);
+        var overrideAliaser = new SimpleCombatantAliaser(overrides);
+        return aliaser.OverrideWith(overrideAliaser);
     }
     public static IAliasCombatantIds OverrideWith(this IAliasCombatantIds aliaser, IAliasCombatantIds overrides)
     {

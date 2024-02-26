@@ -52,7 +52,7 @@ public class DescribeWithAliases: IDescriptionContext
         return CombatantDescriber.NameOf(id);
     }
 
-    public string TryNameOf(CombatantAlias alias)
+    public string NameOf(CombatantAlias alias)
     {
         var immediatePriority = CombatantAliasRawId;
         var immediateFallback = CombatantAliasRawId.ToString();
