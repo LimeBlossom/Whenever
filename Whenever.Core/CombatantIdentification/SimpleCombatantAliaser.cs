@@ -51,7 +51,7 @@ public static class SimpleCombatantAliaserExtensions
 {
     /// <summary>
     /// Bakes the currently defined aliases in the aliaser into a new SimpleCombatantAliaser. Effectively is a clone
-    /// of the current state, clearing any refererences to the original aliaser.
+    /// of the current state, clearing any references to the original aliaser.
     /// </summary>
     /// <param name="aliaser"></param>
     /// <returns></returns>

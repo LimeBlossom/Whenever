@@ -6,6 +6,12 @@ public class SimpleDescriptionContext : IDescribeCombatants
     {
         this.names = names ?? new();
     }
+    
+    public static IDescribeCombatants CreateInstanceDescribeCombatants(
+        Dictionary<CombatantId, string> names = null)
+    {
+        return new SimpleDescriptionContext(names);
+    }
 
     public static DescribeWithAliases CreateInstance(
         string initiatorName = "the initiator",

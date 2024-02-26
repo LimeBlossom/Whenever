@@ -72,11 +72,6 @@ public class DescribeWithAliases: IDescriptionContext
         return finalName.val;
     }
 
-    public IAliasCombatantIds GetInternalAliaser()
-    {
-        return Aliaser;
-    }
-
     public DescribeWithAliases WithOverrideWhenNotDefined(CombatantAlias alias, string specificName, int priority)
     {
         var existingFallback = AliasFallbackNames.GetFallbackWithPriority(alias);
