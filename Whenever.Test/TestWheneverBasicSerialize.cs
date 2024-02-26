@@ -48,7 +48,7 @@ namespace Whenever.Test
             var (effect, error) = serializer.DeserializeEffect(json);
             Assert.IsNull(error);
             Assert.IsNotNull(effect);
-            Assert.AreEqual("deal 3 damage", effect.Describe(SimpleDescriptionContext.CreateInstance()));
+            Assert.AreEqual("deal 3 damage to the custom card target", effect.Describe(SimpleDescriptionContext.CreateInstance()));
             Assert.AreEqual(typeof(DamageCombatantEffect), effect.GetType());
             Assert.AreEqual(CombatantAlias.FromId("#cardTargetCustom"),(effect as DamageCombatantEffect)?.CombatantTarget);
         }

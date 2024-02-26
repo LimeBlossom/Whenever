@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CoreFac;
 
-public record Whenever<TInspectWorld, TCommandWorld> : IDescribableWithContext
+public record Whenever<TInspectWorld, TCommandWorld> : IDescribableWithConcreteContext
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
@@ -73,7 +73,7 @@ public record Whenever<TInspectWorld, TCommandWorld> : IDescribableWithContext
             Id = Guid.NewGuid()
         };
     }
-    public string Describe(IDescriptionContext context)
+    public string Describe(DescribeWithAliases context)
     {
         // TODO: better way to compose all these. or don't allow accepting an external alias at all?
         var overridenContext = context.WithAliasOverride(this.aliaser);

@@ -3,9 +3,23 @@
     public string Describe(IDescriptionContext context);
 }
 
+public interface IDescribableWithConcreteContext
+{
+    public string Describe(DescribeWithAliases contextWithAliases);
+}
+
 public static class DescribableWithContextExtensions
 {
-    public static string DescribeSentenceCase(this IDescribableWithContext describable, IDescriptionContext context)
+    public static string DescribeSentenceCase(
+        this IDescribableWithContext describable,
+        IDescriptionContext context)
+    {
+        var description = describable.Describe(context);
+        return UppercaseFirst(description);
+    }
+    public static string DescribeSentenceCase(
+        this IDescribableWithConcreteContext describable,
+        DescribeWithAliases context)
     {
         var description = describable.Describe(context);
         return UppercaseFirst(description);

@@ -7,7 +7,7 @@ public class SimpleDescriptionContext : IDescribeCombatants
         this.names = names ?? new();
     }
 
-    public static IDescriptionContext CreateInstance(
+    public static DescribeWithAliases CreateInstance(
         string initiatorName = "the initiator",
         string targetName = "the target",
         Dictionary<CombatantId, string> names = null,
@@ -15,7 +15,7 @@ public class SimpleDescriptionContext : IDescribeCombatants
     {
         aliaser ??= new SimpleCombatantAliaser();
         var combatantDescriber = new SimpleDescriptionContext(names);
-        var withAliases = new DescribeWithAliases(combatantDescriber, aliaser, initiatorName, targetName);
+        var withAliases = DescribeWithAliases.WithStandardAliases(combatantDescriber, aliaser, initiatorName, targetName);
         return withAliases;
     }
 
