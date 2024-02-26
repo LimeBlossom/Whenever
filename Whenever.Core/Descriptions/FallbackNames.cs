@@ -27,13 +27,11 @@ public interface IFallbackNames<TKey, TValue> : IReadonlyFallbackNames<TKey, TVa
     /// <param name="fallbackValue"></param>
     /// <param name="priority"></param>
     void AddFallback(TKey key, TValue fallbackValue, int priority);
-    
-    
 }
 
 public class FallbackNames<TKey, TVal> : IFallbackNames<TKey, TVal>
 {
-    private Dictionary<TKey, FallbackWithPriority> fallbacks = new Dictionary<TKey, FallbackWithPriority>();
+    private Dictionary<TKey, FallbackWithPriority> fallbacks = new();
     
     private struct FallbackWithPriority
     {

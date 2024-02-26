@@ -46,7 +46,7 @@ namespace Whenever.Test
             ";
             
             var descriptionContext = SimpleDescriptionContext.CreateInstance();
-            descriptionContext = descriptionContext.WithOverrideWhenNotDefined(
+            descriptionContext = descriptionContext.WithOverrideAtPriority(
                 CombatantAlias.FromId("#cardTargetCustom"),
                 "the custom card target name",
                 FallbackPriority.OverrideBaseAliasNameL1);

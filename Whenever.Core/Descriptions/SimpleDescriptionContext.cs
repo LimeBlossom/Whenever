@@ -21,7 +21,7 @@ public class SimpleDescriptionContext : IDescribeCombatants
     {
         aliaser ??= new SimpleCombatantAliaser();
         var combatantDescriber = new SimpleDescriptionContext(names);
-        var withAliases = DescribeWithAliases.WithStandardAliases(combatantDescriber, aliaser, initiatorName, targetName);
+        var withAliases = DescribeWithAliases.CreateStandardAliases(combatantDescriber, aliaser, initiatorName, targetName);
         return withAliases;
     }
 

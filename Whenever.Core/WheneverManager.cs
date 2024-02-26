@@ -101,7 +101,7 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
         if (descriptionContext == null)
         {
             var combatantDescriber = SimpleDescriptionContext.CreateInstanceDescribeCombatants();
-            descriptionContext = DescribeWithAliases.WithStandardAliases(combatantDescriber, aliaser);
+            descriptionContext = DescribeWithAliases.CreateStandardAliases(combatantDescriber, aliaser);
         }
         
         var allExecutedEvents = GetAllExecutedEvents(initiatedCommands, aliaser);

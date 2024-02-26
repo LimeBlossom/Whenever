@@ -26,7 +26,7 @@ public class DescribeWithAliases: IDescriptionContext
         this.AliasFallbackNames = aliasFallbackNames;
     }
 
-    public static DescribeWithAliases WithStandardAliases(
+    public static DescribeWithAliases CreateStandardAliases(
         IDescribeCombatants combatantDescriber,
         IAliasCombatantIds aliaser,
         string initiatorName = "the initiator",
@@ -38,7 +38,7 @@ public class DescribeWithAliases: IDescriptionContext
         return new DescribeWithAliases(combatantDescriber, aliaser, fallbackNames);
     }
     
-    public static DescribeWithAliases WithDefinedAliasNames(
+    public static DescribeWithAliases CreateDefinedAliasNames(
         IDescribeCombatants combatantDescriber,
         IAliasCombatantIds aliaser,
         IReadonlyFallbackNames<CombatantAlias, string> aliasFallbackNames)
@@ -71,7 +71,7 @@ public class DescribeWithAliases: IDescriptionContext
         return finalName.val;
     }
 
-    public DescribeWithAliases WithOverrideWhenNotDefined(CombatantAlias alias, string specificName, int priority)
+    public DescribeWithAliases WithOverrideAtPriority(CombatantAlias alias, string specificName, int priority)
     {
         var existingFallback = AliasFallbackNames.GetFallbackWithPriority(alias);
         if (existingFallback is not null && existingFallback.Value.priority > priority)
