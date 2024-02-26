@@ -12,15 +12,14 @@ public class SimpleDescriptionContext : IDescriptionContext
         Dictionary<CombatantId, string> names = null,
         IAliasCombatantIds aliaser = null)
     {
-        this.InitiatorName = initiatorName;
-        this.TargetName = targetName;
-        this.names = names ?? new();
         this.aliaser = aliaser ?? new SimpleCombatantAliaser();
+        this.aliasNames[StandardAliases.Initiator] = initiatorName;
+        this.aliasNames[StandardAliases.Target] = targetName;
+        this.names = names ?? new();
     }
     
     private Dictionary<CombatantId, string> names = new();
-    public string InitiatorName { get; set; }
-    public string TargetName { get; set;  }
+    private Dictionary<CombatantAlias, string> aliasNames = new();
     private IAliasCombatantIds aliaser;
     public string NameOf(CombatantId id)
     {
@@ -32,8 +31,10 @@ public class SimpleDescriptionContext : IDescriptionContext
     }
     public string NameOf(CombatantAlias alias)
     {
-        if (alias.Equals(StandardAliases.Target)) return TargetName;
-        if (alias.Equals(StandardAliases.Initiator)) return InitiatorName;
+        if(aliasNames.TryGetValue(alias, out var name))
+        {
+            return name;
+        }
         var idForAlias = aliaser.GetIdForAlias(alias);
         return idForAlias == null ? alias.ReadableDescription : NameOf(idForAlias);
     }

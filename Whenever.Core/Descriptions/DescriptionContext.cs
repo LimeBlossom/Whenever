@@ -10,68 +10,42 @@ public interface IDescribeCombatants
 
 public interface IDescriptionContext : IDescribeCombatants, IDescribeAliases
 {
-    public string InitiatorName { get; }
-    public string TargetName { get; }
 }
 
 public static class DescriptionContextExtensions
 {
-    private class TargetOverrideDescriptionContext : IDescriptionContext
+    private class SpecificOverrideDescriptionContext : IDescriptionContext
     {
         private readonly IDescriptionContext context;
-        private readonly string targetName;
-        public TargetOverrideDescriptionContext(IDescriptionContext context, string targetName)
+        private readonly CombatantAlias aliasOverride;
+        private readonly string specificName;
+        public SpecificOverrideDescriptionContext(IDescriptionContext context, CombatantAlias aliasOverride, string specificName)
         {
             this.context = context;
-            this.targetName = targetName;
+            this.aliasOverride = aliasOverride;
+            this.specificName = specificName;
         }
         public string NameOf(CombatantId id)
         {
             return context.NameOf(id);
         }
 
-        public string InitiatorName => context.InitiatorName;
-
-        public string TargetName => targetName;
         public string NameOf(CombatantAlias alias)
         {
-            return context.NameOf(alias);
+            return alias.Equals(aliasOverride) ? specificName : context.NameOf(alias);
         }
     }
     
-    public static IDescriptionContext WithTargetOverride(this IDescriptionContext context, string targetName)
+    /// <summary>
+    /// Whenever describing <paramref name="alias"/>, instead return <paramref name="specificName"/>
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="alias"></param>
+    /// <param name="specificName"></param>
+    /// <returns></returns>
+    public static IDescriptionContext WithSpecificOverride(this IDescriptionContext context, CombatantAlias alias, string specificName)
     {
-        return new TargetOverrideDescriptionContext(context, targetName);
-    }
-    
-    private class SpecificOverrideDescriptionContext : IDescriptionContext
-    {
-        private readonly IDescriptionContext context;
-        private readonly CombatantId overrideId;
-        private readonly string specificName;
-        public SpecificOverrideDescriptionContext(IDescriptionContext context, CombatantId overrideId, string specificName)
-        {
-            this.context = context;
-            this.overrideId = overrideId;
-            this.specificName = specificName;
-        }
-        public string NameOf(CombatantId id)
-        {
-            return id == overrideId ? specificName : context.NameOf(id);
-        }
-
-        public string InitiatorName => context.InitiatorName;
-
-        public string TargetName => context.TargetName;
-        public string NameOf(CombatantAlias alias)
-        {
-            return context.NameOf(alias);
-        }
-    }
-    
-    public static IDescriptionContext WithSpecificOverride(this IDescriptionContext context, CombatantId specific, string specificName)
-    {
-        return new SpecificOverrideDescriptionContext(context, specific, specificName);
+        return new SpecificOverrideDescriptionContext(context, alias, specificName);
     }
     
     private class AliasOverrideDescriptionContext : IDescriptionContext
@@ -88,9 +62,6 @@ public static class DescriptionContextExtensions
             return underlyingDescription.NameOf(id);
         }
 
-        public string InitiatorName => underlyingDescription.InitiatorName;
-
-        public string TargetName => underlyingDescription.TargetName;
         public string NameOf(CombatantAlias alias)
         {
             var overrideAliasId = overrideAlias.GetIdForAlias(alias);
@@ -99,6 +70,12 @@ public static class DescriptionContextExtensions
         }
     }
     
+    /// <summary>
+    /// when describing an aliased combatant, take the id from the override aliaser if available, otherwise passthrough to the underlying context 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="overrideAlias"></param>
+    /// <returns></returns>
     public static IDescriptionContext WithAliasOverride(this IDescriptionContext context, IAliasCombatantIds overrideAlias)
     {
         return overrideAlias == null ? context : new AliasOverrideDescriptionContext(context, overrideAlias);
@@ -114,32 +91,6 @@ public static class DescriptionContextExtensions
         else
         {
             return " to " + name;
-        }
-    }
-    
-    public static string ToTargetAsDirectSubject(this IDescriptionContext context)
-    {
-        var targetName = context.TargetName;
-        if (string.IsNullOrWhiteSpace(targetName))
-        {
-            return "";
-        }
-        else
-        {
-            return " to " + targetName;
-        }
-    }
-    
-    public static string ToInitiatorAsDirectSubject(this IDescriptionContext context)
-    {
-        var initiatorName = context.InitiatorName;
-        if (string.IsNullOrWhiteSpace(initiatorName))
-        {
-            return "";
-        }
-        else
-        {
-            return " to " + initiatorName;
         }
     }
     
