@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 public class SimpleCombatantAliaser : IAliasCombatantIds
 {
@@ -29,5 +30,14 @@ public class SimpleCombatantAliaser : IAliasCombatantIds
     public void ClearAlias(CombatantAlias alias)
     {
         aliasToId.Remove(alias);
+    }
+    
+    public SimpleCombatantAliaser Clone()
+    {
+        return new SimpleCombatantAliaser(
+            aliasToId
+                .Select(x => (x.Key, x.Value))
+                .ToArray()
+            );
     }
 }

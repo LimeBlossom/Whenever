@@ -75,6 +75,8 @@ public record Whenever<TInspectWorld, TCommandWorld> : IDescribableWithContext
     }
     public string Describe(IDescriptionContext context)
     {
-        return $"When {filter.Describe(context)}; {effect.Describe(context)}";
+        // TODO: better way to compose all these
+        var overridenContext = context.WithAliasOverride(this.aliaser);
+        return $"When {filter.Describe(overridenContext)}; {effect.Describe(overridenContext)}";
     }
 }

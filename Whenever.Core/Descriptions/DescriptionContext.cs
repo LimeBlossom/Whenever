@@ -74,6 +74,36 @@ public static class DescriptionContextExtensions
         return new SpecificOverrideDescriptionContext(context, specific, specificName);
     }
     
+    private class AliasOverrideDescriptionContext : IDescriptionContext
+    {
+        private readonly IDescriptionContext underlyingDescription;
+        private readonly IAliasCombatantIds overrideAlias;
+        public AliasOverrideDescriptionContext(IDescriptionContext underlyingDescription, IAliasCombatantIds overrideAlias)
+        {
+            this.underlyingDescription = underlyingDescription;
+            this.overrideAlias = overrideAlias;
+        }
+        public string NameOf(CombatantId id)
+        {
+            return underlyingDescription.NameOf(id);
+        }
+
+        public string InitiatorName => underlyingDescription.InitiatorName;
+
+        public string TargetName => underlyingDescription.TargetName;
+        public string NameOf(CombatantAlias alias)
+        {
+            var overrideAliasId = overrideAlias.GetIdForAlias(alias);
+            if (overrideAliasId == null) return underlyingDescription.NameOf(alias);
+            return underlyingDescription.NameOf(overrideAliasId);
+        }
+    }
+    
+    public static IDescriptionContext WithAliasOverride(this IDescriptionContext context, IAliasCombatantIds overrideAlias)
+    {
+        return overrideAlias == null ? context : new AliasOverrideDescriptionContext(context, overrideAlias);
+    }
+    
     public static string ToAliasAsDirectSubject(this IDescriptionContext context, CombatantAlias alias)
     {
         var name = context.NameOf(alias);
