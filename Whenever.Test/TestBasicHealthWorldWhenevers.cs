@@ -30,7 +30,7 @@ namespace Whenever.Test
                 WheneverType whenever,
                 string expectedDescription)
             {
-                Assert.AreEqual(expectedDescription, whenever.Describe(new SimpleDescriptionContext()));
+                Assert.AreEqual(expectedDescription, whenever.Describe(SimpleDescriptionContext.CreateInstance()));
                 turnManager.AddWhenever(whenever);
             }
         }

@@ -1,26 +1,25 @@
 ﻿using System.Collections.Generic;
 
-public class SimpleDescriptionContext : IDescriptionContext
+public class SimpleDescriptionContext : IDescribeCombatants
 {
-    public SimpleDescriptionContext(Dictionary<CombatantId, string> name) : this("the initiator", "the target", name)
+    private SimpleDescriptionContext(Dictionary<CombatantId, string> names = null)
     {
+        this.names = names ?? new();
     }
 
-    public SimpleDescriptionContext(
+    public static IDescriptionContext CreateInstance(
         string initiatorName = "the initiator",
         string targetName = "the target",
         Dictionary<CombatantId, string> names = null,
         IAliasCombatantIds aliaser = null)
     {
-        this.aliaser = aliaser ?? new SimpleCombatantAliaser();
-        this.aliasNames[StandardAliases.Initiator] = initiatorName;
-        this.aliasNames[StandardAliases.Target] = targetName;
-        this.names = names ?? new();
+        aliaser ??= new SimpleCombatantAliaser();
+        var combatantDescriber = new SimpleDescriptionContext(names);
+        var withAliases = new DescribeWithAliases(combatantDescriber, aliaser, initiatorName, targetName);
+        return withAliases;
     }
-    
-    private Dictionary<CombatantId, string> names = new();
-    private Dictionary<CombatantAlias, string> aliasNames = new();
-    private IAliasCombatantIds aliaser;
+
+    private Dictionary<CombatantId, string> names;
     public string NameOf(CombatantId id)
     {
         if(names.TryGetValue(id, out var name))
@@ -28,19 +27,5 @@ public class SimpleDescriptionContext : IDescriptionContext
             return name;
         }
         return "Combatant #" + id.ToString();
-    }
-    public string NameOf(CombatantAlias alias)
-    {
-        if(aliasNames.TryGetValue(alias, out var name))
-        {
-            return name;
-        }
-        var idForAlias = aliaser.GetIdForAlias(alias);
-        return idForAlias == null ? alias.ReadableDescription : NameOf(idForAlias);
-    }
-
-    public IAliasCombatantIds GetInternalAliaser()
-    {
-        return aliaser;
     }
 }

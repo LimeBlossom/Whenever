@@ -33,6 +33,8 @@ public static class DescriptionContextExtensions
 
         public string NameOf(CombatantAlias alias)
         {
+            if(!aliasOverride.Equals(alias)) return context.NameOf(alias);
+            
             var idFromUnderlying = context.GetInternalAliaser().GetIdForAlias(alias);
             return idFromUnderlying == null ?
                 specificName : 

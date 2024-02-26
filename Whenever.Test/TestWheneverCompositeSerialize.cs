@@ -29,7 +29,7 @@ namespace Whenever.Test
             Assert.IsNull(error);
             Assert.IsNotNull(filter);
             Assert.AreEqual(typeof(CompositeWheneverFilter<IInspectWorldHealth, ICommandWorldHealth>), filter.GetType());
-            Assert.AreEqual("at least 2 damage occurs and target has at least 6 health", filter.Describe(new SimpleDescriptionContext()));
+            Assert.AreEqual("at least 2 damage occurs and target has at least 6 health", filter.Describe(SimpleDescriptionContext.CreateInstance()));
         }
     }
 }

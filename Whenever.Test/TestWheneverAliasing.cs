@@ -38,14 +38,14 @@ namespace Whenever.Test
             // whenever the card target takes physical damage, heal the initiator
             var wheneverCardTargetTakesPhysicalDamage = WheneverFilterFactory.Compose(
                     WheneverFilterFactory.DamageIs(DamageType.PHYSICAL),
-                    WheneverFilterFactory.TargetIs(CombatantAlias.FromId("#cardTarget"))
+                    WheneverFilterFactory.TargetIs(CombatantAlias.FromId("#cardTargetAlias"))
                     );
             var healCaster = EffectFactory.Heal(StandardAliases.Initiator, 3);
             
             var aliaser = new SimpleCombatantAliaser();
             var targetedAliaser = aliaser.WithOverrides(
-                ("#cardTarget", enemy),
-                ("#cardCaster", player)
+                ("#cardTargetAlias", enemy),
+                ("#cardCasterAlias", player)
             );
             var whenever = new WheneverType(wheneverCardTargetTakesPhysicalDamage, healCaster);
             whenever = whenever.BakeCombatantAlias(targetedAliaser);
@@ -71,8 +71,8 @@ namespace Whenever.Test
             
             // enemy deals damage, overrides aliasing with baked alias
             targetedAliaser = aliaser.WithOverrides(
-                ("#cardTarget", player),
-                ("#cardCaster", enemy)
+                ("#cardTargetAlias", player),
+                ("#cardCasterAlias", enemy)
             );
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, player),

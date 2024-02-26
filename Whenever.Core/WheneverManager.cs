@@ -98,7 +98,7 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
         IAliasCombatantIds aliaser = null)
     {
         aliaser ??= new SimpleCombatantAliaser();
-        descriptionContext ??= new SimpleDescriptionContext();
+        descriptionContext ??= SimpleDescriptionContext.CreateInstance();
         
         var allExecutedEvents = GetAllExecutedEvents(initiatedCommands, aliaser);
         

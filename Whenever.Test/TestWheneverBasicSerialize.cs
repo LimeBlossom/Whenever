@@ -27,7 +27,7 @@ namespace Whenever.Test
             var (effect, error) = serializer.DeserializeEffect(json);
             Assert.IsNull(error);
             Assert.IsNotNull(effect);
-            Assert.AreEqual("deal 3 damage to the target", effect.Describe(new SimpleDescriptionContext()));
+            Assert.AreEqual("deal 3 damage to the target", effect.Describe(SimpleDescriptionContext.CreateInstance()));
             Assert.AreEqual(typeof(DamageCombatantEffect), effect.GetType());
             Assert.AreEqual(StandardAliases.Target,(effect as DamageCombatantEffect)?.CombatantTarget);
         }
@@ -48,7 +48,7 @@ namespace Whenever.Test
             var (effect, error) = serializer.DeserializeEffect(json);
             Assert.IsNull(error);
             Assert.IsNotNull(effect);
-            Assert.AreEqual("deal 3 damage to the custom card target", effect.Describe(new SimpleDescriptionContext()));
+            Assert.AreEqual("deal 3 damage to the custom card target", effect.Describe(SimpleDescriptionContext.CreateInstance()));
             Assert.AreEqual(typeof(DamageCombatantEffect), effect.GetType());
             Assert.AreEqual(CombatantAlias.FromId("#cardTargetCustom"),(effect as DamageCombatantEffect)?.CombatantTarget);
         }
@@ -70,7 +70,7 @@ namespace Whenever.Test
             var (effect, error) = serializer.DeserializeEffect(json);
             Assert.IsNull(error);
             Assert.IsNotNull(effect);
-            Assert.AreEqual("apply 1 damage per turn for 3 turns to the target", effect.Describe(new SimpleDescriptionContext()));
+            Assert.AreEqual("apply 1 damage per turn for 3 turns to the target", effect.Describe(SimpleDescriptionContext.CreateInstance()));
             Assert.AreEqual(typeof(DotCombatantEffect), effect.GetType());
             Assert.AreEqual(StandardAliases.Target,(effect as DotCombatantEffect)?.CombatantTarget);
         }
@@ -130,7 +130,7 @@ namespace Whenever.Test
             var (effect, error) = serializer.DeserializeEffect(json);
             Assert.IsNull(error);
             Assert.IsNotNull(effect);
-            Assert.AreEqual("apply 0 damage per turn for 3 turns to the target", effect.Describe(new SimpleDescriptionContext()));
+            Assert.AreEqual("apply 0 damage per turn for 3 turns to the target", effect.Describe(SimpleDescriptionContext.CreateInstance()));
             Assert.AreEqual(typeof(DotCombatantEffect), effect.GetType());
             Assert.AreEqual(StandardAliases.Target,(effect as DotCombatantEffect)?.CombatantTarget);
         }
@@ -149,7 +149,7 @@ namespace Whenever.Test
             var (filter, error) = serializer.DeserializeFilter(json);
             Assert.IsNull(error);
             Assert.IsNotNull(filter);
-            Assert.AreEqual("at least 5 damage occurs", filter.Describe(new SimpleDescriptionContext()));
+            Assert.AreEqual("at least 5 damage occurs", filter.Describe(SimpleDescriptionContext.CreateInstance()));
             Assert.AreEqual(typeof(DamageOccurs), filter.GetType());
         }
         
@@ -168,7 +168,7 @@ namespace Whenever.Test
             var (filter, error) = serializer.DeserializeFilter(json);
             Assert.IsNull(error);
             Assert.IsNotNull(filter);
-            Assert.AreEqual("the target has at least 5 health", filter.Describe(new SimpleDescriptionContext()));
+            Assert.AreEqual("the target has at least 5 health", filter.Describe(SimpleDescriptionContext.CreateInstance()));
             Assert.AreEqual(typeof(CombatantHasAtLeastHealth), filter.GetType());
             Assert.AreEqual(StandardAliases.Target,(filter as CombatantHasAtLeastHealth)?.combatant);
         }

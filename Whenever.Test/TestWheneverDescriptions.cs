@@ -14,7 +14,7 @@ namespace Whenever.Test
         [Test]
         public void WheneverPlayerDealsDamage_AndTargetHasAtLeastHealth__DealsMoreDamage()
         {
-            var descriptionContext = new SimpleDescriptionContext("bob", "uncle");
+            var descriptionContext = SimpleDescriptionContext.CreateInstance("bob", "uncle");
             var filters =
                 composer.ForceRegenerateComposites(
                     HealthFac.Filters.TargetHasAtLeastHealth(5),
@@ -28,7 +28,7 @@ var effects = HealthFac.Effects.DamageTarget(2);
         [Test]
         public void PlayerDealsDamage_EmptyTargetName_OmitsTargetAsSubject()
         {
-            var descriptionContext = new SimpleDescriptionContext("George", "");
+            var descriptionContext = SimpleDescriptionContext.CreateInstance("George", "");
             var effect = HealthFac.Effects.DamageTarget(2);
             
             Assert.AreEqual("deal 2 damage", effect.Describe(descriptionContext));
@@ -42,7 +42,7 @@ var effects = HealthFac.Effects.DamageTarget(2);
                 {CombatantId.Hashed("#bob"), "" },
                 {CombatantId.Hashed("#george"), "George" }
             };
-            var descriptionContext = new SimpleDescriptionContext("George", "", descDict);
+            var descriptionContext = SimpleDescriptionContext.CreateInstance("George", "", descDict);
             
             var effectToEmptyTarget = HealthFac.Effects.DamageSpecificTarget(2, CombatantId.Hashed("#bob"));
             Assert.AreEqual("deal 2 damage", effectToEmptyTarget.Describe(descriptionContext));
