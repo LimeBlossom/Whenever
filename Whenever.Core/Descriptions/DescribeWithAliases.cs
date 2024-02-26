@@ -1,8 +1,7 @@
 ﻿
 using UnityEngine;
-using static FallbackConstants;
 
-public static class FallbackConstants
+public static class FallbackPriority
 {
     public const int CombatantAliasRawId = -1000;
     public const int BaseCombatantAliasNames = -100;
@@ -34,8 +33,8 @@ public class DescribeWithAliases: IDescriptionContext
         string targetName = "the target")
     {
         var fallbackNames = new FallbackNames<CombatantAlias, string>();
-        fallbackNames.AddFallback(StandardAliases.Initiator, initiatorName, BaseCombatantAliasNames);
-        fallbackNames.AddFallback(StandardAliases.Target, targetName, BaseCombatantAliasNames);
+        fallbackNames.AddFallback(StandardAliases.Initiator, initiatorName, FallbackPriority.BaseCombatantAliasNames);
+        fallbackNames.AddFallback(StandardAliases.Target, targetName, FallbackPriority.BaseCombatantAliasNames);
         return new DescribeWithAliases(combatantDescriber, aliaser, fallbackNames);
     }
     
@@ -54,18 +53,18 @@ public class DescribeWithAliases: IDescriptionContext
 
     public string NameOf(CombatantAlias alias)
     {
-        var immediatePriority = CombatantAliasRawId;
-        var immediateFallback = CombatantAliasRawId.ToString();
+        var immediatePriority = FallbackPriority.CombatantAliasRawId;
+        var immediateFallback = FallbackPriority.CombatantAliasRawId.ToString();
         
         var idFromUnderlying = Aliaser.GetIdForAlias(alias);
         if(idFromUnderlying != null)
         {
-            immediatePriority = NamedCombatant;
+            immediatePriority = FallbackPriority.NamedCombatant;
             immediateFallback = CombatantDescriber.NameOf(idFromUnderlying);
         }
         
         var finalName = AliasFallbackNames.GetFallbackValue(alias, immediateFallback, immediatePriority);
-        if (finalName.priority <= CombatantAliasRawId)
+        if (finalName.priority <= FallbackPriority.CombatantAliasRawId)
         {
             Debug.LogWarning($"No name defined for alias {alias}");
         }

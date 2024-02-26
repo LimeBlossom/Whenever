@@ -49,7 +49,7 @@ namespace Whenever.Test
             descriptionContext = descriptionContext.WithOverrideWhenNotDefined(
                 CombatantAlias.FromId("#cardTargetCustom"),
                 "the custom card target name",
-                FallbackConstants.OverrideBaseAliasNameL1);
+                FallbackPriority.OverrideBaseAliasNameL1);
             
             
             var (effect, error) = serializer.DeserializeEffect(json);
