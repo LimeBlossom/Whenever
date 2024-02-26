@@ -38,4 +38,9 @@ public class SimpleDescriptionContext : IDescriptionContext
         var idForAlias = aliaser.GetIdForAlias(alias);
         return idForAlias == null ? alias.ReadableDescription : NameOf(idForAlias);
     }
+
+    public IAliasCombatantIds GetInternalAliaser()
+    {
+        return aliaser;
+    }
 }

@@ -1,6 +1,7 @@
 ﻿public interface IDescribeAliases
 {
     public string NameOf(CombatantAlias alias);
+    public IAliasCombatantIds GetInternalAliaser();
 }
 
 public interface IDescribeCombatants
@@ -14,12 +15,12 @@ public interface IDescriptionContext : IDescribeCombatants, IDescribeAliases
 
 public static class DescriptionContextExtensions
 {
-    private class SpecificOverrideDescriptionContext : IDescriptionContext
+    private class OverrideAliasWhenNotDefined : IDescriptionContext
     {
         private readonly IDescriptionContext context;
         private readonly CombatantAlias aliasOverride;
         private readonly string specificName;
-        public SpecificOverrideDescriptionContext(IDescriptionContext context, CombatantAlias aliasOverride, string specificName)
+        public OverrideAliasWhenNotDefined(IDescriptionContext context, CombatantAlias aliasOverride, string specificName)
         {
             this.context = context;
             this.aliasOverride = aliasOverride;
@@ -32,20 +33,29 @@ public static class DescriptionContextExtensions
 
         public string NameOf(CombatantAlias alias)
         {
-            return alias.Equals(aliasOverride) ? specificName : context.NameOf(alias);
+            var idFromUnderlying = context.GetInternalAliaser().GetIdForAlias(alias);
+            return idFromUnderlying == null ?
+                specificName : 
+                context.NameOf(alias);
+        }
+
+        public IAliasCombatantIds GetInternalAliaser()
+        {
+            return context.GetInternalAliaser();
         }
     }
     
     /// <summary>
-    /// Whenever describing <paramref name="alias"/>, instead return <paramref name="specificName"/>
+    /// Whenever describing <paramref name="alias"/>, instead return <paramref name="specificName"/>,
+    /// only if the description context cannot identify the aliased combatant
     /// </summary>
     /// <param name="context"></param>
     /// <param name="alias"></param>
     /// <param name="specificName"></param>
     /// <returns></returns>
-    public static IDescriptionContext WithSpecificOverride(this IDescriptionContext context, CombatantAlias alias, string specificName)
+    public static IDescriptionContext WithOverrideWhenNotDefined(this IDescriptionContext context, CombatantAlias alias, string specificName)
     {
-        return new SpecificOverrideDescriptionContext(context, alias, specificName);
+        return new OverrideAliasWhenNotDefined(context, alias, specificName);
     }
     
     private class AliasOverrideDescriptionContext : IDescriptionContext
@@ -67,6 +77,11 @@ public static class DescriptionContextExtensions
             var overrideAliasId = overrideAlias.GetIdForAlias(alias);
             if (overrideAliasId == null) return underlyingDescription.NameOf(alias);
             return underlyingDescription.NameOf(overrideAliasId);
+        }
+
+        public IAliasCombatantIds GetInternalAliaser()
+        {
+            return underlyingDescription.GetInternalAliaser();
         }
     }
     
