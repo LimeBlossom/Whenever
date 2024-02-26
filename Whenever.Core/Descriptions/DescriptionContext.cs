@@ -102,7 +102,7 @@ public static class DescriptionContextExtensions
     
     public static string ToAliasAsDirectSubject(this IDescriptionContext context, CombatantAlias alias)
     {
-        var name = context.TryNameOf(alias);
+        var name = context.NameOf(alias);
         if (string.IsNullOrWhiteSpace(name))
         {
             return "";
