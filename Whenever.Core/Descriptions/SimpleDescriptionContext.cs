@@ -5,23 +5,17 @@ public class SimpleDescriptionContext : IDescriptionContext
     public SimpleDescriptionContext(Dictionary<CombatantId, string> name) : this("the initiator", "the target", name)
     {
     }
-    public SimpleDescriptionContext(): this("the initiator", "the target")
-    {
-    }
-    
-    public SimpleDescriptionContext(string initiatorName, string targetName)
-    {
-        this.InitiatorName = initiatorName;
-        this.TargetName = targetName;
-        this.aliaser = new SimpleCombatantAliaser();
-    }
 
-    public SimpleDescriptionContext(string initiatorName, string targetName, Dictionary<CombatantId, string> names)
+    public SimpleDescriptionContext(
+        string initiatorName = "the initiator",
+        string targetName = "the target",
+        Dictionary<CombatantId, string> names = null,
+        IAliasCombatantIds aliaser = null)
     {
         this.InitiatorName = initiatorName;
         this.TargetName = targetName;
         this.names = names ?? new();
-        this.aliaser = new SimpleCombatantAliaser();
+        this.aliaser = aliaser ?? new SimpleCombatantAliaser();
     }
     
     private Dictionary<CombatantId, string> names = new();

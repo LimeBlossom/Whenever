@@ -4,8 +4,8 @@ public record CombatantsAreSame<TInspectWorld, TCommandWorld>: IWheneverFilter<T
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
-    private readonly CombatantAlias variableAlias;
-    private readonly CombatantAlias expectedAlias;
+    public readonly CombatantAlias variableAlias;
+    public readonly CombatantAlias expectedAlias;
 
     public CombatantsAreSame(CombatantAlias variableAlias, CombatantAlias expectedAlias)
     {

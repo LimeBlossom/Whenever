@@ -8,6 +8,14 @@ public class SimpleCombatantAliaser : IAliasCombatantIds
     {
     }
     
+    public SimpleCombatantAliaser(params (CombatantAlias, CombatantId)[] aliases)
+    {
+        foreach (var (alias, id) in aliases)
+        {
+            SetAlias(alias, id);
+        }
+    }
+    
     public CombatantId GetIdForAlias(CombatantAlias alias)
     {
         return aliasToId.GetValueOrDefault(alias);
