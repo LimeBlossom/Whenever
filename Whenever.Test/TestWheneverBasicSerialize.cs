@@ -41,14 +41,21 @@ namespace Whenever.Test
             {
                 ""type"": ""DamageCombatantEffect"",
                 ""damage"": 3,
-                ""combatant"": {""alias"": ""#cardTargetCustom"", ""readableDescription"": ""the custom card target""}
+                ""combatant"": {""alias"": ""#cardTargetCustom"" }
             }
             ";
+            
+            var descriptionContext = SimpleDescriptionContext.CreateInstance();
+            descriptionContext = descriptionContext.WithOverrideWhenNotDefined(
+                CombatantAlias.FromId("#cardTargetCustom"),
+                "the custom card target name",
+                FallbackConstants.OverrideBaseAliasNameL1);
+            
             
             var (effect, error) = serializer.DeserializeEffect(json);
             Assert.IsNull(error);
             Assert.IsNotNull(effect);
-            Assert.AreEqual("deal 3 damage to the custom card target", effect.Describe(SimpleDescriptionContext.CreateInstance()));
+            Assert.AreEqual("deal 3 damage to the custom card target name", effect.Describe(descriptionContext));
             Assert.AreEqual(typeof(DamageCombatantEffect), effect.GetType());
             Assert.AreEqual(CombatantAlias.FromId("#cardTargetCustom"),(effect as DamageCombatantEffect)?.CombatantTarget);
         }

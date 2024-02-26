@@ -1,4 +1,5 @@
-﻿public interface IDescribeAliases
+﻿
+public interface IDescribeAliases
 {
     public string TryNameOf(CombatantAlias alias);
 }
@@ -16,7 +17,7 @@ public static class DescriptionContextExtensions
 {
     public static string NameOf(this IDescribeAliases context, CombatantAlias alias)
     {
-        return context.TryNameOf(alias) ?? alias.ReadableDescription;
+        return context.TryNameOf(alias);
     }
     
     public static string ToAliasAsDirectSubject(this IDescriptionContext context, CombatantAlias alias)

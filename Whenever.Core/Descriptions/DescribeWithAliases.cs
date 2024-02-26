@@ -1,15 +1,26 @@
-﻿using System.Collections.Generic;
+﻿
+using UnityEngine;
+using static FallbackConstants;
+
+public static class FallbackConstants
+{
+    public const int CombatantAliasRawId = -1000;
+    public const int BaseCombatantAliasNames = -100;
+    public const int OverrideBaseAliasNameL1 = -90;
+    public const int OverrideBaseAliasNameL2 = -80;
+    public const int NamedCombatant = 100;
+}
 
 public class DescribeWithAliases: IDescriptionContext
 {
     public IDescribeCombatants CombatantDescriber { get; }
     public IAliasCombatantIds Aliaser { get; }
-    public IReadOnlyDictionary<CombatantAlias, string> AliasFallbackNames { get; }
+    public IReadonlyFallbackNames<CombatantAlias, string> AliasFallbackNames { get; }
 
     private DescribeWithAliases(
         IDescribeCombatants combatantDescriber,
         IAliasCombatantIds aliaser,
-        IReadOnlyDictionary<CombatantAlias, string> aliasFallbackNames)
+        IReadonlyFallbackNames<CombatantAlias, string> aliasFallbackNames)
     {
         this.CombatantDescriber = combatantDescriber;
         this.Aliaser = aliaser;
@@ -22,10 +33,18 @@ public class DescribeWithAliases: IDescriptionContext
         string initiatorName = "the initiator",
         string targetName = "the target")
     {
-        var fallbackNames = new Dictionary<CombatantAlias, string>();
-        fallbackNames[StandardAliases.Initiator] = initiatorName;
-        fallbackNames[StandardAliases.Target] = targetName;
+        var fallbackNames = new FallbackNames<CombatantAlias, string>();
+        fallbackNames.AddFallback(StandardAliases.Initiator, initiatorName, BaseCombatantAliasNames);
+        fallbackNames.AddFallback(StandardAliases.Target, targetName, BaseCombatantAliasNames);
         return new DescribeWithAliases(combatantDescriber, aliaser, fallbackNames);
+    }
+    
+    public static DescribeWithAliases WithDefinedAliasNames(
+        IDescribeCombatants combatantDescriber,
+        IAliasCombatantIds aliaser,
+        IReadonlyFallbackNames<CombatantAlias, string> aliasFallbackNames)
+    {
+        return new DescribeWithAliases(combatantDescriber, aliaser, aliasFallbackNames);
     }
 
     public string NameOf(CombatantId id)
@@ -35,17 +54,22 @@ public class DescribeWithAliases: IDescriptionContext
 
     public string TryNameOf(CombatantAlias alias)
     {
+        var immediatePriority = CombatantAliasRawId;
+        var immediateFallback = CombatantAliasRawId.ToString();
+        
         var idFromUnderlying = Aliaser.GetIdForAlias(alias);
         if(idFromUnderlying != null)
         {
-            return CombatantDescriber.NameOf(idFromUnderlying);
+            immediatePriority = NamedCombatant;
+            immediateFallback = CombatantDescriber.NameOf(idFromUnderlying);
         }
-        if(AliasFallbackNames.TryGetValue(alias, out var name))
+        
+        var finalName = AliasFallbackNames.GetFallbackValue(alias, immediateFallback, immediatePriority);
+        if (finalName.priority <= CombatantAliasRawId)
         {
-            return name;
+            Debug.LogWarning($"No name defined for alias {alias}");
         }
-
-        return null;
+        return finalName.val;
     }
 
     public IAliasCombatantIds GetInternalAliaser()
@@ -53,14 +77,15 @@ public class DescribeWithAliases: IDescriptionContext
         return Aliaser;
     }
 
-    public DescribeWithAliases WithOverrideWhenNotDefined(CombatantAlias alias, string specificName)
+    public DescribeWithAliases WithOverrideWhenNotDefined(CombatantAlias alias, string specificName, int priority)
     {
-        if (AliasFallbackNames.ContainsKey(alias))
-        {// already defined, don't override
+        var existingFallback = AliasFallbackNames.GetFallbackWithPriority(alias);
+        if (existingFallback is not null && existingFallback.Value.priority > priority)
+        {// already defined with higher priority, don't override
             return this;
         }
-        var newFallbacks = new Dictionary<CombatantAlias, string>(AliasFallbackNames);
-        newFallbacks[alias] = specificName;
+        var newFallbacks = new FallbackNames<CombatantAlias, string>(AliasFallbackNames);
+        newFallbacks.AddFallback(alias, specificName, priority);
         return new DescribeWithAliases(CombatantDescriber, Aliaser, newFallbacks);
     }
 
