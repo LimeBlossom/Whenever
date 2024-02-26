@@ -14,10 +14,8 @@ public interface IManageWorld<TInspect, TCommand>
     /// previous command batch.
     /// </summary>
     /// <param name="initiatedCommand"></param>
-    /// <param name="descriptionContext"></param>
     public void InitiateCommandBatch(
         IEnumerable<InitiatedCommand<TCommand>> initiatedCommand,
-        IDescribeCombatants descriptionContext = null,
         IAliasCombatantIds aliaser = null);
     public IEnumerable<WheneverExecutionEvent<TInspect, TCommand> > GetAllExecutedEvents(
         IEnumerable<InitiatedCommand<TCommand>> initiatedCommand,
@@ -36,23 +34,21 @@ public static class ManageWorldExtensions
         this IManageWorld<TInspect, TCommand> manager,
         IWorldCommand<TCommand> command,
         ICommandInitiator initiator,
-        IDescribeCombatants descriptionContext = null,
         IAliasCombatantIds aliaser = null)
         where TInspect : IInspectWorld
         where TCommand : ICommandWorld
     {
-        manager.InitiateCommand(new InitiatedCommand<TCommand>(command, initiator), descriptionContext, aliaser);
+        manager.InitiateCommand(new InitiatedCommand<TCommand>(command, initiator), aliaser);
     }
         
     public static void InitiateCommand<TInspect, TCommand>(
         this IManageWorld<TInspect, TCommand> manager,
         InitiatedCommand<TCommand> command,
-        IDescribeCombatants descriptionContext = null,
         IAliasCombatantIds aliaser = null)
         where TInspect : IInspectWorld
         where TCommand : ICommandWorld
     {
-        manager.InitiateCommandBatch(new []{command}, descriptionContext, aliaser);
+        manager.InitiateCommandBatch(new []{command}, aliaser);
     }
     
     public static void RemoveWhenever<TInspect, TCommand>(

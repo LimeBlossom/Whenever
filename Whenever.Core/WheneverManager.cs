@@ -22,8 +22,6 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
         this.inspector = inspector;
         this.commander = commander;
     }
-    
-    
         
     public Guid? AddWhenever(Whenever<TInspectWorld, TCommandWorld> whenever)
     {
@@ -94,21 +92,16 @@ public class WheneverManager<TInspectWorld, TCommandWorld> : IManageWorld<TInspe
     
     public void InitiateCommandBatch(
         IEnumerable<InitiatedCommand<TCommandWorld>> initiatedCommands,
-        IDescribeCombatants descriptionContext = null,
         IAliasCombatantIds aliaser = null)
     {
         aliaser ??= new SimpleCombatantAliaser();
-        if (descriptionContext == null)
-        {
-            var combatantDescriber = SimpleDescriptionContext.CreateInstanceDescribeCombatants();
-            descriptionContext = DescribeWithAliases.CreateStandardAliases(combatantDescriber, aliaser);
-        }
+        var loggingDescriber = new EmptyDescribeCombatants();
         
         var allExecutedEvents = GetAllExecutedEvents(initiatedCommands, aliaser);
         
         foreach (var currentCommand in allExecutedEvents)
         {
-            Debug.Log("Applying command: " + currentCommand.generatedCommand.Describe(descriptionContext));
+            Debug.Log("Applying command: " + currentCommand.generatedCommand.Describe(loggingDescriber));
             currentCommand.generatedCommand.command.ApplyCommand(commander);
         }
     }

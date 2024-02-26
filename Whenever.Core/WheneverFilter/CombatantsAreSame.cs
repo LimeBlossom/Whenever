@@ -4,7 +4,22 @@ public record CombatantsAreSame<TInspectWorld, TCommandWorld>: IWheneverFilter<T
     where TInspectWorld : IInspectWorld
     where TCommandWorld : ICommandWorld
 {
+    /// <summary>
+    /// The alias which is expected to change more often, leaving the <see cref="expectedAlias"/> constant through time
+    /// </summary>
+    /// <remarks>
+    /// For example, this may be <see cref="StandardAliases.Target"/> during an operation which decides which target to point the card at.
+    /// </remarks>
+    /// <remarks>
+    /// This is primarily relevant only for descriptive text, functionally these variables are symmetric.
+    /// </remarks>
     public readonly CombatantAlias variableAlias;
+    /// <summary>
+    /// The alias which is expected to remain constant through time, leaving the <see cref="variableAlias"/> to change
+    /// </summary>
+    /// <remarks>
+    /// This is primarily relevant only for descriptive text, functionally these variables are symmetric.
+    /// </remarks>
     public readonly CombatantAlias expectedAlias;
 
     public CombatantsAreSame(CombatantAlias variableAlias, CombatantAlias expectedAlias)

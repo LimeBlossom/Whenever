@@ -83,7 +83,7 @@ public class DescribeWithAliases: IDescriptionContext
         return new DescribeWithAliases(CombatantDescriber, Aliaser, newFallbacks);
     }
 
-    public IDescriptionContext WithAliasOverride(IAliasCombatantIds overrideAlias)
+    public DescribeWithAliases WithAliasOverride(IAliasCombatantIds overrideAlias)
     {
         if (overrideAlias == null) return this;
         var newAliaser = this.Aliaser.OverrideWith(overrideAlias);

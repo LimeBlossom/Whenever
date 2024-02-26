@@ -75,7 +75,6 @@ public record Whenever<TInspectWorld, TCommandWorld> : IDescribableWithConcreteC
     }
     public string Describe(DescribeWithAliases context)
     {
-        // TODO: better way to compose all these. or don't allow accepting an external alias at all?
         var overridenContext = context.WithAliasOverride(bakedAliaser);
         return $"When {filter.Describe(overridenContext)}; {effect.Describe(overridenContext)}";
     }
