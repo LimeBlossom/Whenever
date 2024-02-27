@@ -26,7 +26,24 @@ public class SimpleCombatantAliaser : IAliasCombatantIds
     {
         return aliasToId.Keys;
     }
-
+    
+    /// <summary>
+    /// Set the alias if <paramref name="id"/> is non-null, otherwise clear the alias.
+    /// </summary>
+    /// <param name="alias"></param>
+    /// <param name="id"></param>
+    public void SetOrClearAlias(CombatantAlias alias, CombatantId id)
+    {
+        if (id == null)
+        {
+            ClearAlias(alias);
+        }
+        else
+        {
+            SetAlias(alias, id);
+        }
+    }
+    
     public void SetAlias(CombatantAlias alias, CombatantId id)
     {
         aliasToId[alias] = id;
