@@ -12,18 +12,20 @@ Whenever Damage occurs:
 Whenever Target has at least health:
 ```json
 {
-  "type": "TargetHasAtLeastHealth",
-  "atLeast": 5
+  "type": "CombatantHasAtLeastHealth",
+  "atLeast": 5,
+  "combatant": "#target"
 }
 ```
 
 ## Basic effects 
 
-Deal damage:
+Deal damage to the target:
 ```json
 {
-  "type": "DealDamage",
-  "amount": 5
+  "type": "DamageCombatantEffect",
+  "damage": 5,
+  "combatant": "#target"
 }
 ```
 
@@ -42,8 +44,9 @@ Whenever Damage occurs, target takes 3 damage
   ],
   "effects": [
     {
-      "type": "DealDamage",
-      "amount": 3
+      "type": "DamageCombatantEffect",
+      "damage": 3,
+      "combatant": "#target"
     }
   ]
 }
@@ -59,15 +62,16 @@ Whenever Damage occurs and target is #cardCaster, target takes 3 healing
       "atLeast": 1
     },
     {
-      "type": "IdentityAliasMatches",
-      "alias1": "#cardCaster",
-      "alias2": "#currentTarget"
+      "type": "CombatantsAreSame",
+      "variableAlias": "#target",
+      "expectedAlias": "#cardCaster"
     }
   ],
   "effects": [
     {
-      "type": "DealDamage",
-      "amount": -3
+      "type": "DamageCombatantEffect",
+      "damage": -3,
+      "combatant": "#target"
     }
   ]
 }
