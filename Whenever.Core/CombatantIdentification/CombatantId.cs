@@ -2,35 +2,30 @@
 {
     private readonly int id;
     // allows usage of the id field to store hashes safely, alongside the default sequencing constructor
-    private readonly bool isHashed;
+    private readonly string hashedName;
     
-    public static readonly CombatantId DEFAULT = new CombatantId(1, false);
+    public static readonly CombatantId DEFAULT = new CombatantId(1, null);
     public static readonly CombatantId INVALID = default;
     
     public static CombatantId Next(CombatantId id)
     {
-        return new CombatantId(id.id + 1, false);
+        return new CombatantId(id.id + 1, null);
     }
 
     public static CombatantId Hashed(string name)
     {
-        return new CombatantId(name.GetHashCode(), true);
+        return new CombatantId(name.GetHashCode(), name);
     }
 
-    public CombatantId Next()
-    {
-        return CombatantId.Next(this);
-    }
-    
-    private CombatantId(int id, bool isHashed)
+    private CombatantId(int id, string hashedName)
     {
         this.id = id;
-        this.isHashed = isHashed;
+        this.hashedName = hashedName;
     }
     
         
     public override string ToString()
     {
-        return id.ToString();
+        return hashedName ?? id.ToString();
     }
 }
