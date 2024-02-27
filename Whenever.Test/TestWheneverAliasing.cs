@@ -43,12 +43,10 @@ namespace Whenever.Test
             var healCaster = EffectFactory.Heal(StandardAliases.Initiator, 3);
             
             var aliaser = new SimpleCombatantAliaser();
-            var targetedAliaser = aliaser.WithOverrides(
-                ("#cardTargetAlias", enemy),
-                ("#cardCasterAlias", player)
-            );
+            aliaser.SetAlias("#cardTargetAlias", enemy);
+            aliaser.SetAlias("#cardCasterAlias", player);
             var whenever = new WheneverType(wheneverCardTargetTakesPhysicalDamage, healCaster);
-            whenever = whenever.BakeCombatantAlias(targetedAliaser);
+            whenever = whenever.BakeCombatantAlias(aliaser);
             
             turnManager.AddWhenever(whenever);
             
@@ -70,14 +68,12 @@ namespace Whenever.Test
             Assert.AreEqual(9, baseWorld.CombatantData(enemy).CurrentHealth());
             
             // enemy deals damage, overrides aliasing with baked alias
-            targetedAliaser = aliaser.WithOverrides(
-                ("#cardTargetAlias", player),
-                ("#cardCasterAlias", enemy)
-            );
+            aliaser.SetAlias("#cardTargetAlias", player);
+            aliaser.SetAlias("#cardCasterAlias", enemy);
             turnManager.InitiateCommand(
                 CmdFactory.Damage(DamageType.PHYSICAL, 1, player),
                 Initiators.From(enemy),
-                aliaser: targetedAliaser);
+                aliaser: aliaser);
             
             Assert.AreEqual(8, baseWorld.CombatantData(player).CurrentHealth());
             Assert.AreEqual(9, baseWorld.CombatantData(enemy).CurrentHealth());

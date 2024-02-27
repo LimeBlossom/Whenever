@@ -26,16 +26,21 @@ public record Whenever<TInspectWorld, TCommandWorld> : IDescribableWithConcreteC
         this.effect = effect;
         this.bakedAliaser = bakedAliases;
     }
-    
+
     /// <summary>
     /// Will return a new whenever which has baked-in the provided combatant aliases. Useful to bake in permanent context
     ///     such as "the caster of the card which caused this whenever"
     /// </summary>
     /// <param name="aliases"></param>
+    /// <param name="assumeAlreadyBaked">
+    /// When true, will assume the given alias is already baked and will share a reference to the provided aliaser.
+    /// Use this if we want to share a baked aliaser between multiple whenever instances, without allocating extra
+    /// </param>
     /// <returns></returns>
-    public Whenever<TInspectWorld, TCommandWorld> BakeCombatantAlias(IAliasCombatantIds aliases)
+    public Whenever<TInspectWorld, TCommandWorld> BakeCombatantAlias(IAliasCombatantIds aliases, bool assumeAlreadyBaked = false)
     {
-        return new Whenever<TInspectWorld, TCommandWorld>(filter, effect, aliases);
+        var bakedAliases = assumeAlreadyBaked ? aliases : aliases.BakeInto();
+        return new Whenever<TInspectWorld, TCommandWorld>(filter, effect, bakedAliases);
     }
     
     public bool TriggersOn(

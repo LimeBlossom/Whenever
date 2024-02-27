@@ -157,7 +157,6 @@ namespace Whenever.Test
             
             Assert.AreEqual(6, ctx.inspector.GetHealth(ctx.enemy));
         }
-
     }
     
 }
