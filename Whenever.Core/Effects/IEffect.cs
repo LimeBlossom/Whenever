@@ -6,5 +6,6 @@ public interface IEffect<in TInspectWorld, TCommandWorld> : IDescribableWithCont
 {
     public IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffect(
         InitiatedCommand<TCommandWorld> command,
+        IAliasCombatantIds aliaser,
         TInspectWorld world);
 }

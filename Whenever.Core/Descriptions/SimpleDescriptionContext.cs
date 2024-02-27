@@ -1,30 +1,31 @@
 ﻿using System.Collections.Generic;
 
-public class SimpleDescriptionContext : IDescriptionContext
+public class SimpleDescriptionContext : IDescribeCombatants
 {
-    public SimpleDescriptionContext(Dictionary<CombatantId, string> name) : this("the initiator", "the target", name)
+    private SimpleDescriptionContext(Dictionary<CombatantId, string> names = null)
     {
-    }
-    public SimpleDescriptionContext(): this("the initiator", "the target")
-    {
-    }
-    
-    public SimpleDescriptionContext(string initiatorName, string targetName)
-    {
-        this.InitiatorName = initiatorName;
-        this.TargetName = targetName;
-    }
-
-    public SimpleDescriptionContext(string initiatorName, string targetName, Dictionary<CombatantId, string> names)
-    {
-        this.InitiatorName = initiatorName;
-        this.TargetName = targetName;
         this.names = names ?? new();
     }
     
-    private Dictionary<CombatantId, string> names = new();
-    public string InitiatorName { get; set; }
-    public string TargetName { get; set;  }
+    public static IDescribeCombatants CreateInstanceDescribeCombatants(
+        Dictionary<CombatantId, string> names = null)
+    {
+        return new SimpleDescriptionContext(names);
+    }
+
+    public static DescribeWithAliases CreateInstance(
+        string initiatorName = "the initiator",
+        string targetName = "the target",
+        Dictionary<CombatantId, string> names = null,
+        IAliasCombatantIds aliaser = null)
+    {
+        aliaser ??= new SimpleCombatantAliaser();
+        var combatantDescriber = new SimpleDescriptionContext(names);
+        var withAliases = DescribeWithAliases.CreateStandardAliases(combatantDescriber, aliaser, initiatorName, targetName);
+        return withAliases;
+    }
+
+    private Dictionary<CombatantId, string> names;
     public string NameOf(CombatantId id)
     {
         if(names.TryGetValue(id, out var name))

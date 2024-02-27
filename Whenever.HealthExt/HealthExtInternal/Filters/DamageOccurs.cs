@@ -14,7 +14,10 @@ namespace HealthExtInternal
             this.atLeast = atLeast;
         }
 
-        public bool TriggersOn(InitiatedCommand<ICommandWorldHealth> initiatedCommand, IInspectWorldHealth world)
+        public bool TriggersOn(
+            InitiatedCommand<ICommandWorldHealth> initiatedCommand,
+            IAliasCombatantIds aliaser,
+            IInspectWorldHealth world)
         {
             if (initiatedCommand.command is Damage damageCommand)
             {

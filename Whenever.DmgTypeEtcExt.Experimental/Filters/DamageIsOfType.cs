@@ -12,7 +12,10 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Filters
             this.damageType = damageType;
         }
 
-        public bool TriggersOn(InitiatedCommand<ICommandableWorldDemo> initiatedCommand, IInspectableWorldDemo world)
+        public bool TriggersOn(
+            InitiatedCommand<ICommandableWorldDemo> initiatedCommand,
+            IAliasCombatantIds aliaser,
+            IInspectableWorldDemo world)
         {
             if(initiatedCommand.command is DamageCommand damageCommand)
             {

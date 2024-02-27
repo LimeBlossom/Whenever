@@ -13,7 +13,10 @@ public record NoopEffect<TInspectWorld, TCommandWorld> : IEffect<TInspectWorld, 
         this.description = description;
     }
     
-    public IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffect(InitiatedCommand<TCommandWorld> command, TInspectWorld world)
+    public IEnumerable<IWorldCommand<TCommandWorld>> ApplyEffect(
+        InitiatedCommand<TCommandWorld> command,
+        IAliasCombatantIds aliaser,
+        TInspectWorld world)
     {
         return Enumerable.Empty<IWorldCommand<TCommandWorld>>();
     }

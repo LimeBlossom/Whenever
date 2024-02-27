@@ -14,7 +14,10 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
             this.meteorDamage = meteorDamage;
         }
 
-        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffect(InitiatedCommand<ICommandableWorldDemo> command, IInspectableWorldDemo world)
+        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffect(
+            InitiatedCommand<ICommandableWorldDemo> command,
+            IAliasCombatantIds aliaser,
+            IInspectableWorldDemo world)
         {
             var allCombatants = world.AllIds().ToArray();
             var randomSelection = world.GetRng().Next(0, allCombatants.Length);

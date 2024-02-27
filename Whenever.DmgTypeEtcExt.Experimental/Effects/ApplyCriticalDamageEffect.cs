@@ -5,10 +5,18 @@ using Whenever.DmgTypeEtcExt.Experimental.World;
 
 namespace Whenever.DmgTypeEtcExt.Experimental.Effects
 {
-    public record ApplyCriticalDamageEffect: IEffect<IInspectableWorldDemo, ICommandableWorldDemo>
+    public record ApplyCriticalDamageEffect: EffectAliasedTargetEffect<IInspectableWorldDemo, ICommandableWorldDemo>
     {
         public float critDamageMultiplier;
-        public IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffect(InitiatedCommand<ICommandableWorldDemo> command, IInspectableWorldDemo world)
+
+        public ApplyCriticalDamageEffect(CombatantAlias alias) : base(alias)
+        {
+        }
+        
+        protected override IEnumerable<IWorldCommand<ICommandableWorldDemo>> ApplyEffectToTarget(
+            CombatantId target,
+            InitiatedCommand<ICommandableWorldDemo> command,
+            IInspectableWorldDemo world)
         {
             if (command.command is not DamageCommand targetedCommand)
             {
@@ -19,12 +27,12 @@ namespace Whenever.DmgTypeEtcExt.Experimental.Effects
             // Apply critical damage to target
             var critAmount = targetedCommand.damagePackage.damageAmount * critDamageMultiplier;
             var damagePackage = new DamagePackage(DamageType.CRITICAL, critAmount);
-            yield return new DamageCommand(targetedCommand.Target, damagePackage);
+            yield return new DamageCommand(target, damagePackage);
         }
 
-        public string Describe(IDescriptionContext context)
+        protected override string DescribeOnTarget()
         {
-            return $"apply {critDamageMultiplier}x {DamageType.CRITICAL} damage to the target";
+            return $"apply {critDamageMultiplier}x {DamageType.CRITICAL} damage";
         }
     }
 }
