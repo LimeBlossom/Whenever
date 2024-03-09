@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
+using JetBrains.Annotations;
 using UnityEngine;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 
 namespace Serialization
 {
@@ -154,6 +158,12 @@ namespace Serialization
     {
         public T Data { get; }
     }
+
+    internal class PartialTypeContainer : PartialTypeIndicator
+    {
+        public object data;
+    }
+    
     [Serializable]
     internal class PartialTypeContainer<T> : PartialTypeIndicator, IPartialTypeExtractor<T>
     {
@@ -161,19 +171,71 @@ namespace Serialization
         public T data;
         public T Data => data;
     }
-    
-    internal class TypenameConverter : JsonConverter<Version>
+
+    public interface IObjectGraphSerializer
     {
-        public override void WriteJson(JsonWriter writer, Version value, JsonSerializer serializer)
+        public string Typename { get; }
+    }
+
+    internal class Idk : CustomCreationConverter<IPolymorphicSerializable>
+    {
+        public override IPolymorphicSerializable Create(Type objectType)
         {
-            writer.WriteValue(value.ToString());
+            throw new NotImplementedException();
+        }
+    }
+    
+    internal class TypenameConverter : JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            if(value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+            
+            var objectType = value.GetType();
+            var typeKey = objectType.GetCustomAttribute<PolymorphicSerializableAttribute>()?.typeKey;
+            if(typeKey == null)
+            {
+                throw new Exception("Type does not have PolymorphicSerializableAttribute");
+            }
+            
+            JToken t;
+            serializer.Converters.Remove(this);
+            var converters = serializer.Converters.ToArray();
+            try
+            {
+                 t = JToken.FromObject(value, serializer);
+            }
+            finally
+            {
+                serializer.Converters.Add(this);
+            }
+
+            if (t.Type != JTokenType.Object)
+            {
+                throw new Exception("Written json must be a json object");
+            }
+
+            JObject o = (JObject)t;
+                
+            o.AddFirst(new JProperty("type", typeKey));
+
+            o.WriteTo(writer, converters);
         }
 
-        public override Version ReadJson(JsonReader reader, Type objectType, Version existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            string s = (string)reader.Value;
+            var jobject = JObject.Load(reader);
+            var typename = (string)JObject.Load(reader)["type"];
+        }
 
-            return new Version(s);
+        public override bool CanConvert(Type objectType)
+        {
+            var attr = objectType.GetCustomAttribute<PolymorphicSerializableAttribute>();
+            return attr != null;
         }
     }
 
