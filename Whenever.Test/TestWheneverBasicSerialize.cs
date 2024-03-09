@@ -64,6 +64,25 @@ namespace Whenever.Test
             Assert.AreEqual(effect.Describe(descriptionContext), damageEffect.Describe(descriptionContext));
             Assert.AreEqual(effect.CombatantTarget, damageEffect.CombatantTarget);
         }
+
+        [Test]
+        public void RoundTripFullWhenever()
+        {
+            var effect = new DamageCombatantEffect(StandardAliases.Target) {damage = 3};
+            var filter = new DamageOccurs(atLeast: 5);
+            var whenever = new Whenever<IInspectWorldHealth, ICommandWorldHealth>(filter, effect);
+
+            var serializer = GetSerializer();
+            
+            var (json, error) = serializer.Serialize(whenever);
+            Assert.IsNull(error);
+            var (deserializedWhenever, error2) = serializer.DeserializeWhenever(json);
+            Assert.IsNull(error2);
+            
+            Assert.AreEqual(typeof(Whenever<IInspectWorldHealth, ICommandWorldHealth>), deserializedWhenever.GetType());
+            var descriptionContext = SimpleDescriptionContext.CreateInstance();
+            Assert.AreEqual(whenever.Describe(descriptionContext), deserializedWhenever.Describe(descriptionContext));
+        }
         
         [Test]
         public void DeserializedWithCustomCombatantAlias()

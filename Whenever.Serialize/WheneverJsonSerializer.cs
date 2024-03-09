@@ -18,6 +18,16 @@ namespace Serialization
             return PolymorphicDeserialize<IEffect<TInspectWorld, TCommandWorld>>(json);
         }
         
+        public (string? res, string? error) Serialize(Whenever<TInspectWorld, TCommandWorld> effect)
+        {
+            return (null, "not implemented");
+        }
+        
+        public (Whenever<TInspectWorld, TCommandWorld>? res, string? error) DeserializeWhenever(string json)
+        {
+            return (null, "not implemented");
+        }
+        
         public (string? rest, string? error) SerializeEffect(IEffect<TInspectWorld, TCommandWorld> effect)
         {
             return PolymorphicSerialize(effect);
