@@ -19,10 +19,8 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""DamageCombatantEffect"",
-                ""data"": {
-                    ""damage"": 3,
-                    ""combatant"": {""alias"": ""#target""}
-                }
+                ""damage"": 3,
+                ""combatant"": {""alias"": ""#target""}
             }
             ";
             
@@ -33,6 +31,21 @@ namespace Whenever.Test
             Assert.AreEqual(typeof(DamageCombatantEffect), effect.GetType());
             Assert.AreEqual(StandardAliases.Target,(effect as DamageCombatantEffect)?.CombatantTarget);
         }
+        
+        [Test]
+        public void SerializeDamageTargetEffect()
+        {
+            var effect = new DamageCombatantEffect(StandardAliases.Target) {damage = 3};
+            
+            var serializer = GetSerializer();
+            var (json, error) = serializer.SerializeEffect(effect);
+            Assert.IsNull(error);
+
+            var expectedJson = @"{""type"":""DamageCombatantEffect"",""combatant"":{""alias"":""#target""},""damage"":3.0}";
+            
+            Assert.AreEqual(expectedJson, json);
+        }
+        
         [Test]
         public void RoundTripDamageTargetEffect()
         {
@@ -44,7 +57,7 @@ namespace Whenever.Test
             var (deserializedEffect, error2) = serializer.DeserializeEffect(json);
             Assert.IsNull(error2);
             
-            Assert.AreEqual(typeof(DamageCombatantEffect), deserializedEffect);
+            Assert.AreEqual(typeof(DamageCombatantEffect), deserializedEffect.GetType());
             var damageEffect = (DamageCombatantEffect)deserializedEffect;
             
             var descriptionContext = SimpleDescriptionContext.CreateInstance();
@@ -60,10 +73,8 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""DamageCombatantEffect"",
-                ""data"": {
-                    ""damage"": 3,
-                    ""combatant"": {""alias"": ""#cardTargetCustom"" }
-                }
+                ""damage"": 3,
+                ""combatant"": {""alias"": ""#cardTargetCustom"" }
             }
             ";
             
@@ -90,11 +101,9 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""DotCombatantEffect"",
-                ""data"": {
-                    ""damage"": 1,
-                    ""turns"": 3,
-                    ""combatant"": {""alias"": ""#target""}
-                }
+                ""damage"": 1,
+                ""turns"": 3,
+                ""combatant"": {""alias"": ""#target""}
             }
             ";
             
@@ -115,9 +124,7 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""SomeTypeThatsNotDeclared"",
-                ""data"": {
-                    ""someNumber"": 1
-                }
+                ""someNumber"": 1
             }
             ";
             
@@ -136,9 +143,7 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""SomeTypeThatsNotDeclared""
-                ""data"": {
-                    ""someNumber"": 1
-                }
+                ""someNumber"": 1
             }
             ";
             
@@ -157,10 +162,8 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""DotCombatantEffect"",
-                ""data"": {
-                    ""turns"": 3,
-                    ""combatant"": {""alias"": ""#target""}
-                }
+                ""turns"": 3,
+                ""combatant"": {""alias"": ""#target""}
             }
             ";
             
@@ -180,9 +183,7 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""DamageOccurs"",
-                ""data"": {
-                    ""atLeast"": 5
-                }
+                ""atLeast"": 5
             }";
             
             var (filter, error) = serializer.DeserializeFilter(json);
@@ -200,10 +201,8 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""CombatantHasAtLeastHealth"",
-                ""data"": {
-                    ""atLeast"": 5,
-                    ""combatant"": {""alias"": ""#target""}
-                }
+                ""atLeast"": 5,
+                ""combatant"": {""alias"": ""#target""}
             }";
             
             var (filter, error) = serializer.DeserializeFilter(json);

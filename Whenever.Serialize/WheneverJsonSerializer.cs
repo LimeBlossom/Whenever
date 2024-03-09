@@ -37,42 +37,23 @@ namespace Serialization
         private (string? res, string? error) PolymorphicSerialize<T>(T obj)
         {
             var objType = obj.GetType();
-            
-            AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(
-                new AssemblyName("AssemblyName"), AssemblyBuilderAccess.Run);
-            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("ModuleName");
-            TypeBuilder typeBuilder = moduleBuilder.DefineType(
-                $"TmpNamespace.{objType.Name}_WithTypeName" , TypeAttributes.Public, objType);
-
-            typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
-            typeBuilder.DefineField("type", typeof(string), FieldAttributes.Public);
-
-// // Add a method
-//             var newMethod = typeBuilder.DefineMethod("MethodName" , MethodAttributes.Public);
-//
-//             ILGenerator ilGen = newMethod.GetILGenerator();
-//
-// // Create IL code for the method
-//             ilGen.Emit(...);
-
-// ...
-
-// Create the type itself
-            Type concreteType = typeBuilder.CreateType();
-            
             var typeKey = objType.GetCustomAttribute<PolymorphicSerializableAttribute>()?.typeKey;
             if(typeKey == null)
             {
                 return (null, "Type does not have PolymorphicSerializableAttribute");
             }
-            var newConcreteInstance = Activator.CreateInstance(concreteType);
-            concreteType.GetField("type").SetValue(newConcreteInstance, typeKey);
-            // var container = new PartialTypeContainer<T>
-            // {
-            //     type = typeKey,
-            //     data = obj
-            // };
-            return (JsonUtility.ToJson(newConcreteInstance), null);
+            
+            var unitySerializedJson = JsonUtility.ToJson(obj);
+            
+            var expectedStart = @"{""";
+            if (!unitySerializedJson.StartsWith(expectedStart))
+            {
+                return (null, $"Expected start of json to be {expectedStart}");
+            }
+            
+            var replacedStart = @"{""type"":""" + typeKey + @""",""";
+            var unitySerializedJsonWithType = replacedStart + unitySerializedJson.Substring(expectedStart.Length);
+            return (unitySerializedJsonWithType, null);
         }
         
         public (T? res, string? error) PolymorphicDeserialize<T>(string json) where T : class
@@ -103,24 +84,16 @@ namespace Serialization
                 return (null, $"Could not find type {typeIndicator.type}");
             }
             
-            
-            var containerType = typeof(PartialTypeContainer<>).MakeGenericType(typeToDeserialize);
-            var deserializedObject = Activator.CreateInstance(containerType);
-            JsonUtility.FromJsonOverwrite(json, deserializedObject);
-            if (deserializedObject is not IPartialTypeExtractor<T>)
+            var (deserialized, deserializationError) = Try<object, ArgumentException>(() => JsonUtility.FromJson(json, typeToDeserialize));
+            if(deserialized == null)
             {
-                Debug.LogError("Deserialized object is not IPartialTypeExtractor<T>");
+                return (null, deserializationError.Message);
             }
-
-            var dataProperty = containerType.GetProperty("data");
-            var deserializedData = dataProperty?.GetValue(deserializedObject);
-            if (deserializedData is not T)
+            if (deserialized is not T deserializedAsT)
             {
-                Debug.LogError("Reflected object is not T");
+                return (null, $"Deserialized object is not {filterType.Name}");
             }
-            var deserializedFromReflection = (T)deserializedData;
-            var deserializedByCast = deserializedObject as IPartialTypeExtractor<T>;
-            return (deserializedByCast?.Data, null);
+            return (deserializedAsT, null);
         }
         
         private (TSuccess res, TException error) Try<TSuccess, TException>(Func<TSuccess> fn)
