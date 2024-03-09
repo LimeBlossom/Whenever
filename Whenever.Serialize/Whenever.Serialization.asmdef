@@ -1,15 +1,16 @@
 {
-    "name": "Whenever.HealthExt",
-    "rootNamespace": "",
+    "name": "Whenever.Serialization",
+    "rootNamespace": "Serialization",
     "references": [
-        "GUID:f62bd97b21e4a964c87d0c329ebd9a04",
-        "GUID:867c3adc712a59444a8625dbbcf34561"
+        "GUID:f62bd97b21e4a964c87d0c329ebd9a04"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],

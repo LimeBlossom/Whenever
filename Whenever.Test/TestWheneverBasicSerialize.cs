@@ -19,8 +19,10 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""DamageCombatantEffect"",
-                ""damage"": 3,
-                ""combatant"": {""alias"": ""#target""}
+                ""data"": {
+                    ""damage"": 3,
+                    ""combatant"": {""alias"": ""#target""}
+                }
             }
             ";
             
@@ -31,6 +33,24 @@ namespace Whenever.Test
             Assert.AreEqual(typeof(DamageCombatantEffect), effect.GetType());
             Assert.AreEqual(StandardAliases.Target,(effect as DamageCombatantEffect)?.CombatantTarget);
         }
+        [Test]
+        public void RoundTripDamageTargetEffect()
+        {
+            var effect = new DamageCombatantEffect(StandardAliases.Target) {damage = 3};
+            
+            var serializer = GetSerializer();
+            var (json, error) = serializer.SerializeEffect(effect);
+            Assert.IsNull(error);
+            var (deserializedEffect, error2) = serializer.DeserializeEffect(json);
+            Assert.IsNull(error2);
+            
+            Assert.AreEqual(typeof(DamageCombatantEffect), deserializedEffect);
+            var damageEffect = (DamageCombatantEffect)deserializedEffect;
+            
+            var descriptionContext = SimpleDescriptionContext.CreateInstance();
+            Assert.AreEqual(effect.Describe(descriptionContext), damageEffect.Describe(descriptionContext));
+            Assert.AreEqual(effect.CombatantTarget, damageEffect.CombatantTarget);
+        }
         
         [Test]
         public void DeserializedWithCustomCombatantAlias()
@@ -40,8 +60,10 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""DamageCombatantEffect"",
-                ""damage"": 3,
-                ""combatant"": {""alias"": ""#cardTargetCustom"" }
+                ""data"": {
+                    ""damage"": 3,
+                    ""combatant"": {""alias"": ""#cardTargetCustom"" }
+                }
             }
             ";
             
@@ -68,9 +90,11 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""DotCombatantEffect"",
-                ""damage"": 1,
-                ""turns"": 3,
-                ""combatant"": {""alias"": ""#target""}
+                ""data"": {
+                    ""damage"": 1,
+                    ""turns"": 3,
+                    ""combatant"": {""alias"": ""#target""}
+                }
             }
             ";
             
@@ -91,7 +115,9 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""SomeTypeThatsNotDeclared"",
-                ""someNumber"": 1
+                ""data"": {
+                    ""someNumber"": 1
+                }
             }
             ";
             
@@ -110,7 +136,9 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""SomeTypeThatsNotDeclared""
-                ""someNumber"": 1
+                ""data"": {
+                    ""someNumber"": 1
+                }
             }
             ";
             
@@ -129,8 +157,10 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""DotCombatantEffect"",
-                ""turns"": 3,
-                ""combatant"": {""alias"": ""#target""}
+                ""data"": {
+                    ""turns"": 3,
+                    ""combatant"": {""alias"": ""#target""}
+                }
             }
             ";
             
@@ -150,7 +180,9 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""DamageOccurs"",
-                ""atLeast"": 5
+                ""data"": {
+                    ""atLeast"": 5
+                }
             }";
             
             var (filter, error) = serializer.DeserializeFilter(json);
@@ -168,8 +200,10 @@ namespace Whenever.Test
             var json = @"
             {
                 ""type"": ""CombatantHasAtLeastHealth"",
-                ""atLeast"": 5,
-                ""combatant"": {""alias"": ""#target""}
+                ""data"": {
+                    ""atLeast"": 5,
+                    ""combatant"": {""alias"": ""#target""}
+                }
             }";
             
             var (filter, error) = serializer.DeserializeFilter(json);
