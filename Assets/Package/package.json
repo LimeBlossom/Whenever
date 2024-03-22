@@ -1,0 +1,13 @@
+{
+  "name": "com.limeblossom.whenever",
+  "version": "0.1.0",
+  "displayName": "Whenever",
+  "description": "Whenever X do Y. A system for building synergistic interactions.",
+  "unity": "2022.3",
+  "dependencies": {
+  },
+  "author": {
+    "name": "LimeBlossom",
+    "email": "limeblossomstudio@gmail.com"
+  }
+}
