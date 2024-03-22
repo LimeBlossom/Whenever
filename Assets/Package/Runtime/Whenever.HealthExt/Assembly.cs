@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Whenever Test")]
+[assembly: InternalsVisibleTo("com.limeblossom.whenever.test")]
